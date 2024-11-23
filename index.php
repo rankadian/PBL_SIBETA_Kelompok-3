@@ -100,7 +100,7 @@
         <div class="row align-items-xl-center gy-5">
 
           <div class="col-xl-5 content">
-            <h3>About Us</h3>
+            <h3>About</h3>
             <h2>Surat Bebas Tanggungan</h2>
             <p>Surat Bebas Tanggungan Mahasiswa adalah dokumen resmi yang menyatakan bahwa mahasiswa tidak memiliki tanggungan atau kewajiban tertentu yang belum terselesaikan. Guna untuk prasyarat pendaftaran wisuda dan kelulusan tiap mahasiswa.</p>
             <a href="#" class="read-more"><span>Read More</span><i class="bi bi-arrow-right"></i></a>
@@ -117,27 +117,27 @@
                 </div>
               </div> <!-- End Icon Box -->
 
-              <div class="col-md-6" data-aos="fade-up" data-aos-delay="300">
+              <div class="col-md-6" data-aos="fade-up" data-aos-delay="200">
                 <div class="icon-box">
                   <i class="bi bi-clipboard-pulse"></i>
-                  <h3>Ketentuan</h3>
-                  <p>Autem saepe animi et aut aspernatur culpa facere. Rerum saepe rerum voluptates quia</p>
+                  <h3>Guna</h3>
+                  <p>Digunakan untuk mendaftar wisuda.</p>
                 </div>
               </div> <!-- End Icon Box -->
 
               <div class="col-md-6" data-aos="fade-up" data-aos-delay="400">
                 <div class="icon-box">
                   <i class="bi bi-command"></i>
-                  <h3>Veniam omnis</h3>
-                  <p>Omnis perferendis molestias culpa sed. Recusandae quas possimus. Quod consequatur corrupti</p>
+                  <h3>Poin-Poin</h3>
+                  <p>Kompen tidak memiliki alpha, SKLA telah melunasi administrasi selama berkuliah, PKL membuat laporan setelah magang, TOEIC hasil tes => 450, SKKM D4 15 point dan D3 12 point, Publikasi skripsi</p>
                 </div>
               </div> <!-- End Icon Box -->
 
               <div class="col-md-6" data-aos="fade-up" data-aos-delay="500">
                 <div class="icon-box">
                   <i class="bi bi-graph-up-arrow"></i>
-                  <h3>Delares sapiente</h3>
-                  <p>Sint et dolor voluptas minus possimus nostrum. Reiciendis commodi eligendi omnis quideme lorenda</p>
+                  <h3>Request</h3>
+                  <p>Surat bebas tanggungan bisa diminta ketiga semua tanggungan sudah selesai setelah menyelesaikan Tugas Akhir (TA)</p>
                 </div>
               </div> <!-- End Icon Box -->
 
