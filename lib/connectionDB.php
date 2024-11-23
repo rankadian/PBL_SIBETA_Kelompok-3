@@ -1,10 +1,10 @@
 <?php
-$host = "localhost"; // Server host
-$user = "root";      // Username MySQL Anda
-$password = "";      // Password MySQL Anda
-$database = "sibeta_web"; // Nama database
+$host = "localhost";
+$user = "root";
+$password = "";
+$database = "sibeta_web";
 
-// Buat koneksi
+// Koneksi database
 $conn = new mysqli($host, $user, $password, $database);
 
 // Cek koneksi
