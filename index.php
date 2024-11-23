@@ -100,7 +100,7 @@
             <p>Surat Bebas Tanggungan Mahasiswa adalah dokumen resmi yang menyatakan bahwa mahasiswa tidak memiliki tanggungan atau kewajiban tertentu, baik dalam UKT, KOMPEN, SKLA, SURAT PKL, TOEIC, SKKM,LAPORAN TUGAS AKHIR, SURAT PUBLIKASI, .Guna memastikan bahwa mahasiswa terkait tidak memiliki beban tanggung jawab yang belum terselesaikan.</p>
             <div class="d-flex">
               <a href="login.php" class="btn-get-started">login</a>
-              <a href="https://youtu.be/b3rNUhDqciM?si=1gOedGGooimwdRYI" class="glightbox btn-watch-video d-flex align-items-center"><i class="bi bi-play-circle"></i><span>Watch Video</span></a>
+              <a href="https://www.youtube.com/watch?v=Y7f98aduVJ8" class="glightbox btn-watch-video d-flex align-items-center"><i class="bi bi-play-circle"></i><span>Watch Video</span></a>
             </div>
           </div>
 
