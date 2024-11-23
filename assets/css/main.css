@@ -1792,6 +1792,30 @@ button:hover {
   background: #0056b3;
 }
 
+/*logout section*/
+.btn {
+  display: inline-block;
+  padding: 10px 15px;
+  color: white;
+  background-color: #dc3545; /* Warna merah */
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.btn:hover {
+  background-color: #c82333; /* Warna merah lebih gelap */
+}
+
+.btn-danger {
+  background-color: #dc3545;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}
+
+
 /*--------------------------------------------------------------
 # Starter Section Section
 --------------------------------------------------------------*/
