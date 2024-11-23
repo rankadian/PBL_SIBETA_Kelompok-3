@@ -1,9 +1,5 @@
 <?php
-include('lib/Session.php'); 
-$session = new Session();   
-if ($session->get('is_login') !== true) {     
-  header('Location: login.php'); 
-}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -51,7 +47,7 @@ if ($session->get('is_login') !== true) {
       <a href="index.html" class="logo d-flex align-items-center">
         <!-- Uncomment the line below if you also wish to use an image logo -->
         <!-- <img src="assets/img/logo.png" alt=""> -->
-        <h1 class="sitename">Bootslander</h1>
+        <h1 class="sitename">SIBETA</h1>
       </a>
 
       <nav id="navmenu" class="navmenu">
@@ -100,10 +96,10 @@ if ($session->get('is_login') !== true) {
           </div>
 
           <div class="col-lg-6  d-flex flex-column justify-content-center" data-aos="fade-in">
-            <h1>Build Your Landing Page With <span>Bootslander</span></h1>
-            <p>We are team of talented designers making websites with Bootstrap</p>
+            <h1>SISTEM BEBAS TANGGUNGAN POLINEMA<br><span>SIBETA</span></h1>
+            <p>Surat Bebas Tanggungan Mahasiswa adalah dokumen resmi yang menyatakan bahwa mahasiswa tidak memiliki tanggungan atau kewajiban tertentu, baik dalam bentuk utang, tanggung jawab hukum, maupun kewajiban lain kepada pihak tertentu. Surat ini sering digunakan untuk berbagai keperluan, seperti proses administrasi, legalitas, atau pelunasan kewajiban, guna memastikan bahwa mahasiswa terkait tidak memiliki beban tanggung jawab yang belum terselesaikan.</p>
             <div class="d-flex">
-              <a href="#about" class="btn-get-started">Get Started</a>
+              <a href="#about" class="btn-get-started">Get Starte</a>
               <a href="https://www.youtube.com/watch?v=Y7f98aduVJ8" class="glightbox btn-watch-video d-flex align-items-center"><i class="bi bi-play-circle"></i><span>Watch Video</span></a>
             </div>
           </div>
