@@ -1,6 +1,4 @@
-<?php
 
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -80,7 +78,7 @@
             <p>SIBETA atau Sistem Infromasi Bebas Tanggungan adalah suatu sistem yang digunakan untuk memudahkan dalam memonitoring data tanggungan yang dimiliki oleh setiap mahasiswa yang pada akhirnya sebagai prasyarat dalam proses kelulusan.</p>
             <div class="d-flex">
               <a href="login.php" class="btn-get-started">login</a>
-              <a href="https://www.youtube.com/watch?v=Y7f98aduVJ8" class="glightbox btn-watch-video d-flex align-items-center"><i class="bi bi-play-circle"></i><span>Watch Video</span></a>
+              <a href="https://youtu.be/b3rNUhDqciM?si=1gOedGGooimwdRYI" class="glightbox btn-watch-video d-flex align-items-center"><i class="bi bi-play-circle"></i><span>Watch Video</span></a>
             </div>
           </div>
 
