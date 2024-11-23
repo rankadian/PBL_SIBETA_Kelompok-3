@@ -1,26 +1,33 @@
 <?php
 session_start();
-include 'db/connection.php';
+require './db/connection.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = mysqli_real_escape_string($conn, $_POST['username']);
-    $password = md5($_POST['password']);
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
-    $query = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
-    $result = mysqli_query($conn, $query);
+    $stmt = $conn->prepare("SELECT * FROM users WHERE username = :username");
+    $stmt->bindParam(':username', $username);
+    $stmt->execute();
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (mysqli_num_rows($result) === 1) {
-        $user = mysqli_fetch_assoc($result);
-        $_SESSION['username'] = $user['username'];
+    if ($user && hash('sha256', $password) === $user['password']) {
         $_SESSION['role'] = $user['role'];
+        $_SESSION['username'] = $user['username'];
 
+        // Redirect berdasarkan role
         if ($user['role'] === 'admin') {
             header('Location: admin/dashboard.php');
-        } else {
-            header('Location: user/dashboard.php');
+        } elseif ($user['role'] === 'prodi') {
+            header('Location: prodi/dashboard.php');
+        } elseif ($user['role'] === 'mahasiswa') {
+            header('Location: mahasiswa/dashboard.php');
+        } elseif ($user['role'] === 'kps') {
+            header('Location: kps/dashboard.php');
         }
+        exit;
     } else {
-        echo "<script>alert('Invalid credentials!'); window.location.href='login.php';</script>";
+        echo "Username atau password salah!";
     }
 }
 ?>

@@ -1,12 +1,13 @@
 <?php
 $host = 'localhost';
-$user = 'root';
-$pass = '';
-$db   = 'bebas_tanggungan';
+$dbname = 'sibeta_web_3';
+$username = 'root'; // Sesuaikan dengan username MySQL Anda
+$password = ''; // Sesuaikan dengan password MySQL Anda
 
-$conn = mysqli_connect($host, $user, $pass, $db);
-
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
+try {
+    $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Koneksi gagal: " . $e->getMessage());
 }
 ?>
