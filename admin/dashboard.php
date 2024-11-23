@@ -13,6 +13,7 @@ if ($_SESSION['role'] !== 'admin') {
 </head>
 <body>
     <h1>Welcome, Admin</h1>
-    <a href="../logout.php">Logout</a>
+    <a href="../logout.php" class="btn btn-danger">Logout</a>
+
 </body>
 </html>
