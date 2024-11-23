@@ -7,7 +7,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Index - Bootslander Bootstrap Template</title>
+  <title>SISTEM BEBAS TANGGUNGAN JTI</title>
   <meta name="description" content="">
   <meta name="keywords" content="">
 

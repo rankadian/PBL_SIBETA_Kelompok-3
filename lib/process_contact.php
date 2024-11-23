@@ -1,6 +1,6 @@
 <?php
 // Include file koneksi database
-include 'db.php';
+include '../lib/connectionDB.php';
 
 // Cek apakah form telah dikirim
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
