@@ -1,6 +1,6 @@
 <div class="mb-5">
     <h2>Layanan Bebas Tanggungan</h2>
-    <p>Pilih layanan berikut:</p>
+    <p>DOWNLOAD SURAT:</p>
     <ul>
         <li><a href="#">Request Surat Publikasi</a></li>
         <li><a href="#">Request Surat Bebas Kompen</a></li>
