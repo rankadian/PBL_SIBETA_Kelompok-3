@@ -39,6 +39,13 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
                 case 'graduation':
                     include 'includes/graduation.php';
                     break;
+                case 'add_student':
+                    include 'includes/add_student.php';
+                    break;
+                    case 'manage_accounts':
+                        include 'includes/manage_accounts.php';
+                        break;
+                    
                 default:
                     echo "<h3>Halaman tidak ditemukan!</h3>";
             }
