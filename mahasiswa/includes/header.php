@@ -8,7 +8,7 @@
             <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link" href="dashboard.php?page=beranda">Beranda</a></li>
                 <li class="nav-item"><a class="nav-link" href="dashboard.php?page=layanan">Layanan Bebas Tanggungan</a></li>
-                <li class="nav-item"><a class="nav-link" href="dashboard.php?page=status">Status Validasi</a></li>
+                <li class="nav-item"><a class="nav-link" href="dashboard.php?page=status_validations">Status Validasi</a></li>
                 <li class="nav-item"><a class="nav-link" href="dashboard.php?page=wisuda">Daftar Wisuda</a></li>
                 <li class="nav-item"><a class="nav-link text-danger" href="../logout.php">Logout</a></li>
             </ul>
