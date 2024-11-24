@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form action="" method="POST">
             <div class="mb-3">
                 <label for="username" class="form-label">NIM</label>
-                <input type="text" name="username" id="username" class="form-control" placeholder="Masukkan username" required>
+                <input type="text" name="username" id="username" class="form-control" placeholder="Masukkan NIM" required>
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>

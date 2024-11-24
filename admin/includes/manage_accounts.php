@@ -48,6 +48,24 @@ if (isset($_GET['delete'])) {
     }
 }
 
+// Fungsi Edit Password
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_password'])) {
+    $id = $_POST['id'];
+    $new_password = $_POST['new_password'];
+    $hashedPassword = hash('sha256', $new_password);
+
+    $stmt = $conn->prepare("UPDATE users SET password = :password WHERE id = :id AND role = 'mahasiswa'");
+    $stmt->bindParam(':password', $hashedPassword);
+    $stmt->bindParam(':id', $id);
+
+    try {
+        $stmt->execute();
+        $message = "Password berhasil diperbarui!";
+    } catch (PDOException $e) {
+        $error = "Gagal memperbarui password: " . $e->getMessage();
+    }
+}
+
 // Ambil Data Mahasiswa
 $stmt = $conn->prepare("SELECT id, username, created_at FROM users WHERE role = 'mahasiswa'");
 $stmt->execute();
@@ -74,8 +92,8 @@ $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <form action="" method="POST">
                 <input type="hidden" name="add_account" value="1">
                 <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
-                    <input type="text" name="username" id="username" class="form-control" placeholder="Masukkan username" required>
+                    <label for="username" class="form-label">NIM</label>
+                    <input type="text" name="username" id="username" class="form-control" placeholder="Masukkan NIM" required>
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
@@ -96,7 +114,7 @@ $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Username</th>
+                        <th>NIM</th>
                         <th>Tanggal Dibuat</th>
                         <th>Aksi</th>
                     </tr>
@@ -108,8 +126,38 @@ $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <td><?= htmlspecialchars($student['username']) ?></td>
                             <td><?= $student['created_at'] ?></td>
                             <td>
+                                <!-- Tombol Hapus -->
                                 <a href="?page=manage_accounts&delete=<?= $student['id'] ?>" class="btn btn-danger btn-sm"
                                    onclick="return confirm('Yakin ingin menghapus akun ini?')">Hapus</a>
+
+                                <!-- Form Edit Password -->
+                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editPasswordModal<?= $student['id'] ?>">Edit Password</button>
+
+                                <!-- Modal Edit Password -->
+                                <div class="modal fade" id="editPasswordModal<?= $student['id'] ?>" tabindex="-1" aria-labelledby="editPasswordModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="editPasswordModalLabel">Edit Password - <?= htmlspecialchars($student['username']) ?></h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <form action="" method="POST">
+                                                <div class="modal-body">
+                                                    <input type="hidden" name="edit_password" value="1">
+                                                    <input type="hidden" name="id" value="<?= $student['id'] ?>">
+                                                    <div class="mb-3">
+                                                        <label for="new_password" class="form-label">Password Baru</label>
+                                                        <input type="password" name="new_password" class="form-control" placeholder="Masukkan password baru" required>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                                    <button type="submit" class="btn btn-warning">Simpan Perubahan</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>
