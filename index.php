@@ -9,8 +9,8 @@
   <meta name="keywords" content="">
 
   <!-- Favicons -->
-  <link href="assets/img/favicon.png" rel="icon">
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <link href="assets/img/sibetaV3.png" rel="icon">
+  
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -27,13 +27,6 @@
   <!-- Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
 
-  <!-- =======================================================
-  * Template Name: Bootslander
-  * Template URL: https://bootstrapmade.com/bootslander-free-bootstrap-landing-page-template/
-  * Updated: Aug 07 2024 with Bootstrap v5.3.3
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
 </head>
 
 <body class="index-page">
@@ -107,7 +100,7 @@
         <div class="row align-items-xl-center gy-5">
 
           <div class="col-xl-5 content">
-            <h3>About Us</h3>
+            <h3>About</h3>
             <h2>Surat Bebas Tanggungan</h2>
             <p>Surat Bebas Tanggungan Mahasiswa adalah dokumen resmi yang menyatakan bahwa mahasiswa tidak memiliki tanggungan atau kewajiban tertentu yang belum terselesaikan. Guna untuk prasyarat pendaftaran wisuda dan kelulusan tiap mahasiswa.</p>
             <a href="#" class="read-more"><span>Read More</span><i class="bi bi-arrow-right"></i></a>
@@ -124,27 +117,27 @@
                 </div>
               </div> <!-- End Icon Box -->
 
-              <div class="col-md-6" data-aos="fade-up" data-aos-delay="300">
+              <div class="col-md-6" data-aos="fade-up" data-aos-delay="200">
                 <div class="icon-box">
                   <i class="bi bi-clipboard-pulse"></i>
-                  <h3>Ketentuan</h3>
-                  <p>Autem saepe animi et aut aspernatur culpa facere. Rerum saepe rerum voluptates quia</p>
+                  <h3>Guna</h3>
+                  <p>Digunakan untuk mendaftar wisuda.</p>
                 </div>
               </div> <!-- End Icon Box -->
 
               <div class="col-md-6" data-aos="fade-up" data-aos-delay="400">
                 <div class="icon-box">
                   <i class="bi bi-command"></i>
-                  <h3>Veniam omnis</h3>
-                  <p>Omnis perferendis molestias culpa sed. Recusandae quas possimus. Quod consequatur corrupti</p>
+                  <h3>Poin-Poin</h3>
+                  <p>Kompen tidak memiliki alpha, SKLA telah melunasi administrasi selama berkuliah, PKL membuat laporan setelah magang, TOEIC hasil tes => 450, SKKM D4 15 point dan D3 12 point, Publikasi skripsi</p>
                 </div>
               </div> <!-- End Icon Box -->
 
               <div class="col-md-6" data-aos="fade-up" data-aos-delay="500">
                 <div class="icon-box">
                   <i class="bi bi-graph-up-arrow"></i>
-                  <h3>Delares sapiente</h3>
-                  <p>Sint et dolor voluptas minus possimus nostrum. Reiciendis commodi eligendi omnis quideme lorenda</p>
+                  <h3>Request</h3>
+                  <p>Surat bebas tanggungan bisa diminta ketiga semua tanggungan sudah selesai setelah menyelesaikan Tugas Akhir (TA)</p>
                 </div>
               </div> <!-- End Icon Box -->
 
@@ -224,10 +217,6 @@
     <div class="container copyright text-center mt-4">
       <p>© <span>Copyright</span> <strong class="px-1 sitename">Bootslander</strong> <span>All Rights Reserved</span></p>
       <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you've purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
         Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
       </div>
     </div>

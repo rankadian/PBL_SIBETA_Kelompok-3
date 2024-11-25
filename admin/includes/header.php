@@ -10,6 +10,8 @@
                 <li class="nav-item"><a class="nav-link" href="dashboard.php?page=requests">Request Mahasiswa</a></li>
                 <li class="nav-item"><a class="nav-link" href="dashboard.php?page=validation">Validasi Bukti Upload</a></li>
                 <li class="nav-item"><a class="nav-link" href="dashboard.php?page=graduation">Jadwal Wisuda</a></li>
+                <li class="nav-item"><a class="nav-link" href="dashboard.php?page=add_student">Tambah Akun Mahasiswa</a></li>
+                <li class="nav-item"><a class="nav-link" href="dashboard.php?page=manage_accounts">Manajemen Akun</a></li>
                 <li class="nav-item"><a class="nav-link text-danger" href="../logout.php">Logout</a></li>
             </ul>
         </div>
