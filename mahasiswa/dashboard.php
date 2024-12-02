@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'mahasiswa') {
     header('Location: ../login.php');
     exit;
 }
@@ -10,14 +10,11 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Dashboard Mahasiswa</title>
     <!-- fav icons-->
-    <link href="../assets/img/sibetaV3.png" rel="icon">
-    <!--link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon"-->
-    
+     <link href="../assets/img/sibetaV3.png" rel="icon">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
     
 </head>
 <body>
@@ -30,20 +27,14 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
                 case 'beranda':
                     include 'includes/beranda.php';
                     break;
-                case 'requests':
-                    include 'includes/requests.php';
+                case 'layanan':
+                    include 'includes/layanan.php';
                     break;
-                case 'validation':
-                    include 'includes/validation.php';
+                case 'status':
+                    include 'includes/status.php';
                     break;
-                case 'graduation':
-                    include 'includes/graduation.php';
-                    break;
-                case 'add_student':
-                    include 'includes/add_student.php';
-                    break;
-                case 'manage_accounts':
-                    include 'includes/manage_accounts.php';
+                case 'wisuda':
+                    include 'includes/wisuda.php';
                     break;
                 default:
                     echo "<h3>Halaman tidak ditemukan!</h3>";
