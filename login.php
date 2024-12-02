@@ -43,11 +43,8 @@ if (isset($_SESSION['role'])) {
                 
                 <button type="submit" class="btn btn-primary w-100" style="background-color:#1b156a; border-color:#1b156a; color:white;">Login</button>
             </form>
-            <p class="text-center mt-3">Belum punya akun? <a href="register.php" class="text-decoration-none">Daftar</a></p>
         </div>
     </div>
-
-
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
