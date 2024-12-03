@@ -1,6 +1,6 @@
 <?php
 $use_driver = 'sqlsrv'; // mysql atau sqlsrv
-$host = 'LAPTOP-9E916KGJ'; // 'localhost';
+$host = 'LAPTOP-Q3PDL8SK'; // 'localhost';
 $username = ''; //'sa';
 $password = '';
 $database = 'sibeta'; // 'master'
