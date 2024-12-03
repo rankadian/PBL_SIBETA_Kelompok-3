@@ -1,17 +1,26 @@
 <?php
 session_start();
 
-// Memasukkan koneksi SQL Server dan fungsi lainnya
-include "lib/Connection.php";  // Memasukkan koneksi SQL Server
-include "fungsi/pesan_kilat.php";  // Memasukkan fungsi pesan
-include "fungsi/anti_injection.php";  // Memasukkan fungsi anti injection
+// Debug: Cek apakah data POST diterima dengan benar
+echo '<pre>';
+print_r($_POST);
+echo '</pre>';
+
+include "lib/Connection.php";
+include "fungsi/pesan_kilat.php";
+include "fungsi/anti_injection.php";
 
 // Mendapatkan input username dan password dari form login
-$username = antiinjection($db, $_POST['username']);  // Gunakan koneksi $db untuk anti injection
-$password = antiinjection($db, $_POST['password']);  // Gunakan koneksi $db untuk anti injection
+if (isset($_POST['username']) && isset($_POST['password'])) {
+    $username = antiinjection($db, $_POST['username']);
+    $password = antiinjection($db, $_POST['password']);
+} else {
+    echo "Data POST tidak diterima dengan benar.";
+    exit();
+}
 
 // Query untuk mencari username
-$query = "SELECT username, level, salt, password as hashed_password FROM user WHERE username = ?";
+$query = "SELECT username, level, password as hashed_password FROM [user] WHERE username = ?";
 $params = array($username);
 
 // Menjalankan query menggunakan SQL Server
@@ -28,14 +37,10 @@ sqlsrv_free_stmt($stmt);
 
 // Jika username ditemukan
 if ($row) {
-    $salt = $row['salt'];
     $hashed_password = $row['hashed_password'];
 
-    // Menggabungkan password dengan salt
-    $combined_password = $salt . $password;
-
-    // Verifikasi password
-    if (password_verify($combined_password, $hashed_password)) {
+    // Verifikasi password langsung terhadap kolom password (tanpa salt)
+    if (password_verify($password, $hashed_password)) {
         $_SESSION['username'] = $row['username'];
         $_SESSION['level'] = $row['level'];
 
