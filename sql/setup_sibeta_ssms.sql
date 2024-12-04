@@ -171,28 +171,3 @@ CREATE TABLE surat_bebas_tanggungan (
     FOREIGN KEY (mahasiswa_id) REFERENCES mahasiswa(id) ON DELETE NO ACTION,
     FOREIGN KEY (tanggungan_id) REFERENCES tanggungan(id_tanggungan) ON DELETE NO ACTION
 );
-
-
--- Membuat tabel tanggal wisuda
-CREATE TABLE tanggal_wisuda (
-    id_tanggal_wisuda INT IDENTITY(1,1) PRIMARY KEY,
-    admin_id INT NOT NULL,
-    tanggal_wisuda DATE NOT NULL,
-    kuota INT DEFAULT 0, -- Menyimpan jumlah mahasiswa yang sudah terdaftar
-    status VARCHAR(50) DEFAULT 'terbuka',
-    tanggal_dibuat DATETIME DEFAULT GETDATE(),
-    FOREIGN KEY (admin_id) REFERENCES admin(id) ON DELETE CASCADE
-);
-
-
--- Membuat tabel wisuda
-CREATE TABLE wisuda (
-    id_wisuda INT IDENTITY(1,1) PRIMARY KEY,
-    mahasiswa_id INT NOT NULL,
-    id_surat INT NOT NULL,
-    status_pendaftaran VARCHAR(50) DEFAULT 'terdaftar',
-    tanggal_wisuda_id INT NOT NULL,
-    FOREIGN KEY (mahasiswa_id) REFERENCES mahasiswa(id) ON DELETE CASCADE,
-    FOREIGN KEY (id_surat) REFERENCES surat_bebas_tanggungan(id_surat) ON DELETE CASCADE,
-    FOREIGN KEY (tanggal_wisuda_id) REFERENCES tanggal_wisuda(id_tanggal_wisuda) ON DELETE CASCADE
-);
