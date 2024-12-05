@@ -1,4 +1,4 @@
--- Drop existing tables (if exists)
+-- Drop tabel dengan foreign key constraints yang tepat
 IF OBJECT_ID('dbo.TB_ABSENSI', 'U') IS NOT NULL DROP TABLE dbo.TB_ABSENSI;
 IF OBJECT_ID('dbo.TB_ADMIN', 'U') IS NOT NULL DROP TABLE dbo.TB_ADMIN;
 IF OBJECT_ID('dbo.TB_KPS', 'U') IS NOT NULL DROP TABLE dbo.TB_KPS;
@@ -6,7 +6,6 @@ IF OBJECT_ID('dbo.TB_MAHASISWA', 'U') IS NOT NULL DROP TABLE dbo.TB_MAHASISWA;
 IF OBJECT_ID('dbo.TB_PKL', 'U') IS NOT NULL DROP TABLE dbo.TB_PKL;
 IF OBJECT_ID('dbo.TB_PUBLIKASI', 'U') IS NOT NULL DROP TABLE dbo.TB_PUBLIKASI;
 IF OBJECT_ID('dbo.TB_SKKM', 'U') IS NOT NULL DROP TABLE dbo.TB_SKKM;
-IF OBJECT_ID('dbo.TB_SURAT_BEBAS_TANGGUNGAN', 'U') IS NOT NULL DROP TABLE dbo.TB_SURAT_BEBAS_TANGGUNGAN;
 IF OBJECT_ID('dbo.TB_TANGGUNGAN', 'U') IS NOT NULL DROP TABLE dbo.TB_TANGGUNGAN;
 IF OBJECT_ID('dbo.TB_TOEIC', 'U') IS NOT NULL DROP TABLE dbo.TB_TOEIC;
 IF OBJECT_ID('dbo.TB_UKT', 'U') IS NOT NULL DROP TABLE dbo.TB_UKT;
@@ -15,14 +14,12 @@ IF OBJECT_ID('dbo.TB_VERIFIKASI_ADMIN', 'U') IS NOT NULL DROP TABLE dbo.TB_VERIF
 IF OBJECT_ID('dbo.TB_VERIFIKASI_KPS', 'U') IS NOT NULL DROP TABLE dbo.TB_VERIFIKASI_KPS;
 IF OBJECT_ID('dbo.TB_NOTIFIKASI', 'U') IS NOT NULL DROP TABLE dbo.TB_NOTIFIKASI;
 
-
--- Membuat database
-CREATE DATABASE SIBETA_NEW;
+-- Membuat database baru
+CREATE DATABASE SIBETA_NEW_3;
 GO
 
-USE SIBETA_NEW;
+USE SIBETA_NEW_3;
 GO
-
 
 -- Membuat tabel TB_USER
 CREATE TABLE dbo.TB_USER (
@@ -31,7 +28,6 @@ CREATE TABLE dbo.TB_USER (
     password VARCHAR(255) NOT NULL,
     level VARCHAR(50) CHECK (level IN ('mahasiswa', 'admin', 'kps')) NOT NULL
 );
-
 
 -- Membuat tabel TB_MAHASISWA
 CREATE TABLE dbo.TB_MAHASISWA (
@@ -44,7 +40,6 @@ CREATE TABLE dbo.TB_MAHASISWA (
     FOREIGN KEY (user_id) REFERENCES dbo.TB_USER(id)
 );
 
-
 -- Membuat tabel TB_ADMIN
 CREATE TABLE dbo.TB_ADMIN (
     email VARCHAR(100) PRIMARY KEY,
@@ -53,7 +48,6 @@ CREATE TABLE dbo.TB_ADMIN (
     FOREIGN KEY (user_id) REFERENCES dbo.TB_USER(id)
 );
 
-
 -- Membuat tabel TB_KPS
 CREATE TABLE dbo.TB_KPS (
     email VARCHAR(100) PRIMARY KEY,
@@ -61,7 +55,6 @@ CREATE TABLE dbo.TB_KPS (
     user_id INT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES dbo.TB_USER(id)
 );
-
 
 -- Membuat tabel TB_ABSENSI
 CREATE TABLE dbo.TB_ABSENSI (
@@ -73,7 +66,6 @@ CREATE TABLE dbo.TB_ABSENSI (
     FOREIGN KEY (mahasiswa_nim) REFERENCES dbo.TB_MAHASISWA(nim) ON DELETE CASCADE
 );
 
-
 -- Membuat tabel TB_UKT
 CREATE TABLE dbo.TB_UKT (
     id_ukt INT IDENTITY(1,1) PRIMARY KEY,
@@ -81,7 +73,6 @@ CREATE TABLE dbo.TB_UKT (
     status_validasi VARCHAR(50) DEFAULT 'belum mengajukan',
     FOREIGN KEY (mahasiswa_nim) REFERENCES dbo.TB_MAHASISWA(nim) ON DELETE CASCADE
 );
-
 
 -- Membuat tabel TB_PKL
 CREATE TABLE dbo.TB_PKL (
@@ -93,7 +84,6 @@ CREATE TABLE dbo.TB_PKL (
     FOREIGN KEY (mahasiswa_nim) REFERENCES dbo.TB_MAHASISWA(nim) ON DELETE CASCADE
 );
 
-
 -- Membuat tabel TB_TOEIC
 CREATE TABLE dbo.TB_TOEIC (
     id_toeic INT IDENTITY(1,1) PRIMARY KEY,
@@ -103,7 +93,6 @@ CREATE TABLE dbo.TB_TOEIC (
     FOREIGN KEY (mahasiswa_nim) REFERENCES dbo.TB_MAHASISWA(nim) ON DELETE CASCADE
 );
 
-
 -- Membuat tabel TB_SKKM
 CREATE TABLE dbo.TB_SKKM (
     id_skkm INT IDENTITY(1,1) PRIMARY KEY,
@@ -112,7 +101,6 @@ CREATE TABLE dbo.TB_SKKM (
     status_validasi VARCHAR(50) DEFAULT 'belum mengajukan',
     FOREIGN KEY (mahasiswa_nim) REFERENCES dbo.TB_MAHASISWA(nim) ON DELETE CASCADE
 );
-
 
 -- Membuat tabel TB_PUBLIKASI
 CREATE TABLE dbo.TB_PUBLIKASI (
@@ -124,7 +112,6 @@ CREATE TABLE dbo.TB_PUBLIKASI (
     status_validasi VARCHAR(50) DEFAULT 'belum mengajukan',
     FOREIGN KEY (mahasiswa_nim) REFERENCES dbo.TB_MAHASISWA(nim) ON DELETE CASCADE
 );
-
 
 -- Membuat tabel TB_TANGGUNGAN
 CREATE TABLE dbo.TB_TANGGUNGAN (
@@ -148,7 +135,6 @@ CREATE TABLE dbo.TB_TANGGUNGAN (
     FOREIGN KEY (publikasi_id) REFERENCES dbo.TB_PUBLIKASI(id_publikasi) ON DELETE NO ACTION
 );
 
-
 -- Membuat tabel TB_VERIFIKASI_ADMIN
 CREATE TABLE dbo.TB_VERIFIKASI_ADMIN (
     id_verifikasi_admin INT IDENTITY(1,1) PRIMARY KEY,
@@ -161,7 +147,6 @@ CREATE TABLE dbo.TB_VERIFIKASI_ADMIN (
     FOREIGN KEY (mahasiswa_nim) REFERENCES dbo.TB_MAHASISWA(nim) ON DELETE NO ACTION,
     FOREIGN KEY (id_tanggungan) REFERENCES dbo.TB_TANGGUNGAN(id_tanggungan) ON DELETE NO ACTION
 );
-
 
 -- Membuat tabel TB_VERIFIKASI_KPS
 CREATE TABLE dbo.TB_VERIFIKASI_KPS (
@@ -176,33 +161,13 @@ CREATE TABLE dbo.TB_VERIFIKASI_KPS (
     FOREIGN KEY (id_tanggungan) REFERENCES dbo.TB_TANGGUNGAN(id_tanggungan) ON DELETE NO ACTION
 );
 
-
--- Membuat tabel TB_SURAT_BEBAS_TANGGUNGAN
-CREATE TABLE dbo.TB_SURAT_BEBAS_TANGGUNGAN (
-    id_surat INT IDENTITY(1,1) PRIMARY KEY,
-    mahasiswa_nim VARCHAR(15) NOT NULL,
-    tanggungan_id INT NOT NULL,
-    tanggal_surat DATETIME DEFAULT GETDATE(),
-    status_surat VARCHAR(50) DEFAULT 'belum diterbitkan',
-    file_surat VARBINARY(MAX),
-    FOREIGN KEY (mahasiswa_nim) REFERENCES dbo.TB_MAHASISWA(nim) ON DELETE NO ACTION,
-    FOREIGN KEY (tanggungan_id) REFERENCES dbo.TB_TANGGUNGAN(id_tanggungan) ON DELETE NO ACTION
-);
-
-
 -- Membuat tabel TB_NOTIFIKASI
 CREATE TABLE dbo.TB_NOTIFIKASI (
     id_notifikasi INT IDENTITY(1,1) PRIMARY KEY,
-    pengirim_email VARCHAR(100) NOT NULL,
-    penerima_nim VARCHAR(15) NOT NULL,
-    id_tanggungan INT NOT NULL,
-    pesan VARCHAR(255) NOT NULL,
-    status_notifikasi VARCHAR(50) CHECK (status_notifikasi IN ('belum dibaca', 'sudah dibaca')) DEFAULT 'belum dibaca',
+    mahasiswa_nim VARCHAR(15) NOT NULL,
+    pesan TEXT NOT NULL,
     tanggal_notifikasi DATETIME DEFAULT GETDATE(),
-    jenis_pengirim VARCHAR(10) CHECK (jenis_pengirim IN ('admin', 'kps')) NOT NULL,
-    status_tanggungan VARCHAR(50) DEFAULT 'belum diverifikasi',
-    FOREIGN KEY (penerima_nim) REFERENCES dbo.TB_MAHASISWA(nim) ON DELETE NO ACTION,  -- Ubah di sini
-    FOREIGN KEY (id_tanggungan) REFERENCES dbo.TB_TANGGUNGAN(id_tanggungan) ON DELETE NO ACTION  -- Ubah di sini
+    FOREIGN KEY (mahasiswa_nim) REFERENCES dbo.TB_MAHASISWA(nim) ON DELETE CASCADE
 );
 
 
@@ -296,20 +261,20 @@ INSERT INTO dbo.TB_SURAT_BEBAS_TANGGUNGAN (mahasiswa_nim, tanggungan_id, tanggal
 
 -- Menambahkan beberapa contoh notifikasi
 -- Notifikasi dari admin (misalnya ada ketidaksesuaian file)
-INSERT INTO dbo.TB_NOTIFIKASI (pengirim_email, penerima_nim, id_tanggungan, pesan, jenis_pengirim, status_tanggungan) 
+INSERT INTO dbo.TB_NOTIFIKASI (penerima_nim, id_tanggungan, pesan_notifikasi, status_baca) 
 VALUES 
-('adminjti@gmail.com', '19061003', 1, 'Tanggungan absensi Anda belum lengkap. Silakan periksa kembali dokumen yang diunggah.', 'admin', 'permasalahan'),
-('adminjti@gmail.com', '19061004', 2, 'Tanggungan UKT Anda mengalami ketidaksesuaian data. Silakan hubungi admin.', 'admin', 'permasalahan'),
-('adminjti@gmail.com', '19061001', 1, 'Tanggungan PKL Anda berhasil diunggah dan tidak ada masalah.', 'admin', 'diterima');
+('19061003', 1, 'Tanggungan absensi Anda belum lengkap. Silakan periksa kembali dokumen yang diunggah.', 0),
+('19061004', 2, 'Tanggungan UKT Anda mengalami ketidaksesuaian data. Silakan hubungi admin.', 0),
+('19061001', 1, 'Tanggungan PKL Anda berhasil diunggah dan tidak ada masalah.', 0);
 
 
 -- Notifikasi dari KPS setelah verifikasi admin selesai
-INSERT INTO dbo.TB_NOTIFIKASI (pengirim_email, penerima_nim, id_tanggungan, pesan, jenis_pengirim, status_tanggungan) VALUES
-('kpssib@gmail.com', '19061003', 1, 'Tanggungan absensi Anda berhasil diverifikasi oleh admin dan diteruskan ke KPS.', 'kps', 'diterima'),
-('kpssib@gmail.com', '19061004', 2, 'Tanggungan UKT Anda telah berhasil diverifikasi dan disetujui oleh KPS.', 'kps', 'diterima');
+INSERT INTO dbo.TB_NOTIFIKASI (penerima_nim, id_tanggungan, pesan_notifikasi, status_baca) VALUES
+('19061003', 1, 'Tanggungan absensi Anda berhasil diverifikasi oleh admin dan diteruskan ke KPS.', 0),
+('19061004', 2, 'Tanggungan UKT Anda telah berhasil diverifikasi dan disetujui oleh KPS.', 0);
 
 
 -- Notifikasi sukses setelah KPS memverifikasi
-INSERT INTO dbo.TB_NOTIFIKASI (pengirim_email, penerima_nim, id_tanggungan, pesan, jenis_pengirim, status_tanggungan) VALUES
-('kpssib@gmail.com', '19061003', 1, 'Tanggungan absensi Anda berhasil diverifikasi oleh KPS.', 'kps', 'diterima'),
-('kpssib@gmail.com', '19061004', 2, 'Tanggungan UKT Anda berhasil diverifikasi dan diterima oleh KPS.', 'kps', 'diterima');
+INSERT INTO dbo.TB_NOTIFIKASI (penerima_nim, id_tanggungan, pesan_notifikasi, status_baca) VALUES
+('19061003', 1, 'Tanggungan absensi Anda berhasil diverifikasi oleh KPS.', 0),
+('19061004', 2, 'Tanggungan UKT Anda berhasil diverifikasi dan diterima oleh KPS.', 0);
