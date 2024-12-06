@@ -1,33 +1,22 @@
 <?php
-$use_driver = 'sqlsrv'; // mysql atau sqlsrv
-$host = 'LAPTOP-9E916KGJ'; // 'localhost';
-$username = ''; //'sa';
+$use_driver = 'sqlsrv';
+$host = 'LAPTOP-9E916KGJ';
+$username = '';
 $password = '';
-$database = 'sibeta'; // 'master'
+$database = 'SIBETA_NEW';
 $db;
 
-if ($use_driver == 'mysql') {
-    try {
-        $db = new mysqli('localhost', $username, $password, $database);
-        if ($db->connect_error) {
-            die('Connection DB failed: ' . $db->connect_error);
-        }
-    } catch (Exception $e) {
-        die($e->getMessage());
+$credential = [
+    'Database' => $database,
+    'UID' => $username,
+    'PWD' => $password
+];
+try {
+    $db = sqlsrv_connect($host, $credential);
+    if (!$db) {
+        $msg = sqlsrv_errors();
+        die($msg[0]['message']);
     }
-} else if ($use_driver == 'sqlsrv') {
-    $credential = [
-        'Database' => $database,
-        'UID' => $username,
-        'PWD' => $password
-    ];
-    try {
-        $db = sqlsrv_connect($host, $credential);
-        if (!$db) {
-            $msg = sqlsrv_errors();
-            die($msg[0]['message']);
-        }
-    } catch (Exception $e) {
-        die($e->getMessage());
-    }
+} catch (Exception $e) {
+    die($e->getMessage());
 }
