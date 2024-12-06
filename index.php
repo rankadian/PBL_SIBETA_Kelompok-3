@@ -10,7 +10,7 @@
 
   <!-- Favicons -->
   <link href="assets/img/sibetaV3.png" rel="icon">
-  
+
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
