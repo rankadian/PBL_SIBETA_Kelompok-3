@@ -4,7 +4,7 @@
     $host     = 'LAPTOP-Q3PDL8SK'; 
     $username = ''; //'sa'; 
     $password = ''; 
-    $database = 'dasar_web'; 
+    $database = 'SIBETA_NEW_3'; 
     $db; 
  
     
