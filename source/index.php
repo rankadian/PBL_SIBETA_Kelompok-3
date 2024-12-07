@@ -6,14 +6,15 @@ if ($session->get('is_login') !== true) {
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ADMIN SIBETA</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <title>SIBETA</title>
   <!-- Favicons -->
   <link href="../assets/img/sibetaV3.png" rel="icon">
 
@@ -51,9 +52,9 @@ if ($session->get('is_login') !== true) {
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
-      <a href="adminlte/index3.html" class="brand-link">
-        <img src="adminlte/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">AdminLTE 3</span>
+      <a href="index.php" class="brand-link">
+        <img src="../assets/img/sibetaV3.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <span class="brand-text font-weight-light">SIBETA</span>
       </a>
 
       <!-- Sidebar -->

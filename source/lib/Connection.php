@@ -1,5 +1,6 @@
 <?php
 $use_driver = 'sqlsrv';
+
 $host     = 'LAPTOP-9E916KGJ';
 $username = '';
 $password = '';
