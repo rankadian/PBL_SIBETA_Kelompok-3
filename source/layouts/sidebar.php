@@ -6,7 +6,7 @@
                 alt="User Image">
         </div>
         <div class="info">
-            <a href="#" class="d-block">Admin JTI</a>
+            <a href="#" class="d-block">Mahasiswa</a>
         </div>
     </div>
 
@@ -24,7 +24,8 @@ fa-search fa-fw"></i></button></div>
     <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
             data-accordion="false">
-            <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
+            <!-- Add icons to the links using the .nav-icon class 
+            with font-awesome or any other icon font library -->
             <li class="nav-item">
                 <a href="index.php" class="nav-link">
                     <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -37,10 +38,16 @@ fa-search fa-fw"></i></button></div>
                     <p>Kategori Buku</p>
                 </a>
             </li>
-            <li class="nav-item border-bottom">
+            <li class="nav-item ">
                 <a href="index.php?page=buku" class="nav-link">
                     <i class="nav-icon fas fa-book"></i>
                     <p>Buku</p>
+                </a>
+            </li>
+            <li class="nav-item border-bottom"> <!--border bottom buat garis paling akhir -->
+                <a href="index.php?page=Mahasiswa" class="nav-link">
+                    <i class="nav-icon fas fa-users"></i>
+                    <p>surat verifikasi</p>
                 </a>
             </li>
             <li class="nav-item">

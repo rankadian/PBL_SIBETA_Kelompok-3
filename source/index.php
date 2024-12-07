@@ -82,10 +82,19 @@ if ($session->get('is_login') !== true) {
         case 'user':
           include('pages/user.php');
           break;
+        case 'mahasiswa':
+          include('pages/mahasiswa.php');
+          break;
         default:
-          include('pages/404.php');
+          // Cek apakah file 404.php ada
+          if (file_exists('pages/404.php')) {
+            include('pages/404.php');
+          } else {
+            echo 'Halaman 404 tidak ditemukan';
+          }
           break;
       }
+
       ?>
 
       <!-- Main content -->
