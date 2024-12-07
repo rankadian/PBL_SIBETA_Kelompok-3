@@ -38,10 +38,16 @@ data-accordion="false">
                 <p>Kategori Buku</p> 
             </a> 
         </li> 
-        <li class="nav-item border-bottom"> 
+        <li class="nav-item "> 
             <a href="index.php?page=buku" class="nav-link"> 
                 <i class="nav-icon fas fa-book"></i> 
                 <p>Buku</p> 
+            </a> 
+        </li> 
+        <li class="nav-item border-bottom">  <!--border bottom buat garis paling akhir -->
+            <a href="index.php?page=Mahasiswa" class="nav-link"> 
+                <i class="nav-icon fas fa-users"></i> 
+                <p>surat verifikasi</p> 
             </a> 
         </li> 
         <li class="nav-item"> 

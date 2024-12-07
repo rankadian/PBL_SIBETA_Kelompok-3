@@ -23,10 +23,11 @@
   <link rel="stylesheet" href="adminlte/plugins/fontawesome-free/css/all.min.css">
 
   <!-- DataTables --> 
-<link rel="stylesheet" href="adminlte/plugins/datatablesbs4/css/dataTables.bootstrap4.min.css"> 
-  <link rel="stylesheet" href="adminlte/plugins/datatablesresponsive/css/responsive.bootstrap4.min.css"> 
+<!-- <link rel="stylesheet" href="adminlte/plugins/datatablesbs4/css/dataTables.bootstrap4.min.css"> 
+  <link rel="stylesheet" href="adminlte/plugins/datatablesresponsive/css/responsive.bootstrap4.min.css">  -->
   <link rel="stylesheet" href="adminlte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css"> 
- 
+  <link rel="stylesheet" href="../source/adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="../source/adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
 
 
 
@@ -46,9 +47,9 @@
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="adminlte/index3.html" class="brand-link">
-      <img src="adminlte/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">AdminLTE 3</span>
+    <a href=" index.php" class="brand-link">
+      <img src="../assets/img/sibetaV3.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+      <span class="brand-text font-weight-light">SIBETA</span>
     </a>
 
     <!-- Sidebar -->
@@ -76,10 +77,19 @@ switch (strtolower($page)) {
     case 'user':
         include('pages/user.php');
         break;
+    case 'mahasiswa':
+        include('pages/mahasiswa.php');
+        break;
     default:
-        include('pages/404.php');
+        // Cek apakah file 404.php ada
+        if (file_exists('pages/404.php')) {
+            include('pages/404.php');
+        } else {
+            echo 'Halaman 404 tidak ditemukan';
+        }
         break;
 }
+
 ?>
 
     <!-- Main content -->
