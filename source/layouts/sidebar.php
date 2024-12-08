@@ -44,12 +44,25 @@ data-accordion="false">
                 <p>Buku</p> 
             </a> 
         </li> 
-        <li class="nav-item border-bottom">  <!--border bottom buat garis paling akhir -->
-            <a href="index.php?page=Mahasiswa" class="nav-link"> 
-                <i class="nav-icon fas fa-users"></i> 
-                <p>surat verifikasi</p> 
+        <li class="nav-item "> 
+            <a href="index.php?page=buku" class="nav-link"> 
+                <i class="nav-icon fas fa-user  "></i> 
+                <p>Upload Bukti</p> 
             </a> 
         </li> 
+        </li> 
+        <li class="nav-item "> 
+            <a href="index.php?page=buku" class="nav-link"> 
+                <i class="nav-icon fas fa-columns"></i> 
+                <p>Status Validasi</p> 
+            </a> 
+        </li> 
+        <li class="nav-item border-bottom">  <!--border bottom buat garis paling akhir -->
+            <a href="index.php?page=Mahasiswa" class="nav-link"> 
+                <i class="nav-icon fas fa-file"></i>  
+                <p>Surat Verifikasi</p> 
+            </a> 
+        
         <li class="nav-item"> 
             <a href="action/auth.php?act=logout" class="nav-link"> 
                 <i class="nav-icon fas fa-sign-out-alt"></i> 
