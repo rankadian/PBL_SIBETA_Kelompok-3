@@ -32,10 +32,7 @@
                 <li>REQ Surat SKLA *admin bu merry</li>
             </ul>
 
-            <!-- Status Validasi -->
-            <h4>Status Validasi</h4>
-            <p>Status: <strong>Sudah Terverifikasi oleh Admin</strong></p>
-            <a href="#" class="btn btn-info">Download Surat Bebas Tanggungan</a>
+           
         </div>
     </div>
 
