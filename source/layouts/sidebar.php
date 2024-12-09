@@ -47,7 +47,7 @@ data-accordion="false">
             if ($_SESSION['level'] == 'admin') {
             ?>
 
-        <li class="nav-item"> 
+        <!-- <li class="nav-item"> 
             <a href="index.php?page=kategori" class="nav-link"> 
                 <i class="nav-icon fas fa-bookmark"></i> 
                 <p>Kategori Buku</p> 
@@ -58,20 +58,27 @@ data-accordion="false">
                 <i class="nav-icon fas fa-book"></i> 
                 <p>Buku</p> 
             </a> 
-        </li> 
-        <li class="nav-item "> 
+        </li>  -->
+
+        <li class="nav-item ">  <!--border bottom buat garis paling akhir -->
+            <a href="index.php?page=verifikasi" class="nav-link"> 
+                <i class="nav-icon fas fa-file"></i>  
+                <p>Verifikasi Mahasiswa</p> 
+            </a> 
+            </li> 
+        <!-- <li class="nav-item "> 
             <a href="index.php?page=buku" class="nav-link"> 
                 <i class="nav-icon fas fa-user  "></i> 
                 <p>Upload Bukti</p> 
             </a> 
         </li> 
         </li> 
-        <li class="nav-item "> 
+        <li class="nav-item border-bottom "> 
             <a href="index.php?page=buku" class="nav-link"> 
                 <i class="nav-icon fas fa-columns"></i> 
                 <p>Status Validasi</p> 
             </a> 
-        </li> 
+        </li>  -->
        
         <?php
             }
