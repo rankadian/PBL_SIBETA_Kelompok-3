@@ -83,6 +83,10 @@ switch (strtolower($page)) {
         case 'upload':
           include('pages/uploadMhs.php');
           break;    
+
+          case 'download':
+            include('pages/downloadMhs.php');
+            break;    
     default:
         // Cek apakah file 404.php ada
         if (file_exists('pages/404.php')) {
