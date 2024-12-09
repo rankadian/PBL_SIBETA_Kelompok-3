@@ -1,6 +1,4 @@
 <?php
-
-
 // Check if the user is logged in
 if (isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
@@ -96,7 +94,7 @@ data-accordion="false">
             </li> 
 
             <li class="nav-item border-bottom">  <!--border bottom buat garis paling akhir -->
-            <a href="index.php?page=mahasiswa" class="nav-link"> 
+            <a href="index.php?page=" class="nav-link"> 
                 <i class="nav-icon fas fa-file"></i>  
                 <p>Status</p> 
             </a> 
