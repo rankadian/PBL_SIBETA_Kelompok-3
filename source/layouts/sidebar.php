@@ -82,7 +82,7 @@ data-accordion="false">
             ?>
 
             <li class="nav-item ">  <!--border bottom buat garis paling akhir -->
-            <a href="index.php?page=Mahasiswa" class="nav-link"> 
+            <a href="index.php?page=download" class="nav-link"> 
                 <i class="nav-icon fas fa-file"></i>  
                 <p>Download Surat</p> 
             </a> 
