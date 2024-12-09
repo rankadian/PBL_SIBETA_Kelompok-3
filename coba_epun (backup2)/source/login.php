@@ -2,49 +2,49 @@
 include('lib/Session.php');
 include('lib/Connection.php');
 
-// // Ambil data dari form login
-// $inputUsername = $_POST['username'];
-// $inputPassword = $_POST['password'];
+// Ambil data dari form login
+$inputUsername = $_POST['username'];
+$inputPassword = $_POST['password'];
 
-// // cari user berdasarkan username
-// $query = "SELECT * FROM TB_USER WHERE username = ?";
-// $params = [$inputUsername];
-// $stmt = sqlsrv_query($conn, $query, $params);
+// cari user berdasarkan username
+$query = "SELECT * FROM TB_USER WHERE username = ?";
+$params = [$inputUsername];
+$stmt = sqlsrv_query($conn, $query, $params);
 
-// if ($stmt === false) {
-//     die("Query gagal: " . print_r(sqlsrv_errors(), true));
-// }
+if ($stmt === false) {
+    die("Query gagal: " . print_r(sqlsrv_errors(), true));
+}
 
-// $user = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+$user = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
 
-// // Validasi user
-// if ($user) {
-//     // Verif pass
-//     if (password_verify($inputPassword, $user['password'])) {
-//         // session berdasarkan level
-//         $_SESSION['username'] = $user['username'];
-//         $_SESSION['level'] = $user['level'];
-//         $_SESSION['id'] = $user['id'];
+// Validasi user
+if ($user) {
+    // Verif pass
+    if (password_verify($inputPassword, $user['password'])) {
+        // session berdasarkan level
+        $_SESSION['username'] = $user['username'];
+        $_SESSION['level'] = $user['level'];
+        $_SESSION['id'] = $user['id'];
 
-//         // Sesuai role
-//         if ($user['level'] === 'admin') {
-//             $_SESSION['level'] = 'admin';
-//             header("Location: ");
-//         } elseif ($user['level'] === 'mahasiswa') {
-//             $_SESSION['level'] = 'mahasiswa';
-//             header("Location: ../source/pages/mahasiswa.php");
-//         } elseif ($user['level'] === 'kps') {
-//             $_SESSION['level'] = 'kps';
-//             header("Location:");
-//         }
-//     } else echo "Password salah!";
-// } else {
-//     echo "Username tidak ditemukan!";
-// }
+        // Sesuai role
+        if ($user['level'] === 'admin') {
+            $_SESSION['level'] = 'admin';
+            header("Location: ");
+        } elseif ($user['level'] === 'mahasiswa') {
+            $_SESSION['level'] = 'mahasiswa';
+            header("Location: ../source/pages/mahasiswa.php");
+        } elseif ($user['level'] === 'kps') {
+            $_SESSION['level'] = 'kps';
+            header("Location:");
+        }
+    } else echo "Password salah!";
+} else {
+    echo "Username tidak ditemukan!";
+}
 
-// // Tutup koneksi
-// sqlsrv_free_stmt($stmt);
-// sqlsrv_close($conn);
+// Tutup koneksi
+sqlsrv_free_stmt($stmt);
+sqlsrv_close($conn);
 
 $session = new Session();
 
