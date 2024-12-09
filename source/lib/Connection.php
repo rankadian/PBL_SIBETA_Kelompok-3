@@ -1,10 +1,10 @@
 <?php  
     $use_driver = 'sqlsrv'; // mysql atau sqlsrv 
  
-    $host     = 'LAPTOP-Q3PDL8SK'; 
+    $host     = 'DESKTOP-QAULIDP'; 
     $username = ''; //'sa'; 
     $password = ''; 
-    $database = 'SIBETA_NEW_3'; 
+    $database = 'sibetaAdmin'; 
     $db; 
  
     

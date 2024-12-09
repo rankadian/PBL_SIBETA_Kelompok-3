@@ -98,20 +98,13 @@ class VerifikasiMahasiswaModel extends Model
     // Update the verification status (for approve, pending, or rejected)
     public function updateStatus($id, $status)
     {
-        // Ensure that valid status values are received
-        $validStatuses = ['Terverifikasi', 'Menunggu Verifikasi', 'Ditolak'];
-        if (in_array($status, $validStatuses)) {
-            $query = "UPDATE {$this->table} SET status_validasi = ? WHERE id_verifikasi_admin = ?";
-            $params = [$status, $id];
+        $query = "UPDATE {$this->table} SET status_validasi = ? WHERE id_verifikasi_admin = ?";
+        $params = [$status, $id];
 
-            // Execute query with parameters
-            $stmt = sqlsrv_query($this->db, $query, $params);
-            if (!$stmt) {
-                die(print_r(sqlsrv_errors(), true));
-            }
-        } else {
-            // If status is invalid, handle appropriately (maybe log an error or return false)
-            return false;
+        // Execute query with parameters
+        $stmt = sqlsrv_query($this->db, $query, $params);
+        if (!$stmt) {
+            die(print_r(sqlsrv_errors(), true));
         }
     }
 }
