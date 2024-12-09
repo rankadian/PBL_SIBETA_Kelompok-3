@@ -1,5 +1,6 @@
 <?php
-include('Model.php');
+include_once('Model.php');
+include_once('Database.php');
 class UserModel extends Model
 {
     protected $db;
