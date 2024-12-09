@@ -4,6 +4,7 @@ $session = new Session();
 if ($session->get('is_login') !== true) {
   header('Location: login.php');
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -25,12 +26,6 @@ if ($session->get('is_login') !== true) {
   <link rel="stylesheet" href="adminlte/plugins/fontawesome-free/css/all.min.css">
 
   <!-- DataTables -->
-  <!-- <link rel="stylesheet" href="adminlte/plugins/datatablesbs4/css/dataTables.bootstrap4.min.css"> 
-  <link rel="stylesheet" href="adminlte/plugins/datatablesresponsive/css/responsive.bootstrap4.min.css"> 
-  <link rel="stylesheet" href="adminlte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">  -->
-
-  <!-- yang atas salah path lokasi untuk file datatables dan responsive-nya -->
-
   <link rel="stylesheet" href="../source/adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
   <link rel="stylesheet" href="../source/adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
   <link rel="stylesheet" href="adminlte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
@@ -86,7 +81,6 @@ if ($session->get('is_login') !== true) {
           include('pages/mahasiswa.php');
           break;
         default:
-          // Cek apakah file 404.php ada
           if (file_exists('pages/404.php')) {
             include('pages/404.php');
           } else {
@@ -94,7 +88,6 @@ if ($session->get('is_login') !== true) {
           }
           break;
       }
-
       ?>
 
       <!-- Main content -->
@@ -141,6 +134,32 @@ if ($session->get('is_login') !== true) {
     <!-- /.control-sidebar -->
   </div>
   <!-- ./wrapper -->
+
+  <!-- Script untuk notifikasi -->
+  <script>
+    function updateNotifications() {
+      const notifications = <?php echo json_encode($notifications); ?>;
+      const notificationCount = notifications.length;
+      $('#notification-count').text(notificationCount);
+      $('#notification-header').text(notificationCount + ' Notifications');
+
+      const dropdownMenu = $('.dropdown-menu');
+      dropdownMenu.find('.dropdown-item').not('.dropdown-header').remove();
+
+      notifications.forEach(function(notification) {
+        const notificationItem = `
+          <a href="#" class="dropdown-item">
+            <i class="fas fa-bell mr-2"></i> ${notification.message}
+            <span class="float-right text-muted text-sm">${notification.timestamp}</span>
+          </a>
+        `;
+        dropdownMenu.append(notificationItem);
+      });
+    }
+
+    // Panggil fungsi untuk pertama kali saat halaman dimuat
+    updateNotifications();
+  </script>
 
   <!-- Bootstrap 4 -->
   <script src="adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>

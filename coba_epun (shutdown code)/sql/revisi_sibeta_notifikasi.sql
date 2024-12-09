@@ -203,12 +203,12 @@ CREATE TABLE dbo.TB_NOTIFIKASI (
 
 -- Masukkan data ke tabel TB_USER
 INSERT INTO dbo.TB_USER (username, password, level) VALUES
-('admin01', 'adminpass01', 'admin'),
-('kps01', 'kpspass01', 'kps'),
-('mahasiswa001', 'mahasiswapass001', 'mahasiswa'),
-('mahasiswa002', 'mahasiswapass002', 'mahasiswa'),
-('mahasiswa003', 'mahasiswapass003', 'mahasiswa'),
-('mahasiswa004', 'mahasiswapass004', 'mahasiswa');
+('admin01', '$2y$10$8I.NpkUK.jfchLfydbQLweBYvuObNj3Oie3IXIweld4jfFunNcVwq', 'admin'), --adminpass01
+('kps01', '$2y$10$U.fDC1K7Oh84PGZe6jmoQ.Vc4.9/qpHjrAxPbyi5CZDNk.3DIe9ZW', 'kps'), --kpspass01
+('mahasiswa001', '$2y$10$dFSmGNu6nanQ2fkQnIzhTemynRMCbE.SCBQuaWSzRfKz.O8b9SGCm', 'mahasiswa'), --mahasiswapass001
+('mahasiswa002', '$2y$10$EIg.hARNDY1AkPcJC7TgLuay4QNTNDHATJjiFfc.3k3QYGOHlR1Eu', 'mahasiswa'), --mahasiswapass002
+('mahasiswa003', '$2y$10$arb27gHYiqVXI7b9XaBgruFkdjA8G9skXDZpHvsVtARR/76ljFVNm', 'mahasiswa'), --mahasiswapass003
+('mahasiswa004', '$2y$10$k0fZSWnAuYfYj74OulrI4.dUXOlRahCOcVb/2UBZuLbxmkd/NUUTq', 'mahasiswa'); --mahasiswapass004
 
 
 -- Masukkan data ke tabel TB_MAHASISWA

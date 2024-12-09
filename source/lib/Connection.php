@@ -1,6 +1,8 @@
 <?php
-$use_driver = 'sqlsrv';
+// class Connection{
 
+// }
+$use_driver = 'sqlsrv';
 $host     = 'LAPTOP-9E916KGJ';
 $username = '';
 $password = '';

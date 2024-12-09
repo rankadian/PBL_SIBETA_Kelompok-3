@@ -37,7 +37,7 @@ if ($session->get('is_login') === true) {
             $status = $session->getFlash('status');
             if ($status === false) {
                 $message = $session->getFlash('message');
-                echo '<div class="alert alert-warning">' . $message . 
+                echo '<div class="alert alert-warning">' . $message .
                     '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
             }
             ?>
@@ -49,6 +49,17 @@ if ($session->get('is_login') === true) {
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
                     <input type="password" class="form-control" name="password" id="password" placeholder="Enter your password" required>
+                </div>
+
+                <!-- Dropdown for User Role -->
+                <div class="mb-3">
+                    <label for="role" class="form-label">Select Role</label>
+                    <select name="role" id="role" class="form-control" required>
+                        <option value="" disabled selected>Select your role</option>
+                        <option value="admin">Admin</option>
+                        <option value="mahasiswa">Mahasiswa</option>
+                        <option value="kps">KPS</option>
+                    </select>
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -85,6 +96,9 @@ if ($session->get('is_login') === true) {
                         required: true,
                         minlength: 5,
                         maxlength: 255
+                    },
+                    role: {
+                        required: true
                     }
                 },
                 errorElement: 'span',
