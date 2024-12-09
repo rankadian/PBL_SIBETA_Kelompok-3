@@ -85,8 +85,14 @@ if ($session->get('is_login') !== true) {
         case 'upload':
           include('pages/uploadMhs.php');
           break;
+        case 'download':
+          include('pages/downloadMhs.php');
+          break;
         case 'status':
           include('pages/statusMhs.php');
+          break;
+        case 'status2':
+          include('pages/statusAdm.php');
           break;
         default:
           // Cek apakah file 404.php ada

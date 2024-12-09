@@ -15,29 +15,7 @@
         </div>
     </div>
 
-    <!-- Layanan Bebas Tanggungan Section -->
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Layanan Bebas Tanggungan</h3>
-        </div>
-        <div class="card-body">
-            <h4>Request Verifikasi</h4>
-            <ul>
-                <li>REQ Surat Publikasi *admin prodi 
-                    <!-- Button to Download All Files -->
-                    <button class="btn btn-sm btn-info" onclick="downloadAllFiles()">Download Semua File</button>
-                </li>
-                <li>REQ Surat Bebas Kompen *admin prodi</li>
-                <li>REQ Surat Validasi PKL *admin ruang BACA</li>
-                <li>REQ Surat SKLA *admin bu merry</li>
-            </ul>
 
-            <!-- Status Validasi -->
-            <h4>Status Validasi</h4>
-            <p>Status: <strong>Sudah Terverifikasi oleh Admin</strong></p>
-            <a href="#" class="btn btn-info">Download Surat Bebas Tanggungan</a>
-        </div>
-    </div>
 
     <!-- File Upload Section -->
     <div class="card">
@@ -54,7 +32,7 @@
                     <button type="button" class="btn btn-sm btn-secondary" onclick="saveFile('laporan_tugas_akhir')">Save</button>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
-                
+
                 <!-- Upload Program/Aplikasi (ZIP/RAR) -->
                 <div class="form-group">
                     <label>Upload Program/Aplikasi (ZIP/RAR)</label>

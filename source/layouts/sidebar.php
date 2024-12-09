@@ -1,6 +1,4 @@
 <?php
-
-
 // Check if the user is logged in
 if (isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
@@ -67,7 +65,7 @@ fa-search fa-fw"></i></button></div>
                 </li>
                 </li>
                 <li class="nav-item ">
-                    <a href="index.php?page=buku" class="nav-link">
+                    <a href="index.php?page=status2" class="nav-link">
                         <i class="nav-icon fas fa-columns"></i>
                         <p>Status Validasi</p>
                     </a>
@@ -82,7 +80,7 @@ fa-search fa-fw"></i></button></div>
             ?>
 
                 <li class="nav-item "> <!--border bottom buat garis paling akhir -->
-                    <a href="index.php?page=Mahasiswa" class="nav-link">
+                    <a href="index.php?page=download" class="nav-link">
                         <i class="nav-icon fas fa-file"></i>
                         <p>Download Surat</p>
                     </a>
