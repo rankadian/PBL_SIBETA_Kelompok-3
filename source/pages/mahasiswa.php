@@ -14,27 +14,6 @@
             </div>
         </div>
     </div>
-    <!-- Info table per semester -->
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Informasi Per Semester dan Tanggungannya</h3>
-        </div>
-        <div class="card-body">
-            <table class="table table-sm table-bordered table-striped" id="semester-table">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Semester</th>
-                        <th>Tanggungan</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Dynamic table content will be injected here -->
-                </tbody>
-            </table>
-        </div>
-    </div>
 
     <!-- Layanan Bebas Tanggungan -->
     <div class="card">
@@ -44,7 +23,10 @@
         <div class="card-body">
             <h4>Request Verifikasi</h4>
             <ul>
-                <li>REQ Surat Publikasi *admin prodi <button class="btn btn-sm btn-info" onclick="downloadCart()">Download Cart</button></li>
+                <li>REQ Surat Publikasi *admin prodi 
+                    <!-- Tombol Download Semua File -->
+                    <button class="btn btn-sm btn-info" onclick="downloadAllFiles()">Download Semua File</button>
+                </li>
                 <li>REQ Surat Bebas Kompen *admin prodi</li>
                 <li>REQ Surat Validasi PKL *admin ruang BACA</li>
                 <li>REQ Surat SKLA *admin bu merry</li>
@@ -114,10 +96,8 @@
         alert('Cart downloaded!');
     }
 
-    // Initialize DataTable for semester info
-    $(document).ready(function() {
-        $('#semester-table').DataTable({
-            ajax: 'MahasiswaAction.php?act=load', // Data loading from server
-        });
-    });
+    // Fungsi untuk mengunduh seluruh file dalam folder sebagai ZIP
+    function downloadAllFiles() {
+        window.location.href = 'downloadAllFiles.php'; // Arahkan ke skrip PHP untuk mengunduh ZIP
+    }
 </script>

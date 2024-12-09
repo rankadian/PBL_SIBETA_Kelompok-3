@@ -1,12 +1,22 @@
+<?php
+
+
+// Check if the user is logged in
+if (isset($_SESSION['username'])) {
+    $username = $_SESSION['username'];
+} else {
+    $username = ''; // Default value if not logged in
+}
+?>
 <div class="sidebar"> 
     <!-- Sidebar user (optional) --> 
     <div class="user-panel mt-3 pb-3 mb-3 d-flex"> 
-        <div class="image"> 
+        <!-- <div class="image"> 
             <img src="adminlte/dist/img/user2-160x160.jpg" class="img-circle elevation-2" 
 alt="User Image"> 
-        </div> 
+        </div>  -->
         <div class="info"> 
-            <a href="#" class="d-block">Alexander Pierce</a> 
+            <a href="#" class="d-block">Login Sebagai : <?php echo htmlspecialchars($username)?></a> 
         </div> 
     </div> 
  
@@ -32,6 +42,11 @@ data-accordion="false">
                 <p>Dashboard</p> 
             </a> 
         </li> 
+        
+        <?php
+            if ($_SESSION['level'] == 'admin') {
+            ?>
+
         <li class="nav-item"> 
             <a href="index.php?page=kategori" class="nav-link"> 
                 <i class="nav-icon fas fa-bookmark"></i> 
@@ -57,18 +72,32 @@ data-accordion="false">
                 <p>Status Validasi</p> 
             </a> 
         </li> 
-        <li class="nav-item border-bottom">  <!--border bottom buat garis paling akhir -->
+       
+        <?php
+            }
+            ?>
+
+            <?php
+            if ($_SESSION['level'] == 'mahasiswa') {
+            ?>
+            <li class="nav-item border-bottom">  <!--border bottom buat garis paling akhir -->
             <a href="index.php?page=Mahasiswa" class="nav-link"> 
                 <i class="nav-icon fas fa-file"></i>  
                 <p>Surat Verifikasi</p> 
             </a> 
-        
-        <li class="nav-item"> 
+            </li> 
+            <?php
+            }
+            ?>
+
+
+            <li class="nav-item"> 
             <a href="action/auth.php?act=logout" class="nav-link"> 
-                <i class="nav-icon fas fa-sign-out-alt"></i> 
-                <p>Logout</p> 
+            <i class="nav-icon fas fa-sign-out-alt"></i> 
+            <p>Logout</p> 
             </a> 
         </li> 
+
     </ul> 
     </nav> 
     <!-- /.sidebar-menu --> 
