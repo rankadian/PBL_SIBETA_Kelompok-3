@@ -32,18 +32,6 @@ fa-search fa-fw"></i></button></div>
                     <p>Dashboard</p>
                 </a>
             </li>
-            <li class="nav-item">
-                <a href="index.php?page=kategori" class="nav-link">
-                    <i class="nav-icon fas fa-bookmark"></i>
-                    <p>Kategori Buku</p>
-                </a>
-            </li>
-            <li class="nav-item ">
-                <a href="index.php?page=buku" class="nav-link">
-                    <i class="nav-icon fas fa-book"></i>
-                    <p>Buku</p>
-                </a>
-            </li>
             <li class="nav-item ">
                 <a href="index.php?page=buku" class="nav-link">
                     <i class="nav-icon fas fa-user  "></i>
