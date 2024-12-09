@@ -96,17 +96,6 @@ if ($session->get('is_login') === true) {
                     <input type="password" class="form-control" name="password" id="password" placeholder="Enter your password" required>
                 </div>
 
-                <!-- Dropdown for User Role -->
-                <div class="mb-3">
-                    <label for="role" class="form-label">Select Role</label>
-                    <select name="role" id="role" class="form-control" required>
-                        <option value="" disabled selected>Select your role</option>
-                        <option value="admin">Admin</option>
-                        <option value="mahasiswa">Mahasiswa</option>
-                        <option value="kps">KPS</option>
-                    </select>
-                </div>
-
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" id="remember" name="remember">
