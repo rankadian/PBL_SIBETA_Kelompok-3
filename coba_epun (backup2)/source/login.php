@@ -1,50 +1,5 @@
 <?php
 include('lib/Session.php');
-include('lib/Connection.php');
-
-// Ambil data dari form login
-$inputUsername = $_POST['username'];
-$inputPassword = $_POST['password'];
-
-// cari user berdasarkan username
-$query = "SELECT * FROM TB_USER WHERE username = ?";
-$params = [$inputUsername];
-$stmt = sqlsrv_query($conn, $query, $params);
-
-if ($stmt === false) {
-    die("Query gagal: " . print_r(sqlsrv_errors(), true));
-}
-
-$user = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
-
-// Validasi user
-if ($user) {
-    // Verif pass
-    if (password_verify($inputPassword, $user['password'])) {
-        // session berdasarkan level
-        $_SESSION['username'] = $user['username'];
-        $_SESSION['level'] = $user['level'];
-        $_SESSION['id'] = $user['id'];
-
-        // Sesuai role
-        if ($user['level'] === 'admin') {
-            $_SESSION['level'] = 'admin';
-            header("Location: "); //pages admin
-        } elseif ($user['level'] === 'mahasiswa') {
-            $_SESSION['level'] = 'mahasiswa';
-            header("Location: ../source/pages/mahasiswa.php");
-        } elseif ($user['level'] === 'kps') {
-            $_SESSION['level'] = 'kps';
-            header("Location:");
-        }
-    } else echo "Password salah!";
-} else {
-    echo "Username tidak ditemukan!";
-}
-
-// Tutup koneksi
-sqlsrv_free_stmt($stmt);
-sqlsrv_close($conn);
 
 $session = new Session();
 
@@ -86,24 +41,20 @@ if ($session->get('is_login') === true) {
                     '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
             }
             ?>
-            <form action="action/auth.php?act=login" method="post" id="form-login">
-                <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" name="username" id="username" placeholder="Enter your username" required>
+            <form action="../source/loginController.php" method="post">
+                <!-- <img src="assets/img/brand.png"> -->
+                <p>Login to access your account</p>
+                <div class="alert alert-danger" role="alert">
+                    Masukkan username dan password<br>
+                    (Menggunakan NIM sebagai username)
                 </div>
                 <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" name="password" id="password" placeholder="Enter your password" required>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
                 </div>
-
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="remember" name="remember">
-                        <label for="remember" class="form-check-label">Remember Me</label>
-                    </div>
+                <div class="mb-3">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
                 </div>
-
-                <button type="submit" class="btn btn-primary w-100" style="background-color:#1b156a; border-color:#1b156a;">Sign In</button>
+                <button type="submit" class="btn btn-primary">Login</button>
             </form>
         </div>
     </div>

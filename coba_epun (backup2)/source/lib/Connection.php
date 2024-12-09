@@ -2,10 +2,10 @@
 class Connection
 {
     private $db;
-    private $host = 'LAPTOP-9E916KGJ'; // Nama host atau IP server
-    private $username = ''; // Username database Anda
-    private $password = ''; // Password database Anda
-    private $database = 'SIBETA_NEW_3'; // Nama database
+    private $host = 'LAPTOP-9E916KGJ';
+    private $username = '';
+    private $password = '';
+    private $database = 'SIBETA_NEW_3';
 
     // Konstruktor untuk membuat koneksi database
     public function __construct()
