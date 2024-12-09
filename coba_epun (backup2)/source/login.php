@@ -29,7 +29,7 @@ if ($user) {
         // Sesuai role
         if ($user['level'] === 'admin') {
             $_SESSION['level'] = 'admin';
-            header("Location: ");
+            header("Location: "); //pages admin
         } elseif ($user['level'] === 'mahasiswa') {
             $_SESSION['level'] = 'mahasiswa';
             header("Location: ../source/pages/mahasiswa.php");
