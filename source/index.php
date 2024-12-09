@@ -80,6 +80,9 @@ switch (strtolower($page)) {
     case 'mahasiswa':
         include('pages/mahasiswa.php');
         break;
+        case 'upload':
+          include('pages/uploadMhs.php');
+          break;    
     default:
         // Cek apakah file 404.php ada
         if (file_exists('pages/404.php')) {

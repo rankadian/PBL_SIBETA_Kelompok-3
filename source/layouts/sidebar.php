@@ -80,12 +80,28 @@ data-accordion="false">
             <?php
             if ($_SESSION['level'] == 'mahasiswa') {
             ?>
-            <li class="nav-item border-bottom">  <!--border bottom buat garis paling akhir -->
+
+            <li class="nav-item ">  <!--border bottom buat garis paling akhir -->
             <a href="index.php?page=Mahasiswa" class="nav-link"> 
                 <i class="nav-icon fas fa-file"></i>  
-                <p>Surat Verifikasi</p> 
+                <p>Download Surat</p> 
             </a> 
             </li> 
+
+            <li class="nav-item ">  <!--border bottom buat garis paling akhir -->
+            <a href="index.php?page=upload" class="nav-link"> 
+                <i class="nav-icon fas fa-file"></i>  
+                <p>Upload Surat</p> 
+            </a> 
+            </li> 
+
+            <li class="nav-item border-bottom">  <!--border bottom buat garis paling akhir -->
+            <a href="index.php?page=mahasiswa" class="nav-link"> 
+                <i class="nav-icon fas fa-file"></i>  
+                <p>Status</p> 
+            </a> 
+            </li> 
+
             <?php
             }
             ?>
