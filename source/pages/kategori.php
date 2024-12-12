@@ -92,8 +92,7 @@ dismiss="modal">Batal</button>
             success: function(response){ 
                 var data = JSON.parse(response); 
                 $('#form-data').modal('show'); 
-                $('#form-tambah').attr('action', 
-'action/kategoriAction.php?act=update&id='+id); 
+                $('#form-tambah').attr('action', 'action/kategoriAction.php?act=update&id='+id); 
                 $('#kategori_kode').val(data.kategori_kode); 
                 $('#kategori_nama').val(data.kategori_nama);
             } 

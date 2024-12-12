@@ -15,16 +15,14 @@ class KategoriModel extends Model
     {
         if ($this->driver == 'mysql') {
             // prepare statement untuk query insert
-            $query = $this->db->prepare("insert into {$this->table} (kategori_kode,
-kategori_nama) values(?,?)");
+            $query = $this->db->prepare("insert into {$this->table} (kategori_kode,kategori_nama) values(?,?)");
             // binding parameter ke query, "s" berarti string, "ss" berarti dua string
             $query->bind_param('ss', $data['kategori_kode'], $data['kategori_nama']);
             // eksekusi query untuk menyimpan ke database
             $query->execute();
         } else {
             // eksekusi query untuk menyimpan ke database
-            sqlsrv_query($this->db, "insert into {$this->table} (kategori_kode,
-kategori_nama) values(?,?)", array($data['kategori_kode'], $data['kategori_nama']));
+            sqlsrv_query($this->db, "insert into {$this->table} (kategori_kode,kategori_nama) values(?,?)", array($data['kategori_kode'], $data['kategori_nama']));
         }
     }
     public function getData()

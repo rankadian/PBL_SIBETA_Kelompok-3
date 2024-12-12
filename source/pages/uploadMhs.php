@@ -69,23 +69,5 @@
 </section>
 
 <script>
-    // Function to handle saving files
-    function saveFile(fileId) {
-        const file = document.getElementById(fileId).files[0];
-        if (file) {
-            alert('File saved: ' + file.name);
-        } else {
-            alert('No file selected!');
-        }
-    }
-
-    // Function for Downloading All Files (ZIP)
-    function downloadAllFiles() {
-        window.location.href = 'downloadAllFiles.php'; // Redirect to PHP script to download ZIP
-    }
-
-    // Function to Download Single File (for example, 'Surat Bebas Tanggungan')
-    function downloadSingleFile(fileUrl) {
-        window.location.href = fileUrl; // Redirect to the file download URL
-    }
+    
 </script>

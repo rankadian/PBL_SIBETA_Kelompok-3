@@ -22,10 +22,8 @@ if($act == 'load'){
             $i, 
             $row['kategori_kode'], 
             $row['kategori_nama'], 
-            '<button class="btn btn-sm btn-warning" 
-onclick="editData('.$row['kategori_id'].')"><i class="fa fa-edit"></i></button>  
-             <button class="btn btn-sm btn-danger" 
-onclick="deleteData('.$row['kategori_id'].')"><i class="fa fa-trash"></i></button>' 
+            '<button class="btn btn-sm btn-warning" onclick="editData('.$row['kategori_id'].')"><i class="fa fa-edit"></i></button>  
+             <button class="btn btn-sm btn-danger" onclick="deleteData('.$row['kategori_id'].')"><i class="fa fa-trash"></i></button>' 
         ]; 
         $i++; 
     } 

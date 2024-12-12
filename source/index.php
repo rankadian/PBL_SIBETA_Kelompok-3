@@ -68,7 +68,7 @@ if ($session->get('is_login') !== true) {
 
       switch (strtolower($page)) {
         case 'dashboard':
-          include('pages/dashboard.php');
+          include('pages/Tanggungan.php');
           break;
         case 'buku':
           include('pages/buku.php');
@@ -83,7 +83,7 @@ if ($session->get('is_login') !== true) {
           include('pages/mahasiswa.php');
           break;
         case 'upload':
-          include('pages/uploadMhs.php');
+          include('pages/upload.php');
           break;
         case 'download':
           include('pages/downloadMhs.php');
