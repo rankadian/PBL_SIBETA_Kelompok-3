@@ -1,0 +1,52 @@
+Array
+(
+    [laporan_tugas_akhir] => Array
+        (
+            [name] => Untitled.pdf
+            [full_path] => Untitled.pdf
+            [type] => application/pdf
+            [tmp_name] => C:\Users\risky\AppData\Local\Temp\php3B1E.tmp
+            [error] => 0
+            [size] => 287149
+        )
+
+)
+Array
+(
+    [IDSurat] => 123
+)
+Array
+(
+)
+Array
+(
+)
+Array
+(
+    [laporan_tugas_akhir] => Array
+        (
+            [name] => Untitled.pdf
+            [full_path] => Untitled.pdf
+            [type] => application/pdf
+            [tmp_name] => C:\Users\risky\AppData\Local\Temp\phpCEC0.tmp
+            [error] => 0
+            [size] => 287149
+        )
+
+)
+Array
+(
+    [IDSurat] => 123
+)
+Array
+(
+)
+Array
+(
+)
+Array
+(
+)
+Array
+(
+)

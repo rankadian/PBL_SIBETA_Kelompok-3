@@ -1,0 +1,73 @@
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <!-- Dashboard Header -->
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Beranda</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Beranda</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+   
+
+    <!-- File Upload Section -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Form Upload Bukti Validasi</h3>
+        </div>
+        <div class="card-body">
+            <h4>Upload Bukti Laporan</h4>
+            <form id="uploadForm" action="uploadAction.php" method="post" enctype="multipart/form-data">
+                <!-- Upload Laporan Tugas Akhir -->
+                <div class="form-group">
+                    <label>Upload Laporan Tugas Akhir</label>
+                    <input type="file" class="form-control" name="laporan_tugas_akhir" id="laporan_tugas_akhir">
+                    <button type="button" class="btn btn-sm btn-secondary" onclick="saveFile('laporan_tugas_akhir')">Save</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+                
+                <!-- Upload Program/Aplikasi (ZIP/RAR) -->
+                <div class="form-group">
+                    <label>Upload Program/Aplikasi (ZIP/RAR)</label>
+                    <input type="file" class="form-control" name="program_aplikasi" id="program_aplikasi">
+                    <button type="button" class="btn btn-sm btn-secondary" onclick="saveFile('program_aplikasi')">Save</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for File Upload -->
+    <div class="modal fade" id="form-upload" style="display: none;" aria-hidden="true">
+        <form action="uploadAction.php?act=save" method="post" id="form-upload-data">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Upload Form</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>File</label>
+                            <input type="file" class="form-control" name="upload_file" id="upload_file">
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<script>
+    
+</script>
