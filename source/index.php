@@ -88,6 +88,17 @@ if ($session->get('is_login') !== true) {
         case 'download':
           include('pages/downloadMhs.php');
           break;
+          case 'status2':
+            include('pages/verifikasiAdmin.php');
+            break;
+
+            case 'status3':
+              include('pages/statusMhs.php');
+              break;
+
+              case 'tambah1':
+                include('pages/addMahasiswa.php');
+                break;
         default:
           // Cek apakah file 404.php ada
           if (file_exists('pages/404.php')) {
@@ -104,7 +115,7 @@ if ($session->get('is_login') !== true) {
       <section class="content">
 
         <!-- Default box -->
-        <div class="card">
+        <!-- <div class="card">
           <div class="card-header">
             <h3 class="card-title">Title</h3>
 
@@ -116,18 +127,18 @@ if ($session->get('is_login') !== true) {
                 <i class="fas fa-times"></i>
               </button>
             </div>
-          </div>
-          <div class="card-body">
+          </div> -->
+          <!-- <div class="card-body">
             Selamat Datang Administrator. Anda login sebagai admin.
             <br>
             Start creating your amazing application!
-          </div>
+          </div> -->
           <!-- /.card-body -->
-          <div class="card-footer">
+          <!-- <div class="card-footer">
             Footer
-          </div>
+          </div> -->
           <!-- /.card-footer-->
-        </div>
+        <!-- </div> -->
         <!-- /.card -->
 
       </section>

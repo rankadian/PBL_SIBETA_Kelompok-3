@@ -1,3 +1,12 @@
+<?php
+// Check if the user is logged in
+if (isset($_SESSION['username'])) {
+    $username = $_SESSION['username'];
+} else {
+    $username = ''; // Default value if not logged in
+}
+?>
+
 <section class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
@@ -32,7 +41,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                    <p>Selamat Datang <strong>Administrator</strong>. Anda login sebagai <strong>admin</strong>.</p>
+                    <p>Selamat Datang <strong><?php echo htmlspecialchars($username)?></strong>. Anda login sebagai :  <strong><?php echo htmlspecialchars($username)?></strong>.</p>
                     </div>
                     <!-- /.card-body -->
                     <div class="card-footer">

@@ -13,20 +13,8 @@ class BukuModel extends Model
     }
     public function insertData($data)
     {
-        if ($this->driver == 'mysql') {
-            // prepare statement untuk query insert
-            $query = $this->db->prepare("insert into {$this->table} (kategori_id, buku_kode, buku_nama, jumlah, deskripsi, gambar) values(?, ?, ?, ?, ?, ?)");
-            // binding parameter ke query, "s" berarti string, "ss" berarti dua string
-            $query->bind_param('ss',   
-             $data['kategori_id'],
-            $data['buku_kode'],
-            $data['buku_nama'],
-            $data['jumlah'],
-            $data['deskripsi'],
-            $data['gambar']);
-            // eksekusi query untuk menyimpan ke database
-            $query->execute();
-        } else {
+        
+        
             // eksekusi query untuk menyimpan ke database
             sqlsrv_query($this->db, "insert into {$this->table} (kategori_id, buku_kode, buku_nama, jumlah, deskripsi, gambar) values(?, ?, ?, ?, ?, ?)", array(
                 $data['kategori_id'],
@@ -37,7 +25,7 @@ class BukuModel extends Model
                 $data['gambar']
             ));
         }
-    }
+    
     public function getData()
     {
         if ($this->driver == 'mysql') {

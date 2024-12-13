@@ -45,32 +45,23 @@ data-accordion="false">
             if ($_SESSION['level'] == 'admin') {
             ?>
 
-        <li class="nav-item"> 
-            <a href="index.php?page=kategori" class="nav-link"> 
-                <i class="nav-icon fas fa-bookmark"></i> 
-                <p>Kategori Buku</p> 
+<li class="nav-item "> 
+            <a href="index.php?page=tambah1" class="nav-link"> 
+                <i class="nav-icon fas fa-chart-pie
+"></i> 
+                <p>Tambah Mahasiswa</p> 
             </a> 
-        </li> 
-        <li class="nav-item "> 
-            <a href="index.php?page=buku" class="nav-link"> 
-                <i class="nav-icon fas fa-book"></i> 
-                <p>Buku</p> 
-            </a> 
-        </li> 
-        <li class="nav-item "> 
-            <a href="index.php?page=buku" class="nav-link"> 
-                <i class="nav-icon fas fa-user  "></i> 
-                <p>Upload Bukti</p> 
-            </a> 
-        </li> 
-        </li> 
-        <li class="nav-item "> 
-            <a href="index.php?page=buku" class="nav-link"> 
+        </li>
+
+        <li class="nav-item border-bottom"> 
+            <a href="index.php?page=status2" class="nav-link"> 
                 <i class="nav-icon fas fa-columns"></i> 
-                <p>Status Validasi</p> 
+                <p>Verifikasi Mahasiswa</p> 
             </a> 
         </li> 
        
+
+        
         <?php
             }
             ?>
@@ -88,13 +79,13 @@ data-accordion="false">
 
             <li class="nav-item ">  <!--border bottom buat garis paling akhir -->
             <a href="index.php?page=upload" class="nav-link"> 
-                <i class="nav-icon fas fa-file"></i>  
+                <i class="nav-icon fas fa-columns"></i>  
                 <p>Upload Surat</p> 
             </a> 
             </li> 
 
             <li class="nav-item border-bottom">  <!--border bottom buat garis paling akhir -->
-            <a href="index.php?page=" class="nav-link"> 
+            <a href="index.php?page=status3" class="nav-link"> 
                 <i class="nav-icon fas fa-file"></i>  
                 <p>Status</p> 
             </a> 
