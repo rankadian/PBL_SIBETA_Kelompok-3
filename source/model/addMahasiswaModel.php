@@ -35,5 +35,7 @@ class addMahasiswaModel  {
             return false; // Error inserting data
         }
     }
+
+    
 }
 ?>
