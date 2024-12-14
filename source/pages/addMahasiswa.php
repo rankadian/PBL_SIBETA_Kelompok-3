@@ -37,12 +37,33 @@
             border-radius: 5px;
             box-sizing: border-box;
         }
+        .alert {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .alert.success {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .alert.error {
+            background-color: #f44336;
+            color: white;
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
         <h2>Form Tambah Mahasiswa</h2>
+        
+        <?php if (isset($_GET['status'])): ?>
+            <div class="alert <?php echo $_GET['status']; ?>">
+                <?php echo htmlspecialchars($_GET['message']); ?>
+            </div>
+        <?php endif; ?>
+
         <form action="action/addMahasiswaAction.php" method="POST">
             <label for="username">NIM:</label>
             <input type="text" id="username" name="username" required>
