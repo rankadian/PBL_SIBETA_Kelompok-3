@@ -47,9 +47,15 @@ data-accordion="false">
 
 <li class="nav-item "> 
             <a href="index.php?page=tambah1" class="nav-link"> 
-                <i class="nav-icon fas fa-chart-pie
-"></i> 
+                <i class="nav-icon fas fa-chart-pie"></i> 
                 <p>Tambah Mahasiswa</p> 
+            </a> 
+        </li>
+
+        <li class="nav-item "> 
+            <a href="index.php?page=lihat1" class="nav-link"> 
+                <i class="nav-icon fas fa-chart-pie"></i> 
+                <p>Lihat USER</p> 
             </a> 
         </li>
 
