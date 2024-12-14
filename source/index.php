@@ -99,6 +99,8 @@ if ($session->get('is_login') !== true) {
               case 'tambah1':
                 include('pages/addMahasiswa.php');
                 break;
+
+                
         default:
           // Cek apakah file 404.php ada
           if (file_exists('pages/404.php')) {
