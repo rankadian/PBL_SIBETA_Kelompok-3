@@ -69,7 +69,7 @@
     // Function to load all verifikasi mahasiswa
     function loadVerifikasiData() {
         $.ajax({
-            url: '/verivikasiActionAdm.php?act=load', // Pastikan URL ini sesuai
+            url: '/verifikasiActionAdm.php?act=load', // Pastikan URL ini sesuai
             method: 'GET',
             dataType: 'json',
             success: function(response) {
@@ -114,7 +114,7 @@
         const selectedStatus = document.getElementById('statusInput').value;
 
         $.ajax({
-            url: 'action/VerifikasiMahasiswaAction.php?act=update', // Assuming update action is handled here
+            url: 'action/verifikasiActionAdm.php?act=update', // Assuming update action is handled here
             method: 'POST',
             data: { id: window.currentVerificationId, status_validasi: selectedStatus },
             success: function(response) {
@@ -132,7 +132,7 @@
     // Function to delete data
     function deleteData(id) {
         $.ajax({
-            url: 'action/VerifikasiMahasiswaAction.php?act=delete', 
+            url: 'action/verifikasiActionAdm.php?act=delete', 
             method: 'POST',
             data: { id: id },
             success: function(response) {
@@ -150,4 +150,3 @@
         loadVerifikasiData(); 
     });
 </script>
-

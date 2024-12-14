@@ -1,6 +1,5 @@
 <?php
 include('../lib/Session.php');
-
 $session = new Session();
 
 if ($session->get('is_login') !== true) {
@@ -8,8 +7,6 @@ if ($session->get('is_login') !== true) {
 }
 
 include_once('../model/verifikasiAdm.php');
-include_once('../lib/Secure.php');
-
 $act = isset($_GET['act']) ? strtolower($_GET['act']) : '';
 
 if ($act == 'load') {
@@ -22,72 +19,30 @@ if ($act == 'load') {
             $i,
             $row['NIM'],
             $row['Nama'],
-            '<button class="btn btn-sm btn-warning" onclick="editData(' . $row['NIM'] . ')"><i class="fa fa-edit"></i></button>  
-             <button class="btn btn-sm btn-danger" onclick="deleteData(' . $row['Nama'] . ')"><i class="fa fa-trash"></i></button>'
+            $row['StatusTanggungan'],
+            '<button class="btn btn-sm btn-warning" onclick="changeStatusModal(' . $row['NIM'] . ')">Verifikasi</button>',
+            '<button class="btn btn-sm btn-danger" onclick="rejectData(' . $row['NIM'] . ')">Tolak</button>'
         ];
         $i++;
     }
     echo json_encode($result);
 }
 
-if ($act == 'get') {
-    $id = (isset($_GET['id']) && ctype_digit($_GET['id'])) ? $_GET['id'] : 0;
-
-    $verifikasi = new verifikasiAdm();
-    $data = $verifikasi->getDataById($id);
-    echo json_encode($data);
-}
-
-if ($act == 'save') {
-    $data = [
-        'NIM' => antiSqlInjection($_POST['NIM']),
-        'Nama' => antiSqlInjection($_POST['Nama'])
-    ];
-    $verifikasi = new verifikasiAdm();
-    $verifikasi->insertData($data);
-
-    echo json_encode([
-        'status' => true,
-        'message' => 'Data berhasil disimpan.'
-    ]);
-}
-
 if ($act == 'update') {
-    $id = (isset($_GET['id']) && ctype_digit($_GET['id'])) ? $_GET['id'] : 0;
+    $id = $_GET['id'];
     $data = [
-        'NIM' => antiSqlInjection($_POST['NIM']),
-        'Nama' => antiSqlInjection($_POST['Nama'])
+        'StatusTanggungan' => $_POST['status'],
+        'SuratBebasKompen' => $_POST['surat_bebas_kompen'],
+        'SuratValidasiPKL' => $_POST['surat_validasi_pkl']
     ];
 
     $verifikasi = new verifikasiAdm();
     $verifikasi->updateData($id, $data);
-
-    echo json_encode([
-        'status' => true,
-        'message' => 'Data berhasil diupdate.'
-    ]);
-}
-
-if ($act == 'delete') {
-    $id = (isset($_GET['id']) && ctype_digit($_GET['id'])) ? $_GET['id'] : 0;
-
-    $verifikasi = new verifikasiAdm();
-    $verifikasi->deleteData($id);
-
-    echo json_encode([
-        'status' => true,
-        'message' => 'Data berhasil dihapus.'
-    ]);
+    echo json_encode(['status' => true, 'message' => 'Status berhasil diperbarui']);
 }
 
 if ($act == 'reject') {
-    $id = (isset($_GET['nim']) && ctype_digit($_GET['nim'])) ? $_GET['nim'] : 0;
-
-    $verifikasi = new verifikasiAdm();
-    $verifikasi->deleteData($id);
-
-    echo json_encode([
-        'status' => true,
-        'message' => 'Data berhasil dihapus.'
-    ]);
+    $id = $_GET['id'];
+    // Implement rejection logic here, such as marking the record as rejected
 }
+?>

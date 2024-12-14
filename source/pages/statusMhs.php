@@ -1,25 +1,34 @@
-<!-- Status Validasi Section -->
+<?php
+// Example: Fetch the status from session or database
+// Assuming we fetch the status from session (or use database logic as needed)
+$status = isset($_SESSION['status']) ? $_SESSION['status'] : 'Menunggu Verifikasi'; // Default value
+
+// Check the status of the file
+if ($status == 'Terverifikasi') {
+    echo '<a href="' . $filePath . '" class="btn btn-success" download>Download</a>';
+} else {
+    echo '<span>File belum diverifikasi oleh admin</span>';
+}
+?>
+
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Status Validasi</h3>
     </div>
     <div class="card-body">
-        <!-- Tampilkan status validasi -->
+        <!-- Display status validation -->
         <h4>Status Validasi</h4>
         <div class="status-container">
-            <!-- Menampilkan status dengan ikon dan styling -->
+            <!-- Display status with icon and styling -->
             <p id="statusTextContainer" class="status-text">
                 <i id="statusIcon" class="status-icon"></i>
-                <strong id="statusText">Menunggu Verifikasi</strong>
+                <strong id="statusText"><?php echo $status; ?></strong> <!-- Displaying status dynamically -->
             </p>
         </div>
-
-        <!-- Tidak ada tombol untuk mengubah status pada tampilan admin, seperti tampilan mahasiswa -->
-        <!-- Hanya menampilkan status tanpa kontrol perubahan -->
     </div>
 </div>
 
-<!-- Modal untuk perubahan status validasi -->
+<!-- Modal for status validation change -->
 <div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -43,38 +52,38 @@
 </div>
 
 <script>
-    // Fungsi untuk mengubah status dengan efek visual
+    // Function to change status with visual effects
     function changeStatus(newStatus) {
-        // Update status secara langsung di halaman
+        // Update status directly on the page
         document.getElementById('statusText').textContent = newStatus;
 
-        // Ganti ikon dan warna sesuai status
+        // Change icon and color based on status
         updateStatusIconAndColor(newStatus);
 
-        // Tampilkan modal untuk konfirmasi perubahan status
+        // Show modal for confirming the change
         const statusModal = new bootstrap.Modal(document.getElementById('statusModal'));
         statusModal.show();
     }
 
-    // Fungsi untuk memperbarui status berdasarkan pilihan pengguna
+    // Function to update status based on user selection
     function updateStatus() {
         const selectedStatus = document.getElementById('statusInput').value;
 
-        // Perbarui status di halaman
+        // Update status on the page
         document.getElementById('statusText').textContent = selectedStatus;
 
-        // Ganti ikon dan warna sesuai status
+        // Change icon and color according to status
         updateStatusIconAndColor(selectedStatus);
 
-        // Sembunyikan modal setelah update
+        // Hide the modal after update
         const statusModal = new bootstrap.Modal(document.getElementById('statusModal'));
         statusModal.hide();
 
-        // Kirim permintaan ke server untuk memperbarui status (misalnya via AJAX)
+        // Optionally send an AJAX request to the server to update the status
         alert('Status berhasil diubah menjadi: ' + selectedStatus);
     }
 
-    // Fungsi untuk mengganti ikon dan warna status
+    // Function to update the icon and color based on status
     function updateStatusIconAndColor(status) {
         const statusText = document.getElementById('statusText');
         const statusIcon = document.getElementById('statusIcon');
@@ -82,17 +91,17 @@
         switch (status) {
             case 'Terverifikasi':
                 statusText.style.color = 'green';
-                statusIcon.className = 'bi bi-check-circle';  // Ikon verifikasi
+                statusIcon.className = 'bi bi-check-circle';  // Verified icon
                 statusIcon.style.color = 'green';
                 break;
             case 'Menunggu Verifikasi':
-                statusText.style.color = '#FFA500';  // Oranye
-                statusIcon.className = 'bi bi-clock';  // Ikon menunggu
+                statusText.style.color = '#FFA500';  // Orange color
+                statusIcon.className = 'bi bi-clock';  // Waiting icon
                 statusIcon.style.color = '#FFA500';
                 break;
             case 'Ditolak':
                 statusText.style.color = 'red';
-                statusIcon.className = 'bi bi-x-circle';  // Ikon ditolak
+                statusIcon.className = 'bi bi-x-circle';  // Rejected icon
                 statusIcon.style.color = 'red';
                 break;
             default:
@@ -103,11 +112,11 @@
         }
     }
 
-    // Inisialisasi status default
-    updateStatusIconAndColor('Menunggu Verifikasi');
+    // Initialize the default status
+    updateStatusIconAndColor('<?php echo $status; ?>');
 </script>
 
-<!-- CSS untuk menambahkan style lebih menarik -->
+<!-- CSS for a more attractive style -->
 <style>
     .status-container {
         margin-top: 20px;

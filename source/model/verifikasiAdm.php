@@ -1,5 +1,6 @@
 <?php
 include('Model.php');
+
 class verifikasiAdm extends Model
 {
     protected $db;
@@ -12,81 +13,61 @@ class verifikasiAdm extends Model
         $this->db = $db;
         $this->driver = $use_driver;
     }
-public function insertData($data)
+
+    // Method to insert data into the table
+    public function insertData($data)
     {
-      // eksekusi query untuk menyimpan ke database
-    sqlsrv_query($this->db, "insert into {$this->table} (NIM,IDUser,Nama,StatusTanggungan) values(?,?,?,?)", 
-array($data['NIM'], $data['IDUser'],$data['Nama'],$data['StatusTanggungan']));
-        
+        $query = "INSERT INTO {$this->table} (NIM, Nama, StatusTanggungan, SuratBebasKompen, SuratValidasiPKL) 
+                  VALUES (?, ?, ?, ?, ?)";
+        sqlsrv_query($this->db, $query, [
+            $data['NIM'], $data['Nama'], $data['StatusTanggungan'], $data['SuratBebasKompen'], $data['SuratValidasiPKL']
+        ]);
     }
+
+    // Method to get all data
     public function getData()
     {
-            // query untuk mengambil data dari tabel
-            $query = sqlsrv_query($this->db, "select * from {$this->table}");
-            $data = [];
-            while ($row = sqlsrv_fetch_array($query, SQLSRV_FETCH_ASSOC)) {
-                $data[] = $row;
-            }
-            return $data;
-        
-    }
-    public function getDataById($id)
-    {
-        if ($this->driver == 'mysql') {
-            // query untuk mengambil data berdasarkan id
-            $query = $this->db->prepare("select * from {$this->table} where NIM =
-?");
-            // binding parameter ke query "i" berarti integer. Biar tidak kena SQL Injection
-            $query->bind_param('i', $id);
-            // eksekusi query
-            $query->execute();
-            // ambil hasil query
-            return $query->get_result()->fetch_assoc();
-        } else {
-            // query untuk mengambil data berdasarkan id
-            $query = sqlsrv_query($this->db, "select * from {$this->table} where NIM= ?", [$id]);
-            // ambil hasil query
-            return sqlsrv_fetch_array($query, SQLSRV_FETCH_ASSOC);
+        $query = sqlsrv_query($this->db, "SELECT * FROM {$this->table}");
+        $data = [];
+        while ($row = sqlsrv_fetch_array($query, SQLSRV_FETCH_ASSOC)) {
+            $data[] = $row;
         }
+        return $data;
     }
+
+    // Method to update data based on NIM
     public function updateData($id, $data)
     {
-        if ($this->driver == 'mysql') {
-            // query untuk update data
-            $query = $this->db->prepare("update {$this->table} set kategori_kode = ?,kategori_nama = ? where kategori_id = ?");
-            // binding parameter ke query
-            $query->bind_param('ssi', $data['kategori_kode'], $data['kategori_nama'], $id);
-            // eksekusi query
-            $query->execute();
+        $query = "UPDATE {$this->table} 
+                  SET StatusTanggungan = ?, SuratBebasKompen = ?, SuratValidasiPKL = ? 
+                  WHERE NIM = ?";
+        sqlsrv_query($this->db, $query, [
+            $data['StatusTanggungan'], $data['SuratBebasKompen'], $data['SuratValidasiPKL'], $id
+        ]);
+    }
+
+    // Method to get data by NIM (Get a specific record by its NIM)
+    public function getDataById($id)
+    {
+        $query = sqlsrv_query($this->db, "SELECT * FROM {$this->table} WHERE NIM = ?", [$id]);
+        if ($row = sqlsrv_fetch_array($query, SQLSRV_FETCH_ASSOC)) {
+            return $row;
         } else {
-            // query untuk update data
-            sqlsrv_query($this->db, "update {$this->table} set NIM = ?, Nama = ?, IDUser = ?,StatusTanggungan = ? where NIM = ?", [
-                $data['NIM'],
-                $data['Nama'],
-                $data['IDUser'],
-                $data ['StatusTanggungan'],
-                $id
-            ]);
+            return null; // Return null if no record is found
         }
     }
+
+    // Method to delete data based on NIM
     public function deleteData($id)
     {
-        if ($this->driver == 'mysql') {
-            // query untuk delete data
-            $query = $this->db->prepare("delete from {$this->table} where kategori_id = ?");
-            // binding parameter ke query
-            $query->bind_param('i', $id);
-            // eksekusi query
-            $query->execute();
-        } else {
-            // query untuk delete data
-            sqlsrv_query(
-                $this->db,
-                "delete from {$this->table} where NIM = ?",
-                [$id]
-            );
+        $query = "DELETE FROM {$this->table} WHERE NIM = ?";
+        $result = sqlsrv_query($this->db, $query, [$id]);
+        
+        // Check if the query was successful
+        if ($result === false) {
+            return false; // Return false if delete fails
         }
+        return true; // Return true if delete is successful
     }
 }
-
 ?>
