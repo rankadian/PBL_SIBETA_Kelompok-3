@@ -1,109 +1,156 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Mahasiswa</title>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-</head>
-
-<body>
-    <div class="container">
-        <h1>Upload Mahasiswa</h1>
-        <!-- Form Upload -->
-        <h4>Upload Bukti Laporan</h4>
-
-        <!-- Form Upload Laporan Tugas Akhir -->
-        <form id="uploadLaporanForm" action="action/UploadAction.php?act=save" method="post" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="laporan_tugas_akhir">Upload Laporan Tugas Akhir (PDF)</label>
-                <input type="file" class="form-control" name="laporan_tugas_akhir" id="laporan_tugas_akhir" accept=".pdf" required>
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Upload Berkas</h1>
             </div>
-            <div class="form-group">
-                <input type="hidden" name="IDSurat" value="123"> <!-- Ensure the ID is correctly passed -->
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Upload</li>
+                </ol>
             </div>
-            <button type="submit" class="btn btn-primary">Submit Laporan</button>
-        </form>
-
-
-        <hr>
-
-        <!-- Form Upload Program/Aplikasi -->
-        <form id="uploadProgramForm" action="action/UploadAction.php?act=save" method="post" enctype="multipart/form-data">
-            <div class="form-group" id="form-data">
-                <label for="program_aplikasi">Upload Program/Aplikasi (ZIP/RAR)</label>
-                <input type="file" class="form-control" name="program_aplikasi" id="program_aplikasi" accept=".zip,.rar" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit Program</button>
-        </form>
+        </div>
     </div>
+</section>
 
-    <script>
-        // Fungsi untuk mengunggah file laporan tugas akhir
-        function uploadLaporan() {
-            var formData = new FormData($('#uploadLaporanForm')[0]); // Create a FormData object from the form
+<!-- Main content -->
+<section class="content">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Daftar Upload Mahasiswa</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-md btn-primary" onclick="tambahData()">
+                    Tambah
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-sm table-bordered table-striped" id="table-data">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Surat</th>
+                        <th>Tanggal Dibuat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade" id="form-data" tabindex="-1" aria-hidden="true">
+    <form id="form-tambah">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Unggah Berkas PDF</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Nama Surat</label>
+                        <input type="text" class="form-control" name="NamaSurat" id="NamaSurat" required placeholder="Masukkan jenis surat" />
+                    </div>
+                    <div class="form-group">
+                        <label>Tanggal Laporan</label>
+                        <input type="date" class="form-control" name="TanggalDibuat" id="TanggalDibuat" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="BuktiSurat">Unggah File</label>
+                        <input type="file" class="form-control" name="BuktiSurat" id="BuktiSurat" accept=".pdf, .doc, .docx" required>
+                        <small class="form-text text-muted">Hanya file PDF, DOC, dan DOCX yang diperbolehkan.</small>
+                    </div>
+
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    function tambahData() {
+        $('#form-data').modal('show');
+        $('#form-tambah').trigger('reset');
+        $('#form-tambah').attr('action', 'action/UploadAction.php?act=save');
+    }
+
+    function editData(id) {
+        $.ajax({
+            url: 'action/UploadAction.php?act=get&id=' + id,
+            method: 'GET',
+            success: function(response) {
+                const data = JSON.parse(response);
+                $('#form-data').modal('show');
+                $('#form-tambah').attr('action', 'action/UploadAction.php?act=update&id=' + id);
+                $('#NamaSurat').val(data.NamaSurat);
+                $('#TanggalDibuat').val(data.TanggalDibuat);
+            },
+            error: function() {
+                alert('Gagal mengambil data.');
+            }
+        });
+    }
+
+    function deleteData(id) {
+        if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
             $.ajax({
-                url: $('#uploadLaporanForm').attr('action'), // The URL where the form is submitted
-                type: 'POST', // POST method
-                data: formData, // Form data
-                processData: false, // Don't let jQuery process the data
-                contentType: false, // Don't let jQuery set content type
+                url: 'action/UploadAction.php?act=delete&id=' + id,
+                method: 'POST',
                 success: function(response) {
-                    var result = JSON.parse(response);
+                    const result = JSON.parse(response);
                     if (result.status) {
-                        alert('Laporan berhasil diunggah!');
-                        $('#uploadLaporanForm')[0].reset(); // Reset form after success
+                        alert('Data berhasil dihapus.');
+                        tabelData.ajax.reload();
                     } else {
-                        alert('Gagal mengunggah laporan: ' + result.message);
+                        alert('Gagal menghapus data: ' + result.message);
                     }
                 },
-                error: function(xhr, status, error) {
-                    alert('Terjadi kesalahan: ' + error);
+                error: function() {
+                    alert('Terjadi kesalahan saat menghapus data.');
                 }
             });
         }
+    }
 
+    $(document).ready(function() {
+        table = $('#table-data').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                "url": "action/UploadAction.php?act=load",
+                "type": "GET"
+            }
+        });
+    });
 
-        // Fungsi untuk mengunggah file program/aplikasi
-        function uploadProgram() {
-            var formData = new FormData($('#uploadProgramForm')[0]);
+        $('#form-tambah').on('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
             $.ajax({
-                url: $('#uploadProgramForm').attr('action'),
-                type: 'POST',
+                url: $(this).attr('action'),
+                method: 'POST',
                 data: formData,
                 processData: false,
                 contentType: false,
                 success: function(response) {
-                    var result = JSON.parse(response);
+                    const result = JSON.parse(response);
                     if (result.status) {
-                        alert('Program berhasil diunggah!');
-                        $('#uploadProgramForm')[0].reset(); // Reset form
+                        $('#form-data').modal('hide');
+                        tabelData.ajax.reload();
                     } else {
-                        alert('Gagal mengunggah program: ' + result.message);
+                        alert('Gagal menyimpan data: ' + result.message);
                     }
                 },
-                error: function(xhr, status, error) {
-                    alert('Terjadi kesalahan: ' + error);
+                error: function() {
+                    alert('Terjadi kesalahan saat menyimpan data.');
                 }
             });
-        }
-
-        // Event handler untuk tombol submit
-        $(document).ready(function() {
-            $('#uploadLaporanForm').on('submit', function(e) {
-                e.preventDefault();
-                uploadLaporan();
-            });
-
-            $('#uploadProgramForm').on('submit', function(e) {
-                e.preventDefault();
-                uploadProgram();
-            });
         });
-    </script>
-</body>
 
-</html>
+</script>

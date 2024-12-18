@@ -1,141 +1,130 @@
 <?php
 include('../lib/Session.php');
-include_once('../model/UploadFileModel.php');
+include_once('../model/UploadModel.php');
 include_once('../lib/Secure.php');
 
 $session = new Session();
 
+// Cek apakah user sudah login
 if ($session->get('is_login') !== true) {
     header('Location: login.php');
+    exit;
 }
 
 $act = isset($_GET['act']) ? strtolower($_GET['act']) : '';
 
+// Proses untuk load data
 if ($act == 'load') {
-    $upload = new UploadFileModel();
+    $upload = new UploadModel();
     $data = $upload->getData();
-    $result = [];
+    $result = ['data' => []];
+    $dateTime = new DateTime(); // Creating a new DateTime object
+    // If you need to use the current DateTime object
+    $formattedDate = $dateTime->format('Y-m-d'); // Get the string format
+    // Now you can pass the string to another DateTime constructor
+    $newDateTime = new DateTime($formattedDate);
+
     $i = 1;
     foreach ($data as $row) {
         $result['data'][] = [
             $i,
-            $row['IDSurat'],
-            $row['NamaSurat'],
-            $row['JenisSurat'],
-            $row['TanggalDibuat'],
-            '<button class="btn btn-sm btn-warning" onclick="editData(' . $row['IDSurat'] . ')"><i class="fa fa-edit"></i></button> 
-             <button class="btn btn-sm btn-danger" onclick="deleteData(' . $row['IDSurat'] . ')"><i class="fa fa-trash"></i></button>'
+            htmlspecialchars($row['NamaSurat']),
+            // Pastikan tanggal diformat dengan benar
+            (new DateTime($row['TanggalDibuat']))->format('Y-m-d'),
+            htmlspecialchars($row['BuktiSurat'])
+            // '<button class="btn btn-sm btn-warning" onclick="editData(' . $row['IDSurat'] . ')"><i class="fa fa-edit"></i></button> 
+            // <button class="btn btn-sm btn-danger" onclick="deleteData(' . $row['IDSurat'] . ')"><i class="fa fa-trash"></i></button>'
         ];
         $i++;
     }
     echo json_encode($result);
+    exit;
 }
 
+// Proses untuk mendapatkan data berdasarkan ID
 if ($act == 'get') {
     $id = (isset($_GET['id']) && ctype_digit($_GET['id'])) ? $_GET['id'] : 0;
 
-    $upload = new UploadFileModel();
+    $upload = new UploadModel();
     $data = $upload->getDataById($id);
     echo json_encode($data);
+    exit;
 }
 
+// Proses untuk menyimpan data (termasuk upload file)
 if ($act == 'save') {
-    // Check if the file and IDSurat are available
-    if (isset($_FILES['laporan_tugas_akhir']) && isset($_POST['IDSurat'])) {
-        $fileData = $_FILES['laporan_tugas_akhir'];
-        $idSurat = $_POST['IDSurat'];
+    $BuktiSurat = '';
+    if (isset($_FILES['BuktiSurat']) && $_FILES['BuktiSurat']['error'] === UPLOAD_ERR_OK) {
+        $uploadDir = "../upload";
+        $allowedTypes = ['pdf', 'doc', 'docx'];
 
-        // Instantiate the concrete class for handling file upload
-        $uploadModel = new UploadFileModel();  
-        $uploadResult = $uploadModel->uploadFile($fileData, $idSurat);
-
-        if ($uploadResult === true) {
-            // Prepare data to insert into the TB_Pengajuan table
-            $data = [
-                'IDSurat' => $idSurat,
-                'TanggalPengajuan' => date('Y-m-d H:i:s'), // Current timestamp
-                'StatusPengajuan' => 'Pending', // Or any default status you need
-                'CatatanAdmin' => '', // You can populate this if necessary
-            ];
-
-            // Insert data into the database using the UploadFileModel's createPengajuan method
-            $insertResult = $uploadModel->createPengajuan($data);
-
-            if ($insertResult === true) {
-                echo json_encode([
-                    'status' => true,
-                    'message' => 'Laporan berhasil diunggah dan data pengajuan disimpan.'
-                ]);
-            } else {
-                echo json_encode([
-                    'status' => false,
-                    'message' => 'Laporan berhasil diunggah, tetapi gagal menyimpan pengajuan: ' . $insertResult
-                ]);
-            }
-        } else {
-            echo json_encode([
-                'status' => false,
-                'message' => $uploadResult // Error from file upload
-            ]);
+        // Validasi jenis file
+        $fileType = pathinfo($_FILES['BuktiSurat']['name'], PATHINFO_EXTENSION);
+        if (!in_array($fileType, $allowedTypes)) {
+            $response = ['status' => false, 'message' => 'Invalid file type. Allowed types are pdf, doc, and docx.'];
+            echo json_encode($response);
+            exit;
         }
-    } else {
-        echo json_encode([
-            'status' => false,
-            'message' => 'File or IDSurat is missing.'
-        ]);
+
+        // Generate nama file unik
+        $fileName = time() . "_" . basename($_FILES['BuktiSurat']['name']);
+        $uploadFile = $uploadDir . '/' . $fileName;
+
+        // Pindahkan file ke direktori upload
+        if (!move_uploaded_file($_FILES['BuktiSurat']['tmp_name'], $uploadFile)) {
+            $response = ['status' => false, 'message' => 'Failed to upload the file.'];
+            echo json_encode($response);
+            exit;
+        }
+
+        $BuktiSurat = $fileName;
     }
-}
 
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Check for file and IDSurat
-    if (isset($_FILES['laporan_tugas_akhir']) && isset($_POST['IDSurat'])) {
-        // Process the file upload
-        // your upload logic here
-
-        echo json_encode([
-            'status' => true,
-            'message' => 'File uploaded successfully.'
-        ]);
-    } else {
-        echo json_encode([
-            'status' => false,
-            'message' => 'File or IDSurat is missing.'
-        ]);
-    }
-} else {
-    // Return an error if the method is not POST
-    echo json_encode([
-        'status' => false,
-        'message' => 'Invalid request method.'
-    ]);
-}
-
-if ($act == 'update') {
-    $id = (isset($_GET['id']) && ctype_digit($_GET['id'])) ? $_GET['id'] : 0;
     $data = [
-        'NamaSurat' => antiSqlInjection($_POST['NamaSurat']),
-        'JenisSurat' => antiSqlInjection($_POST['JenisSurat']),
-        'TanggalDibuat' => antiSqlInjection($_POST['TanggalDibuat'])
+        'IDSurat' => isset($_POST['IDSurat']) ? antiSqlInjection($_POST['IDSurat']) : null,
+        'NamaSurat' => isset($_POST['NamaSurat']) ? antiSqlInjection($_POST['NamaSurat']) : null,
+        'TanggalDibuat' => isset($_POST['TanggalDibuat']) ? antiSqlInjection($_POST['TanggalDibuat']) : null,
+        'BuktiSurat' => $BuktiSurat,
     ];
 
-    $upload = new UploadFileModel();
-    $upload->updateData($id, $data);
+    $upload = new UploadModel();
+    $result = $upload->insertData($data);
 
-    echo json_encode([
-        'status' => true,
-        'message' => 'Data berhasil diupdate.'
-    ]);
+    if ($result) {
+        echo json_encode(['status' => true, 'message' => 'Data berhasil disimpan.']);
+    } else {
+        echo json_encode(['status' => false, 'message' => 'Gagal menyimpan data.']);
+    }
+    exit;
 }
 
+// Proses untuk mengupdate data
+if ($act == 'update') {
+    $id = (isset($_GET['id']) && ctype_digit($_GET['id'])) ? $_GET['id'] : 0;
+
+    $data = [
+        'NamaSurat' => htmlspecialchars($_POST['NamaSurat']),
+        'TanggalDibuat' => htmlspecialchars($_POST['TanggalDibuat'])
+    ];
+
+    $upload = new UploadModel();
+    if ($upload->updateData($id, $data)) {
+        echo json_encode(['status' => true, 'message' => 'Data berhasil diupdate.']);
+    } else {
+        echo json_encode(['status' => false, 'message' => 'Gagal mengupdate data.']);
+    }
+    exit;
+}
+
+// Proses untuk menghapus data
 if ($act == 'delete') {
     $id = (isset($_GET['id']) && ctype_digit($_GET['id'])) ? $_GET['id'] : 0;
 
-    $upload = new UploadFileModel();
-    $upload->deleteData($id);
-
-    echo json_encode([
-        'status' => true,
-        'message' => 'Data berhasil dihapus.'
-    ]);
+    $upload = new UploadModel();
+    if ($upload->deleteData($id)) {
+        echo json_encode(['status' => true, 'message' => 'Data berhasil dihapus.']);
+    } else {
+        echo json_encode(['status' => false, 'message' => 'Gagal menghapus data.']);
+    }
+    exit;
 }

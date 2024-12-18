@@ -1,85 +1,74 @@
 <?php
 include_once('Model.php');
 
-abstract class UploadModel extends Model
+class UploadModel extends Model
 {
     protected $db;
-    protected $tableSurat = 'TB_Surat';
-    protected $tablePengajuan = 'TB_Pengajuan';
+    protected $table = 'TB_Surat';
 
     public function __construct()
     {
         include('../lib/Connection.php');
         $this->db = $db;
     }
-
-    // Fungsi abstrak yang harus diimplementasikan di kelas turunan
-    abstract public function getData();
-    abstract public function getDataById($id);
-    abstract public function updateData($id, $data);
-    abstract public function deleteData($id);
-
-    // Fungsi umum untuk mengupload file
-    public function uploadFile($fileData, $idSurat)
+    public function insertData($data)
     {
-        // Validasi file
-        if ($fileData['error'] !== UPLOAD_ERR_OK) {
-            return "Terjadi kesalahan saat mengupload file.";
-        }
-    
-        // Generate nama file unik
-        $fileExtension = pathinfo($fileData['name'], PATHINFO_EXTENSION);
-        $fileName = uniqid('surat_', true) . '.' . $fileExtension;
-    
-        // Lokasi penyimpanan file (relative path)
-        $uploadDirectory = __DIR__ . '/../uploads/'; // Correct relative path
-        $filePath = $uploadDirectory . $fileName;
-    
-        // Pastikan direktori uploads ada dan dapat ditulis
-        if (!is_dir($uploadDirectory) && !mkdir($uploadDirectory, 0775, true)) {
-            return "Gagal membuat direktori uploads.";
-        }
-    
-        // Pindahkan file ke server
-        if (!move_uploaded_file($fileData['tmp_name'], $filePath)) {
-            return "Gagal menyimpan file ke server.";
-        }
-    
-        // Update nama file ke database
-        $query = sqlsrv_query(
+        sqlsrv_query(
             $this->db,
-            "UPDATE {$this->tableSurat} SET NamaSurat = ? WHERE IDSurat = ?",
-            [$fileName, $idSurat]
-        );
-    
-        if (!$query) {
-            return "Gagal menyimpan nama file ke database.";
-        }
-    
-        return true;
-    }
-    
-
-
-    // Fungsi umum untuk membuat pengajuan
-    public function createPengajuan($data)
-    {
-        $query = sqlsrv_query(
-            $this->db,
-            "INSERT INTO {$this->tablePengajuan} (NIM, IDSurat, TanggalPengajuan, StatusPengajuan, CatatanAdmin) 
-             VALUES (?, ?, GETDATE(), ?, ?)",
+            "INSERT INTO {$this->table} (IDSurat, NamaSurat, TanggalDibuat) VALUES ( ?, ?, ?,?)",
             [
-                $data['NIM'],
                 $data['IDSurat'],
-                $data['StatusPengajuan'],
-                $data['CatatanAdmin']
+                $data['NamaSurat'],
+                $data['TanggalDibuat'],
+                $data['BuktiSurat']
             ]
         );
-
-        if (!$query) {
-            return "Gagal menyimpan data pengajuan.";
+    } 
+    public function getData()
+    {
+        $query = sqlsrv_query($this->db, "SELECT * FROM {$this->table}");
+        $data = [];
+        while ($row = sqlsrv_fetch_array($query, SQLSRV_FETCH_ASSOC)) {
+            $data[] = $row;
         }
-
-        return true;
+        return $data;
     }
+    public function getDataById($id)
+    {
+        $query = sqlsrv_query(
+            $this->db,
+            "SELECT * FROM {$this->table} WHERE IDSurat = ?",
+            [$id]
+        );
+        return sqlsrv_fetch_array($query, SQLSRV_FETCH_ASSOC);
+    } 
+    public function updateData($id, $data)
+    {
+        sqlsrv_query(
+            $this->db,
+            "UPDATE {$this->table} SET IDSurat = ?, NamaSurat = ?, TanggalDibuat = ? WHERE IDSurat = ?",
+            [
+                $data['IDSurat'],
+                $data['NamaSurat'],
+                $data['TanggalDibuat'],
+                $id
+            ]
+        );
+    } 
+    public function deleteData($id)
+    {
+        sqlsrv_query(
+            $this->db,
+            "DELETE FROM {$this->table} WHERE IDSurat = ?",
+            [$id]
+        );
+    }
+
+    public function insertFileName($data) {
+        $query = "INSERT INTO TB_Surat (NamaFile) VALUES (:NamaFile)";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':NamaFile', $data['NamaFile']);
+        return $stmt->execute();
+    }
+    
 }
