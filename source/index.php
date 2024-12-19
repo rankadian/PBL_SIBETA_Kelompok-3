@@ -70,12 +70,6 @@ if ($session->get('is_login') !== true) {
         case 'dashboard':
           include('pages/dashboard.php');
           break;
-        case 'buku':
-          include('pages/buku.php');
-          break;
-        case 'kategori':
-          include('pages/kategori.php');
-          break;
         case 'user':
           include('pages/user.php');
           break;
@@ -91,15 +85,12 @@ if ($session->get('is_login') !== true) {
           case 'status2':
             include('pages/verifikasiAdmin.php');
             break;
-
             case 'status3':
               include('pages/statusMhs.php');
               break;
-
               case 'tambah1':
                 include('pages/addMahasiswa.php');
                 break;
-
                 
         default:
           // Cek apakah file 404.php ada
