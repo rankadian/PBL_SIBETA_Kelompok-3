@@ -13,17 +13,32 @@ class UploadModel extends Model
     }
     public function insertData($data)
     {
-        sqlsrv_query(
-            $this->db,
-            "INSERT INTO {$this->table} (IDSurat, NamaSurat, TanggalDibuat) VALUES ( ?, ?, ?,?)",
-            [
-                $data['IDSurat'],
-                $data['NamaSurat'],
-                $data['TanggalDibuat'],
-                $data['BuktiSurat']
-            ]
-        );
-    } 
+        $sql = "INSERT INTO {$this->table} 
+        ( NamaSurat, TanggalDibuat, BuktiSurat) 
+        VALUES ( ?, ?, ?)";
+
+        $params = [
+            $data['NamaSurat'],
+            $data['TanggalDibuat'],
+            $data['BuktiSurat']
+        ];
+
+
+        // Persiapkan query
+        $stmt = sqlsrv_prepare($this->db, $sql, $params);
+
+        if (!$stmt) {
+            die(print_r(sqlsrv_errors(), true)); // Debug jika terjadi error
+        }
+
+        // Eksekusi query
+        if (sqlsrv_execute($stmt)) {
+            echo "Data berhasil ditambahkan.";
+        } else {
+            die(print_r(sqlsrv_errors(), true)); // Debug jika eksekusi gagal
+        }
+    }
+
     public function getData()
     {
         $query = sqlsrv_query($this->db, "SELECT * FROM {$this->table}");
@@ -41,7 +56,7 @@ class UploadModel extends Model
             [$id]
         );
         return sqlsrv_fetch_array($query, SQLSRV_FETCH_ASSOC);
-    } 
+    }
     public function updateData($id, $data)
     {
         sqlsrv_query(
@@ -54,7 +69,7 @@ class UploadModel extends Model
                 $id
             ]
         );
-    } 
+    }
     public function deleteData($id)
     {
         sqlsrv_query(
@@ -64,11 +79,11 @@ class UploadModel extends Model
         );
     }
 
-    public function insertFileName($data) {
+    public function insertFileName($data)
+    {
         $query = "INSERT INTO TB_Surat (NamaFile) VALUES (:NamaFile)";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':NamaFile', $data['NamaFile']);
         return $stmt->execute();
     }
-    
 }

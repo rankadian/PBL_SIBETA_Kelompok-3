@@ -18,22 +18,13 @@ if ($act == 'load') {
     $upload = new UploadModel();
     $data = $upload->getData();
     $result = ['data' => []];
-    $dateTime = new DateTime(); // Creating a new DateTime object
-    // If you need to use the current DateTime object
-    $formattedDate = $dateTime->format('Y-m-d'); // Get the string format
-    // Now you can pass the string to another DateTime constructor
-    $newDateTime = new DateTime($formattedDate);
-
     $i = 1;
     foreach ($data as $row) {
         $result['data'][] = [
             $i,
-            htmlspecialchars($row['NamaSurat']),
-            // Pastikan tanggal diformat dengan benar
-            (new DateTime($row['TanggalDibuat']))->format('Y-m-d'),
-            htmlspecialchars($row['BuktiSurat'])
-            // '<button class="btn btn-sm btn-warning" onclick="editData(' . $row['IDSurat'] . ')"><i class="fa fa-edit"></i></button> 
-            // <button class="btn btn-sm btn-danger" onclick="deleteData(' . $row['IDSurat'] . ')"><i class="fa fa-trash"></i></button>'
+            htmlspecialchars($row['NamaSurat'] ?? ''),
+            htmlspecialchars($row['TanggalDibuat'] ? $row['TanggalDibuat']->format('Y-m-d') : ''),
+            htmlspecialchars($row['BuktiSurat'] ?? '')
         ];
         $i++;
     }
@@ -76,15 +67,12 @@ if ($act == 'save') {
             echo json_encode($response);
             exit;
         }
-
         $BuktiSurat = $fileName;
     }
-
     $data = [
-        'IDSurat' => isset($_POST['IDSurat']) ? antiSqlInjection($_POST['IDSurat']) : null,
         'NamaSurat' => isset($_POST['NamaSurat']) ? antiSqlInjection($_POST['NamaSurat']) : null,
         'TanggalDibuat' => isset($_POST['TanggalDibuat']) ? antiSqlInjection($_POST['TanggalDibuat']) : null,
-        'BuktiSurat' => $BuktiSurat,
+        'BuktiSurat' => $BuktiSurat
     ];
 
     $upload = new UploadModel();

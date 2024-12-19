@@ -41,8 +41,8 @@
     </div>
 </section>
 
-<div class="modal fade" id="form-data" tabindex="-1" aria-hidden="true">
-    <form id="form-tambah">
+<div class="modal fade" id="form-data" style="display: none;" aria-hidden="true">
+    <form action="../action/UploadAction.php?act=save" method="post" id="form-tambah">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
@@ -50,8 +50,16 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Nama Surat</label>
-                        <input type="text" class="form-control" name="NamaSurat" id="NamaSurat" required placeholder="Masukkan jenis surat" />
+                        <label for="NamaSurat">Nama Surat</label>
+                        <select class="form-control" name="NamaSurat" id="NamaSurat">
+                            <option value="" disabled selected>Pilih Surat Yang akan di Upload</option>
+                            <option value="SKKM">SKKM</option>
+                            <option value="TOEIC">Toeic</option>
+                            <option value="PKL">PKL</option>
+                            <option value="SKLA">SKLA</option>
+                            <option value="KOMPEN">Kompen</option>
+                            <option value="PUBLIKASI">Publikasi</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>Tanggal Laporan</label>
@@ -62,7 +70,6 @@
                         <input type="file" class="form-control" name="BuktiSurat" id="BuktiSurat" accept=".pdf, .doc, .docx" required>
                         <small class="form-text text-muted">Hanya file PDF, DOC, dan DOCX yang diperbolehkan.</small>
                     </div>
-
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
@@ -129,28 +136,27 @@
         });
     });
 
-        $('#form-tambah').on('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            $.ajax({
-                url: $(this).attr('action'),
-                method: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    const result = JSON.parse(response);
-                    if (result.status) {
-                        $('#form-data').modal('hide');
-                        tabelData.ajax.reload();
-                    } else {
-                        alert('Gagal menyimpan data: ' + result.message);
-                    }
-                },
-                error: function() {
-                    alert('Terjadi kesalahan saat menyimpan data.');
+    $('#form-tambah').on('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        $.ajax({
+            url: $(this).attr('action'),
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                const result = JSON.parse(response);
+                if (result.status) {
+                    $('#form-data').modal('hide');
+                    tabelData.ajax.reload();
+                } else {
+                    alert('Gagal menyimpan data: ' + result.message);
                 }
-            });
+            },
+            error: function() {
+                alert('Terjadi kesalahan saat menyimpan data.');
+            }
         });
-
+    });
 </script>
