@@ -22,9 +22,13 @@ if ($act == 'load') {
     foreach ($data as $row) {
         $result['data'][] = [
             $i,
-            htmlspecialchars($row['NamaSurat'] ?? ''),
-            htmlspecialchars($row['TanggalDibuat'] ? $row['TanggalDibuat']->format('Y-m-d') : ''),
-            htmlspecialchars($row['BuktiSurat'] ?? '')
+            htmlspecialchars($row['PengajuanID'] ?? ''),
+            htmlspecialchars($row['NIM'] ?? ''),
+            htmlspecialchars($row['SuratID'] ?? ''),
+            htmlspecialchars($row['StatusPengajuan'] ?? ''),
+            htmlspecialchars($row['TanggalPengajuan'] ? $row['TanggalPengajuan']->format('Y-m-d') : ''),
+            htmlspecialchars($row['FilePath'] ?? ''),
+            htmlspecialchars($row['CatatanVerifikasi'] ?? '')
         ];
         $i++;
     }
@@ -44,13 +48,13 @@ if ($act == 'get') {
 
 // Proses untuk menyimpan data (termasuk upload file)
 if ($act == 'save') {
-    $BuktiSurat = '';
-    if (isset($_FILES['BuktiSurat']) && $_FILES['BuktiSurat']['error'] === UPLOAD_ERR_OK) {
+    $FilePath = '';
+    if (isset($_FILES['FilePath']) && $_FILES['FilePath']['error'] === UPLOAD_ERR_OK) {
         $uploadDir = "../upload";
         $allowedTypes = ['pdf', 'doc', 'docx'];
 
         // Validasi jenis file
-        $fileType = pathinfo($_FILES['BuktiSurat']['name'], PATHINFO_EXTENSION);
+        $fileType = pathinfo($_FILES['FilePath']['name'], PATHINFO_EXTENSION);
         if (!in_array($fileType, $allowedTypes)) {
             $response = ['status' => false, 'message' => 'Invalid file type. Allowed types are pdf, doc, and docx.'];
             echo json_encode($response);
@@ -58,21 +62,25 @@ if ($act == 'save') {
         }
 
         // Generate nama file unik
-        $fileName = time() . "_" . basename($_FILES['BuktiSurat']['name']);
+        $fileName = time() . "_" . basename($_FILES['FilePath']['name']);
         $uploadFile = $uploadDir . '/' . $fileName;
 
         // Pindahkan file ke direktori upload
-        if (!move_uploaded_file($_FILES['BuktiSurat']['tmp_name'], $uploadFile)) {
+        if (!move_uploaded_file($_FILES['FilePath']['tmp_name'], $uploadFile)) {
             $response = ['status' => false, 'message' => 'Failed to upload the file.'];
             echo json_encode($response);
             exit;
         }
-        $BuktiSurat = $fileName;
+        $FilePath = $fileName;
     }
+
     $data = [
-        'NamaSurat' => isset($_POST['NamaSurat']) ? antiSqlInjection($_POST['NamaSurat']) : null,
-        'TanggalDibuat' => isset($_POST['TanggalDibuat']) ? antiSqlInjection($_POST['TanggalDibuat']) : null,
-        'BuktiSurat' => $BuktiSurat
+        'NIM' => isset($_POST['NIM']) ? antiSqlInjection($_POST['NIM']) : null,
+        'SuratID' => isset($_POST['SuratID']) ? antiSqlInjection($_POST['SuratID']) : null,
+        'StatusPengajuan' => isset($_POST['StatusPengajuan']) ? antiSqlInjection($_POST['StatusPengajuan']) : null,
+        'TanggalPengajuan' => isset($_POST['TanggalPengajuan']) ? antiSqlInjection($_POST['TanggalPengajuan']) : null,
+        'FilePath' => $FilePath,
+        'CatatanVerifikasi' => isset($_POST['CatatanVerifikasi']) ? antiSqlInjection($_POST['CatatanVerifikasi']) : null
     ];
 
     $upload = new UploadModel();
@@ -91,8 +99,12 @@ if ($act == 'update') {
     $id = (isset($_GET['id']) && ctype_digit($_GET['id'])) ? $_GET['id'] : 0;
 
     $data = [
-        'NamaSurat' => htmlspecialchars($_POST['NamaSurat']),
-        'TanggalDibuat' => htmlspecialchars($_POST['TanggalDibuat'])
+        'NIM' => isset($_POST['NIM']) ? antiSqlInjection($_POST['NIM']) : null,
+        'SuratID' => isset($_POST['SuratID']) ? antiSqlInjection($_POST['SuratID']) : null,
+        'StatusPengajuan' => isset($_POST['StatusPengajuan']) ? antiSqlInjection($_POST['StatusPengajuan']) : null,
+        'TanggalPengajuan' => isset($_POST['TanggalPengajuan']) ? antiSqlInjection($_POST['TanggalPengajuan']) : null,
+        'FilePath' => isset($_POST['FilePath']) ? antiSqlInjection($_POST['FilePath']) : null,
+        'CatatanVerifikasi' => isset($_POST['CatatanVerifikasi']) ? antiSqlInjection($_POST['CatatanVerifikasi']) : null
     ];
 
     $upload = new UploadModel();
