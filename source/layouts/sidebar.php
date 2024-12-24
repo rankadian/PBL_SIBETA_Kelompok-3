@@ -52,13 +52,7 @@ data-accordion="false">
             </a> 
         </li>
 
-        <li class="nav-item "> 
-            <a href="index.php?page=lihat1" class="nav-link"> 
-                <i class="nav-icon fas fa-chart-pie"></i> 
-                <p>Lihat USER</p> 
-            </a> 
-        </li>
-
+        
         <li class="nav-item border-bottom"> 
             <a href="index.php?page=status2" class="nav-link"> 
                 <i class="nav-icon fas fa-columns"></i> 
