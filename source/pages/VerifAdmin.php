@@ -25,11 +25,12 @@
                 <thead>
                     <tr>
                         <th>ID Upload</th>
+                        <th>NIM Mahasiswa</th>
                         <th>Nama Mahasiswa</th>
                         <th>Nama File</th>
                         <th>Jenis Surat</th>
                         <th>Tanggal Dibuat</th>
-                        <th>Aksi</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -64,20 +65,16 @@
     </div>
 </section>
 <script>
-$('#verifikasiTable').DataTable({
-    ajax: {
-        url: 'UploadAction.php?act=load', // Pastikan URL path benar
-        type: 'GET' // Pastikan metode HTTP sesuai
-    },
-    columns: [
-        { data: 0 }, // ID Upload
-        { data: 1 }, // Nama Mahasiswa
-        { data: 2 }, // Nama File
-        { data: 3 }, // Jenis Surat
-        { data: 4 }, // Tanggal Dibuat
-        { data: 5 }  // Aksi
-    ]
-});
+   $(document).ready(function() {
+        table = $('#verifikasiTable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                "url": "action/VerifAdminAction.php?act=load",
+                "type": "GET"
+            }
+        });
+    });
 
 
 </script>

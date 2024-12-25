@@ -17,7 +17,7 @@ class VerifAdminModel extends Model
     {
         $query = "INSERT INTO {$this->table} (IDUpload, IDAdmin, TanggalVerifikasi, StatusVerifikasi, Catatan) 
                   VALUES (?, ?, ?, ?, ?)";
-        
+
         $params = [
             $data['IDUpload'],
             $data['IDAdmin'],
@@ -66,9 +66,11 @@ class VerifAdminModel extends Model
         return sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
     }
 
-    public function getJoinedData() {
+    public function getJoinedData()
+    {
         $query = "SELECT 
                     u.IDUpload,
+                    m.NIM AS NIMMahasiswa,
                     m.Nama AS NamaMahasiswa,
                     u.Nama_file,
                     u.Jenis_Surat,
@@ -76,9 +78,20 @@ class VerifAdminModel extends Model
                   FROM TB_Verifikasi v
                   INNER JOIN TB_Upload u ON v.IDUpload = u.IDUpload
                   INNER JOIN TB_Mahasiswa m ON u.NIM = m.NIM";
-        return $this->db->query($query)->getResultArray();
+
+        $result = sqlsrv_query($this->db, $query);
+        if ($result === false) {
+            die(print_r(sqlsrv_errors(), true)); // Debugging error
+        }
+
+        $data = [];
+        while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+            $data[] = $row;
+        }
+
+        return $data; // Mengembalikan data yang diambil
     }
-    
+
     // Implementasi updateData - Mengupdate status verifikasi
     public function updateData($id, $data)
     {
@@ -111,4 +124,3 @@ class VerifAdminModel extends Model
         return sqlsrv_rows_affected($stmt) > 0;
     }
 }
-?>
