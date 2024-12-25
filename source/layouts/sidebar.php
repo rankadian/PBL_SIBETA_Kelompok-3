@@ -45,9 +45,9 @@ data-accordion="false">
             ?>
 
         <li class="nav-item"> 
-            <a href="index.php?page=kategori" class="nav-link"> 
+            <a href="index.php?page=verif" class="nav-link"> 
                 <i class="nav-icon fas fa-bookmark"></i> 
-                <p>Kategori Buku</p> 
+                <p>Verifikasi Mahasiswa</p> 
             </a> 
         </li> 
         <li class="nav-item "> 

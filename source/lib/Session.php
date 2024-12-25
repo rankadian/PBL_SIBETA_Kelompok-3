@@ -30,11 +30,10 @@ class Session{
  
     public function getFlash($key){ 
         $value = (isset($_SESSION['flash'][$key]))? $_SESSION['flash'][$key] : null; 
-         
         $this->deleteFlash($key); 
         return $value; 
     } 
- 
+
     public function deleteFlash($key){ 
         if(isset($_SESSION['flash'][$key])){ 
             unset($_SESSION['flash'][$key]); 

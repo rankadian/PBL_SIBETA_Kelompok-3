@@ -66,8 +66,8 @@ if ($session->get('is_login') !== true) {
         case 'dashboard':
           include('pages/Tanggungan.php');
           break;
-        case 'buku':
-          include('pages/buku.php');
+        case 'verif':
+          include('pages/VerifAdmin.php');
           break;
         case 'kategori':
           include('pages/kategori.php');

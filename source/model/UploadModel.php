@@ -4,7 +4,7 @@ include_once('Model.php');
 class UploadModel extends Model
 {
     protected $db;
-    protected $table = 'TB_PengajuanSurat';
+    protected $table = 'TB_Upload';
 
     public function __construct()
     {
@@ -15,77 +15,44 @@ class UploadModel extends Model
     // Method untuk menambahkan data pengajuan surat
     public function insertData($data)
     {
-        // Mulai transaksi
-        sqlsrv_begin_transaction($this->db);
-
-        try {
-            // Query untuk memasukkan data ke TB_Surat
-            $sqlSurat = "INSERT INTO TB_Surat (NamaSurat, FilePath, TanggalUpload) 
-                        VALUES (?, ?, ?)";
-            $paramsSurat = [
-                $data['NamaSurat'],          // Nama surat
-                $data['FilePath'],           // Lokasi file
-                $data['TanggalUpload'],      // Tanggal upload
-            ];
-
-            $stmtSurat = sqlsrv_query($this->db, $sqlSurat, $paramsSurat);
-            if ($stmtSurat === false) {
-                throw new Exception('Error inserting into TB_Surat: ' . print_r(sqlsrv_errors(), true));
-            }
-
-            // Ambil SuratID yang baru saja di-insert
-            $queryLastSuratID = "SELECT SCOPE_IDENTITY() AS SuratID";
-            $stmtLastSuratID = sqlsrv_query($this->db, $queryLastSuratID);
-            if ($stmtLastSuratID === false) {
-                throw new Exception('Error retrieving SuratID: ' . print_r(sqlsrv_errors(), true));
-            }
-
-            $row = sqlsrv_fetch_array($stmtLastSuratID, SQLSRV_FETCH_ASSOC);
-            $suratID = $row['SuratID'];
-
-            // Query untuk memasukkan data ke TB_PengajuanSurat
-            $sqlPengajuan = "INSERT INTO TB_PengajuanSurat 
-                            (NIM, SuratID, StatusPengajuan, TanggalPengajuan, FilePath, CatatanVerifikasi) 
-                            VALUES (?, ?, ?, ?, ?, ?)";
-            $paramsPengajuan = [
-                $data['NIM'],                // NIM mahasiswa
-                $suratID,                    // SuratID dari langkah sebelumnya
-                $data['StatusPengajuan'],    // Status pengajuan
-                $data['TanggalPengajuan'],   // Tanggal pengajuan
-                $data['FilePath'],           // Lokasi file
-                $data['CatatanVerifikasi'],  // Catatan verifikasi
-            ];
-
-            $stmtPengajuan = sqlsrv_query($this->db, $sqlPengajuan, $paramsPengajuan);
-            if ($stmtPengajuan === false) {
-                throw new Exception('Error inserting into TB_PengajuanSurat: ' . print_r(sqlsrv_errors(), true));
-            }
-
-            // Commit transaksi jika semua berhasil
-            sqlsrv_commit($this->db);
-            return [
-                'status' => true,
-                'message' => 'Data berhasil disimpan.'
-            ];
-        } catch (Exception $e) {
-            // Rollback transaksi jika ada error
-            sqlsrv_rollback($this->db);
-            return [
-                'status' => false,
-                'message' => 'Transaction failed: ' . $e->getMessage()
-            ];
+        // Query SQL untuk menyisipkan data
+        $query = "INSERT INTO TB_Upload (Nama_file, Jenis_Surat, TanggalDibuat, NIM) VALUES (?, ?, ?, ?)";
+    
+        // Menyiapkan query dengan parameter
+        $stmt = sqlsrv_prepare($this->db, $query, array(
+            $data['Nama_file'], 
+            $data['Jenis_Surat'], 
+            $data['TanggalDibuat'], 
+            $data['NIM']
+        ));
+    
+        // Mengeksekusi query yang sudah disiapkan
+        if (sqlsrv_execute($stmt)) {
+            return true; // Berhasil
+        } else {
+            echo "Error executing query: ";
+            print_r(sqlsrv_errors()); // Tampilkan error jika eksekusi gagal
+            return false; // Gagal
         }
     }
-
 
     // Method untuk mengambil semua data pengajuan surat
     public function getData()
     {
+        // Execute the query
         $query = sqlsrv_query($this->db, "SELECT * FROM {$this->table}");
+
+        // Check if the query failed
+        if ($query === false) {
+            die("SQL query failed: " . print_r(sqlsrv_errors(), true));
+        }
+
+        // Fetch the data
         $data = [];
         while ($row = sqlsrv_fetch_array($query, SQLSRV_FETCH_ASSOC)) {
             $data[] = $row;
         }
+
         return $data;
     }
 
@@ -94,11 +61,13 @@ class UploadModel extends Model
     {
         $query = sqlsrv_query(
             $this->db,
-            "SELECT * FROM {$this->table} WHERE PengajuanID = ?",
+            "SELECT NamaSurat, TanggalUpload FROM {$this->table} WHERE PengajuanID = ?",
             [$id]
         );
         return sqlsrv_fetch_array($query, SQLSRV_FETCH_ASSOC);
     }
+
+    public function getDataForSurat() {}
 
     // Method untuk memperbarui data pengajuan surat
     public function updateData($id, $data)
@@ -136,4 +105,3 @@ class UploadModel extends Model
         }
     }
 }
-?>

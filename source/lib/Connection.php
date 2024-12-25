@@ -4,7 +4,7 @@
     $host     = 'DESKTOP-QAULIDP'; 
     $username = ''; //'sa'; 
     $password = ''; 
-    $database = 'SibetaWeb3'; 
+    $database = 'SibetaWeb6'; 
     $db; 
  
     

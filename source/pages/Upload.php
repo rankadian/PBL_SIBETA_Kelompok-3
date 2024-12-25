@@ -42,7 +42,7 @@
 </section>
 
 <div class="modal fade" id="form-data" style="display: none;" aria-hidden="true">
-    <form action="../action/UploadAction.php?act=save" method="post" id="form-tambah">
+    <form action="../action/UploadAction.php?act=save" method="post" id="form-tambah" enctype="multipart/form-data">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
@@ -50,24 +50,25 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="NamaSurat">Nama Surat</label>
-                        <select class="form-control" name="NamaSurat" id="NamaSurat">
+                        <label for="Jenis_Surat">Nama Surat</label>
+                        <select class="form-control" name="Jenis_Surat" id="Jenis_Surat" required>
                             <option value="" disabled selected>Pilih Surat Yang akan di Upload</option>
-                            <option value="SKKM">SKKM</option>
-                            <option value="TOEIC">Toeic</option>
-                            <option value="PKL">PKL</option>
-                            <option value="SKLA">SKLA</option>
-                            <option value="KOMPEN">Kompen</option>
-                            <option value="PUBLIKASI">Publikasi</option>
+                            <option value="ukt">UKT</option>
+                            <option value="skkm">SKKM</option>
+                            <option value="Toeic">TOEIC</option>
+                            <option value="Publikasi">Publikasi</option>
+                            <option value="Skla">SKLA</option>
+                            <option value="kompensasi">Kompensasi</option>
                         </select>
+
                     </div>
                     <div class="form-group">
                         <label>Tanggal Laporan</label>
                         <input type="date" class="form-control" name="TanggalDibuat" id="TanggalDibuat" required>
                     </div>
                     <div class="form-group">
-                        <label for="BuktiSurat">Unggah File</label>
-                        <input type="file" class="form-control" name="BuktiSurat" id="BuktiSurat" accept=".pdf, .doc, .docx" required>
+                        <label for="Nama_file">Unggah File</label>
+                        <input type="file" class="form-control" name="FilePath" id="Nama_file" accept=".pdf, .doc, .docx" required>
                         <small class="form-text text-muted">Hanya file PDF, DOC, dan DOCX yang diperbolehkan.</small>
                     </div>
                 </div>
@@ -85,6 +86,7 @@
         $('#form-data').modal('show');
         $('#form-tambah').trigger('reset');
         $('#form-tambah').attr('action', 'action/UploadAction.php?act=save');
+        exit;
     }
 
     function editData(id) {
@@ -95,7 +97,7 @@
                 const data = JSON.parse(response);
                 $('#form-data').modal('show');
                 $('#form-tambah').attr('action', 'action/UploadAction.php?act=update&id=' + id);
-                $('#NamaSurat').val(data.NamaSurat);
+                $('#Jenis_Surat').val(data.Jenis_Surat);
                 $('#TanggalDibuat').val(data.TanggalDibuat);
             },
             error: function() {

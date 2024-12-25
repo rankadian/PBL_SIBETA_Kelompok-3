@@ -1,13 +1,14 @@
 <?php
 include('../lib/Session.php');
 include_once('../model/UploadModel.php');
+include_once('../model/MahasiswaModel.php');
 include_once('../lib/Secure.php');
 
 $session = new Session();
 
 // Cek apakah user sudah login
 if ($session->get('is_login') !== true) {
-    header('Location: login.php');
+    header('Location: ../login.php');
     exit;
 }
 
@@ -16,22 +17,19 @@ $act = isset($_GET['act']) ? strtolower($_GET['act']) : '';
 // Proses untuk load data
 if ($act == 'load') {
     $upload = new UploadModel();
-    $data = $upload->getData();
+    $data = $upload->getData(); // Fungsi untuk mengambil NamaSurat dan TanggalUpload
     $result = ['data' => []];
     $i = 1;
+
     foreach ($data as $row) {
         $result['data'][] = [
             $i,
-            htmlspecialchars($row['PengajuanID'] ?? ''),
-            htmlspecialchars($row['NIM'] ?? ''),
-            htmlspecialchars($row['SuratID'] ?? ''),
-            htmlspecialchars($row['StatusPengajuan'] ?? ''),
-            htmlspecialchars($row['TanggalPengajuan'] ? $row['TanggalPengajuan']->format('Y-m-d') : ''),
-            htmlspecialchars($row['FilePath'] ?? ''),
-            htmlspecialchars($row['CatatanVerifikasi'] ?? '')
+            htmlspecialchars($row['Jenis_Surat'] ?? ''),  // Nama Surat
+            htmlspecialchars($row['TanggalDibuat'] ? $row['TanggalDibuat']->format('Y-m-d') : '') // Tanggal Upload
         ];
         $i++;
     }
+
     echo json_encode($result);
     exit;
 }
@@ -48,83 +46,70 @@ if ($act == 'get') {
 
 // Proses untuk menyimpan data (termasuk upload file)
 if ($act == 'save') {
+    // Check if a file was uploaded
     $FilePath = '';
     if (isset($_FILES['FilePath']) && $_FILES['FilePath']['error'] === UPLOAD_ERR_OK) {
         $uploadDir = "../upload";
         $allowedTypes = ['pdf', 'doc', 'docx'];
-
-        // Validasi jenis file
         $fileType = pathinfo($_FILES['FilePath']['name'], PATHINFO_EXTENSION);
-        if (!in_array($fileType, $allowedTypes)) {
-            $response = ['status' => false, 'message' => 'Invalid file type. Allowed types are pdf, doc, and docx.'];
-            echo json_encode($response);
+
+        if (!in_array(strtolower($fileType), $allowedTypes)) {
+            echo json_encode(['status' => false, 'message' => 'Invalid file type.']);
+            exit;
+        }
+        if ($_FILES['FilePath']['size'] > 10000000) {
+            echo json_encode(['status' => false, 'message' => 'File is too large.']);
             exit;
         }
 
-        // Generate nama file unik
         $fileName = time() . "_" . basename($_FILES['FilePath']['name']);
         $uploadFile = $uploadDir . '/' . $fileName;
-
-        // Pindahkan file ke direktori upload
-        if (!move_uploaded_file($_FILES['FilePath']['tmp_name'], $uploadFile)) {
-            $response = ['status' => false, 'message' => 'Failed to upload the file.'];
-            echo json_encode($response);
+        if (move_uploaded_file($_FILES['FilePath']['tmp_name'], $uploadFile)) {
+            $FilePath = $fileName;
+        } else {
+            echo json_encode(['status' => false, 'message' => 'Failed to move uploaded file.']);
             exit;
         }
-        $FilePath = $fileName;
     }
 
+    // Get NIM from session
+    if (!isset($_SESSION['NIM'])) {
+        echo json_encode(['status' => false, 'message' => 'NIM is not set in session.']);
+        exit;
+    }
+    $NIM = $_SESSION['NIM'];
+
+    // Validate Jenis_Surat
+    $Jenis_Surat = isset($_POST['Jenis_Surat']) && !empty(trim($_POST['Jenis_Surat']))
+        ? trim($_POST['Jenis_Surat'])
+        : null;
+
+    if (is_null($Jenis_Surat)) {
+        echo json_encode(['status' => false, 'message' => 'Please select a valid Jenis_Surat.']);
+        exit;
+    }
+
+
+    // Validate or set TanggalDibuat
+    $TanggalDibuat = isset($_POST['TanggalDibuat']) && !empty($_POST['TanggalDibuat'])
+        ? antiSqlInjection($_POST['TanggalDibuat'])
+        : date('Y-m-d');
+
+    // Prepare data
     $data = [
-        'NIM' => isset($_POST['NIM']) ? antiSqlInjection($_POST['NIM']) : null,
-        'SuratID' => isset($_POST['SuratID']) ? antiSqlInjection($_POST['SuratID']) : null,
-        'StatusPengajuan' => isset($_POST['StatusPengajuan']) ? antiSqlInjection($_POST['StatusPengajuan']) : null,
-        'TanggalPengajuan' => isset($_POST['TanggalPengajuan']) ? antiSqlInjection($_POST['TanggalPengajuan']) : null,
-        'FilePath' => $FilePath,
-        'CatatanVerifikasi' => isset($_POST['CatatanVerifikasi']) ? antiSqlInjection($_POST['CatatanVerifikasi']) : null
+        'Nama_file' => $FilePath,
+        'Jenis_Surat' => $Jenis_Surat,
+        'TanggalDibuat' => $TanggalDibuat,
+        'NIM' => $NIM,
     ];
 
+    // Save to database
     $upload = new UploadModel();
     $result = $upload->insertData($data);
 
-    if ($result) {
-        echo json_encode(['status' => true, 'message' => 'Data berhasil disimpan.']);
-    } else {
-        echo json_encode(['status' => false, 'message' => 'Gagal menyimpan data.']);
-    }
-    exit;
-}
-
-// Proses untuk mengupdate data
-if ($act == 'update') {
-    $id = (isset($_GET['id']) && ctype_digit($_GET['id'])) ? $_GET['id'] : 0;
-
-    $data = [
-        'NIM' => isset($_POST['NIM']) ? antiSqlInjection($_POST['NIM']) : null,
-        'SuratID' => isset($_POST['SuratID']) ? antiSqlInjection($_POST['SuratID']) : null,
-        'StatusPengajuan' => isset($_POST['StatusPengajuan']) ? antiSqlInjection($_POST['StatusPengajuan']) : null,
-        'TanggalPengajuan' => isset($_POST['TanggalPengajuan']) ? antiSqlInjection($_POST['TanggalPengajuan']) : null,
-        'FilePath' => isset($_POST['FilePath']) ? antiSqlInjection($_POST['FilePath']) : null,
-        'CatatanVerifikasi' => isset($_POST['CatatanVerifikasi']) ? antiSqlInjection($_POST['CatatanVerifikasi']) : null
-    ];
-
-    $upload = new UploadModel();
-    if ($upload->updateData($id, $data)) {
-        echo json_encode(['status' => true, 'message' => 'Data berhasil diupdate.']);
-    } else {
-        echo json_encode(['status' => false, 'message' => 'Gagal mengupdate data.']);
-    }
-    exit;
-}
-
-// Proses untuk menghapus data
-if ($act == 'delete') {
-    $id = (isset($_GET['id']) && ctype_digit($_GET['id'])) ? $_GET['id'] : 0;
-
-    $upload = new UploadModel();
-    if ($upload->deleteData($id)) {
-        echo json_encode(['status' => true, 'message' => 'Data berhasil dihapus.']);
-    } else {
-        echo json_encode(['status' => false, 'message' => 'Gagal menghapus data.']);
-    }
+    echo json_encode([
+        'status' => $result,
+        'message' => $result ? 'Data successfully saved.' : 'Failed to save data.',
+    ]);
     exit;
 }
