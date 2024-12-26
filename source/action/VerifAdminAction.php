@@ -16,20 +16,24 @@ $act = isset($_GET['act']) ? strtolower($_GET['act']) : '';
 
 if ($act == 'load') {
     $VerifAdminModel = new VerifAdminModel();
-    $data = $VerifAdminModel->getJoinedData(); // Pastikan query-nya sesuai
+    $data = $VerifAdminModel->getDetailVerifikasi(); // Pastikan query-nya sesuai
     $result = [];
     $i = 1;
 
     foreach ($data as $row) {
         $result['data'][] = [
-            $row['IDUpload'],
-            $row['NIMMahasiswa'],
-            $row['NamaMahasiswa'],
+            $row['IDVerifikasi'],
+            $row['TanggalVerifikasi'],
+            $row['StatusVerifikasi'],
+            $row['Catatan'],
             $row['Nama_file'],
             $row['Jenis_Surat'],
-            $row['TanggalDibuat'] = $row['TanggalDibuat']->format('Y-m-d'),
-            '<button class="btn btn-sm btn-warning" onclick="editData(' . $row['IDUpload'] . ')"><i class="fa fa-edit"></i></button> 
-            <button class="btn btn-sm btn-danger" onclick="deleteData(' . $row['IDUpload'] . ')"><i class="fa fa-trash"></i></button>'
+            $row['TanggalDibuat'],
+            $row['NIM'],
+            $row['Nama'],
+            $row['NamaAdmin'],
+            '<button class="btn btn-sm btn-warning" onclick="editData('.$row['IDVerifikasi'].')"><i class="fas fa-edit"></i></button>
+             <button class="btn btn-sm btn-danger" onclick="editData('.$row['IDVerifikasi'].')"><i class="fas fa-trash"></i></button>'
         ];
         $i++;
     }

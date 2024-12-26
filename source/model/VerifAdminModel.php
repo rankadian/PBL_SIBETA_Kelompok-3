@@ -66,32 +66,6 @@ class VerifAdminModel extends Model
         return sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
     }
 
-    public function getJoinedData()
-    {
-        $query = "SELECT 
-                    u.IDUpload,
-                    m.NIM AS NIMMahasiswa,
-                    m.Nama AS NamaMahasiswa,
-                    u.Nama_file,
-                    u.Jenis_Surat,
-                    u.TanggalDibuat
-                  FROM TB_Verifikasi v
-                  INNER JOIN TB_Upload u ON v.IDUpload = u.IDUpload
-                  INNER JOIN TB_Mahasiswa m ON u.NIM = m.NIM";
-
-        $result = sqlsrv_query($this->db, $query);
-        if ($result === false) {
-            die(print_r(sqlsrv_errors(), true)); // Debugging error
-        }
-
-        $data = [];
-        while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
-            $data[] = $row;
-        }
-
-        return $data; // Mengembalikan data yang diambil
-    }
-
     // Implementasi updateData - Mengupdate status verifikasi
     public function updateData($id, $data)
     {
@@ -121,6 +95,101 @@ class VerifAdminModel extends Model
             die(print_r(sqlsrv_errors(), true)); // Debugging error
         }
 
+        return sqlsrv_rows_affected($stmt) > 0;
+    }
+
+    // Mengambil data verifikasi dengan detail mahasiswa dan surat
+    public function getDetailVerifikasi()
+    {
+        $query = "SELECT v.IDVerifikasi,
+                         v.TanggalVerifikasi,
+                         v.StatusVerifikasi,
+                         v.Catatan,
+                         u.IDUpload,
+                         u.Nama_file,
+                         u.Jenis_Surat,
+                         u.TanggalDibuat,
+                         m.NIM,
+                         m.Nama,
+                         a.NamaAdmin
+                  FROM TB_Verifikasi v
+                  JOIN TB_Upload u ON v.IDUpload = u.IDUpload
+                  JOIN TB_Mahasiswa m ON u.NIM = m.NIM
+                  JOIN TB_Admin a ON v.IDAdmin = a.IDAdmin
+                  ORDER BY v.TanggalVerifikasi DESC";
+        
+        $result = sqlsrv_query($this->db, $query);
+        if ($result === false) {
+            die(print_r(sqlsrv_errors(), true));
+        }
+
+        $data = [];
+        while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+            // Konversi status dari BIT ke boolean
+            $row['StatusVerifikasi'] = $row['StatusVerifikasi'] ? true : false;
+            
+            // Format tanggal menggunakan CONVERT di SQL Server
+            $row['TanggalVerifikasi'] = date_format($row['TanggalVerifikasi'], 'Y-m-d');
+            $row['TanggalDibuat'] = date_format($row['TanggalDibuat'], 'Y-m-d');
+            
+            $data[] = $row;
+        }
+        return $data;
+    }
+
+    // Mengambil surat yang belum diverifikasi berdasarkan jenis surat
+    public function getUnverifiedDocuments($jenisSurat = null)
+    {
+        $query = "SELECT 
+                    u.IDUpload,
+                    u.Nama_file,
+                    u.Jenis_Surat,
+                    u.TanggalDibuat,
+                    m.NIM,
+                    m.Nama,
+                    m.ProgramStudi
+                  FROM TB_Upload u
+                  JOIN TB_Mahasiswa m ON u.NIM = m.NIM
+                  WHERE u.IDUpload NOT IN (SELECT IDUpload FROM {$this->table})";
+        
+        if ($jenisSurat) {
+            $query .= " AND u.Jenis_Surat = ?";
+            $params = [$jenisSurat];
+        } else {
+            $params = [];
+        }
+        
+        $result = sqlsrv_query($this->db, $query, $params);
+        if ($result === false) {
+            die(print_r(sqlsrv_errors(), true));
+        }
+
+        $data = [];
+        while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+            $row['TanggalDibuat'] = $row['TanggalDibuat']->format('Y-m-d');
+            $data[] = $row;
+        }
+        return $data;
+    }
+
+    // Update status verifikasi
+    public function updateVerifikasi($idVerifikasi, $status, $catatan)
+    {
+        $query = "UPDATE {$this->table} 
+                  SET StatusVerifikasi = ?, 
+                      Catatan = ?,
+                      TanggalVerifikasi = GETDATE()
+                  WHERE IDVerifikasi = ?";
+        
+        // Konversi status ke BIT
+        $statusBit = $status ? 1 : 0;
+        $params = [$statusBit, $catatan, $idVerifikasi];
+        
+        $stmt = sqlsrv_query($this->db, $query, $params);
+        if ($stmt === false) {
+            die(print_r(sqlsrv_errors(), true));
+        }
+        
         return sqlsrv_rows_affected($stmt) > 0;
     }
 }
