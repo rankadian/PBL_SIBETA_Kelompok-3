@@ -42,7 +42,7 @@
 </section>
 
 <div class="modal fade" id="form-data" style="display: none;" aria-hidden="true">
-    <form action="../action/UploadAction.php?act=save" method="post" id="form-tambah" enctype="multipart/form-data">
+    <form method="post" id="form-tambah" enctype="multipart/form-data">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
@@ -86,7 +86,6 @@
         $('#form-data').modal('show');
         $('#form-tambah').trigger('reset');
         $('#form-tambah').attr('action', 'action/UploadAction.php?act=save');
-        exit;
     }
 
     function editData(id) {
@@ -106,59 +105,47 @@
         });
     }
 
-    function deleteData(id) {
-        if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
-            $.ajax({
-                url: 'action/UploadAction.php?act=delete&id=' + id,
-                method: 'POST',
-                success: function(response) {
+    // Handle form submission
+    $('#form-tambah').on('submit', function(e) {
+        e.preventDefault();
+        $(this).find('button[type="submit"]').prop('disabled', true);
+        
+        $.ajax({
+            url: $(this).attr('action'),
+            method: 'POST',
+            data: new FormData(this),
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                try {
                     const result = JSON.parse(response);
                     if (result.status) {
-                        alert('Data berhasil dihapus.');
-                        tabelData.ajax.reload();
+                        $('#form-data').modal('hide');
+                        location.reload();
                     } else {
-                        alert('Gagal menghapus data: ' + result.message);
+                        alert(result.message);
                     }
-                },
-                error: function() {
-                    alert('Terjadi kesalahan saat menghapus data.');
+                } catch (e) {
+                    console.error(e, response);
+                    alert('Terjadi kesalahan saat memproses data');
                 }
-            });
-        }
-    }
-
-    $(document).ready(function() {
-        table = $('#table-data').DataTable({
-            "processing": true,
-            "serverSide": true,
-            "ajax": {
-                "url": "action/UploadAction.php?act=load",
-                "type": "GET"
+            },
+            error: function() {
+                alert('Gagal menyimpan data');
+            },
+            complete: function() {
+                $('#form-tambah').find('button[type="submit"]').prop('disabled', false);
             }
         });
     });
 
-    $('#form-tambah').on('submit', function(e) {
-        e.preventDefault();
-        const formData = new FormData(this);
-        $.ajax({
-            url: $(this).attr('action'),
-            method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                const result = JSON.parse(response);
-                if (result.status) {
-                    $('#form-data').modal('hide');
-                    tabelData.ajax.reload();
-                } else {
-                    alert('Gagal menyimpan data: ' + result.message);
-                }
-            },
-            error: function() {
-                alert('Terjadi kesalahan saat menyimpan data.');
-            }
+    // Initialize DataTable
+    let table;
+    $(document).ready(function() {
+        table = $('#table-data').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: 'action/UploadAction.php?act=load'
         });
     });
 </script>

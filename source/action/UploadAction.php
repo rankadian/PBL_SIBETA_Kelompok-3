@@ -80,16 +80,20 @@ if ($act == 'save') {
     $NIM = $_SESSION['NIM'];
 
     // Validate Jenis_Surat
+    $validJenisSurat = ['ukt', 'skkm', 'Toeic', 'Publikasi', 'Skla', 'kompensasi'];
     $Jenis_Surat = isset($_POST['Jenis_Surat']) && !empty(trim($_POST['Jenis_Surat']))
         ? trim($_POST['Jenis_Surat'])
         : null;
+        error_log('Jenis_Surat value: ' . $Jenis_Surat);
 
-    if (is_null($Jenis_Surat)) {
-        echo json_encode(['status' => false, 'message' => 'Please select a valid Jenis_Surat.']);
+    if (is_null($Jenis_Surat) || !in_array($Jenis_Surat, $validJenisSurat)) {
+        echo json_encode([
+            'status' => false, 
+            'message' => 'Please select a valid document type (ukt, skkm, Toeic, Publikasi, Skla, or kompensasi).'
+        ]);
         exit;
     }
-
-
+    
     // Validate or set TanggalDibuat
     $TanggalDibuat = isset($_POST['TanggalDibuat']) && !empty($_POST['TanggalDibuat'])
         ? antiSqlInjection($_POST['TanggalDibuat'])
@@ -106,10 +110,10 @@ if ($act == 'save') {
     // Save to database
     $upload = new UploadModel();
     $result = $upload->insertData($data);
-
+    // Send proper JSON response
     echo json_encode([
         'status' => $result,
-        'message' => $result ? 'Data successfully saved.' : 'Failed to save data.',
+        'message' => $result ? 'Data berhasil disimpan.' : 'Gagal menyimpan data.',
     ]);
     exit;
 }
