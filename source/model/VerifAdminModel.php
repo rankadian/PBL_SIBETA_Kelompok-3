@@ -87,15 +87,60 @@ class VerifAdminModel extends Model
     // Implementasi deleteData - Menghapus data verifikasi
     public function deleteData($id)
     {
-        $query = "DELETE FROM {$this->table} WHERE IDVerifikasi = ?";
-        $params = [$id];
+        try {
+            // Begin transaction
+            if (sqlsrv_begin_transaction($this->db) === false) {
+                throw new Exception("Tidak dapat memulai transaksi");
+            }
 
-        $stmt = sqlsrv_query($this->db, $query, $params);
-        if ($stmt === false) {
-            die(print_r(sqlsrv_errors(), true)); // Debugging error
+            // Check if data exists first
+            $checkQuery = "SELECT COUNT(*) as count FROM {$this->table} WHERE IDVerifikasi = ?";
+            $checkParams = [$id];
+            $checkStmt = sqlsrv_query($this->db, $checkQuery, $checkParams);
+            
+            if ($checkStmt === false) {
+                sqlsrv_rollback($this->db);
+                throw new Exception(print_r(sqlsrv_errors(), true));
+            }
+            
+            $row = sqlsrv_fetch_array($checkStmt, SQLSRV_FETCH_ASSOC);
+            if ($row['count'] == 0) {
+                sqlsrv_rollback($this->db);
+                return false; // Data not found
+            }
+
+            // Delete query
+            $query = "DELETE FROM {$this->table} WHERE IDVerifikasi = ?";
+            $params = [$id];
+            
+            // Execute delete
+            $stmt = sqlsrv_query($this->db, $query, $params);
+            
+            if ($stmt === false) {
+                sqlsrv_rollback($this->db);
+                throw new Exception(print_r(sqlsrv_errors(), true));
+            }
+
+            // Check affected rows
+            $affected = sqlsrv_rows_affected($stmt);
+            if ($affected === false || $affected === 0) {
+                sqlsrv_rollback($this->db);
+                return false;
+            }
+
+            // Commit transaction
+            if (sqlsrv_commit($this->db) === false) {
+                throw new Exception("Gagal melakukan commit transaksi");
+            }
+
+            return true;
+        } catch (Exception $e) {
+            // Ensure rollback on any error
+            if (sqlsrv_rollback($this->db) === false) {
+                throw new Exception("Gagal melakukan rollback: " . $e->getMessage());
+            }
+            throw $e;
         }
-
-        return sqlsrv_rows_affected($stmt) > 0;
     }
 
     // Mengambil data verifikasi dengan detail mahasiswa dan surat
