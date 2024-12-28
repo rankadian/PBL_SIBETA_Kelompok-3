@@ -65,7 +65,7 @@ if ($session->get('is_login') !== true) {
       
       switch (strtolower($page)) {
         case 'dashboard':
-          include('pages/Tanggungan.php');
+          include('pages/dashboard.php');
           break;
         case 'verif':
           include('pages/VerifAdmin.php');
