@@ -17,7 +17,7 @@ if ($session->get('is_login') === true) {
     <title>Login - SIBETA</title>
 
     <!-- FAV ICON -->
-    <link href="../assets/img/logoSIb4.png" rel="icon">
+    <link href="../assets/img/icon2.png" rel="icon">
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Bootstrap 5 -->
@@ -25,7 +25,7 @@ if ($session->get('is_login') === true) {
     <link rel="stylesheet" href="../assets/css/main.css">
     <style>
         .background{
-            background-image: url(../assets/img/jti3.png);
+            background-image: url(../assets/img/BG-LOG2-JTI.png);
             background-size: cover;
             background-position: center;
             width: 100%;
@@ -38,7 +38,7 @@ if ($session->get('is_login') === true) {
     <div  class="d-flex justify-content-center align-items-center vh-100  ">
         <div class="card shadow p-4" style="width: 100%; max-width: 400px;">
             <div style="text-align: center; margin-bottom: 2px;">
-                <img src="../assets/img/logoSIb4.png" alt="icon" style="max-width: 150px; width: 100%; height: auto;">
+                <img src="../assets/img/icon2.png" alt="icon" style="max-width: 150px; width: 100%; height: auto;">
             </div>
             <h2 class="text-center mb-4">Login - <strong>SIBETA</strong></h2>
             <p class="login-box-msg text-center mb-4">Sign in to start your session</p>
