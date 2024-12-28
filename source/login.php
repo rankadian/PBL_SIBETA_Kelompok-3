@@ -17,19 +17,28 @@ if ($session->get('is_login') === true) {
     <title>Login - SIBETA</title>
 
     <!-- FAV ICON -->
-    <link href="../assets/img/sibetaV3.png" rel="icon">
+    <link href="../assets/img/icon2.png" rel="icon">
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/main.css">
+    <style>
+        .background{
+            background-image: url(../assets/img/BG-LOG2-JTI.png);
+            background-size: cover;
+            background-position: center;
+            width: 100%;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div class="background">
+    <div  class="d-flex justify-content-center align-items-center vh-100  ">
         <div class="card shadow p-4" style="width: 100%; max-width: 400px;">
             <div style="text-align: center; margin-bottom: 2px;">
-                <img src="../assets/img/sibetaV3.png" alt="icon" style="max-width: 150px; width: 100%; height: auto;">
+                <img src="../assets/img/icon2.png" alt="icon" style="max-width: 150px; width: 100%; height: auto;">
             </div>
             <h2 class="text-center mb-4">Login - <strong>SIBETA</strong></h2>
             <p class="login-box-msg text-center mb-4">Sign in to start your session</p>
@@ -64,6 +73,7 @@ if ($session->get('is_login') === true) {
                 <button type="submit" class="btn btn-primary w-100" style="background-color:#1b156a; border-color:#1b156a;">Sign In</button>
             </form>
         </div>
+    </div>
     </div>
 
     <!-- Bootstrap JS -->
