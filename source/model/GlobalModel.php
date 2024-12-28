@@ -121,4 +121,5 @@ class GlobalModel extends Model
     
         return "Status tidak ditemukan";  
     }  
+    
 }
