@@ -43,7 +43,7 @@ fa-search fa-fw"></i></button></div>
                         <p>Dashboard</p>
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item border-bottom">
                     <a href="index.php?page=verif" class="nav-link">
                         <i class="nav-icon fas fa-bookmark"></i>
                         <p>Verifikasi Mahasiswa</p>
@@ -60,7 +60,7 @@ fa-search fa-fw"></i></button></div>
                 <li class="nav-item">
                     <a href="index.php?page=dashboard" class="nav-link">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>Tanggungan</p>
+                        <p>Dashboard</p>
                     </a>
                 </li>
 
