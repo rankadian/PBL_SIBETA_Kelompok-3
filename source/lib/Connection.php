@@ -1,7 +1,7 @@
 <?php  
     $use_driver = 'sqlsrv'; // mysql atau sqlsrv 
  
-    $host     = 'DESKTOP-QAULIDP'; 
+    $host     = 'LAPTOP-Q3PDL8SK'; 
     $username = ''; //'sa'; 
     $password = ''; 
     $database = 'SibetaWeb7'; 
