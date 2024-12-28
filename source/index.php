@@ -98,7 +98,7 @@ if ($session->get('is_login') !== true) {
 
         <!-- Default box -->
         <div class="card">
-          <div class="card-header">
+          <!-- <div class="card-header">
             <h3 class="card-title">Title</h3>
 
             <div class="card-tools">
@@ -114,11 +114,11 @@ if ($session->get('is_login') !== true) {
             Selamat Datang Administrator. Anda login sebagai admin.
             <br>
             Start creating your amazing application!
-          </div>
+          </div> -->
           <!-- /.card-body -->
-          <div class="card-footer">
+          <!-- <div class="card-footer">
             Footer
-          </div>
+          </div> -->
           <!-- /.card-footer-->
         </div>
         <!-- /.card -->
