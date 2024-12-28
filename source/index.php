@@ -13,7 +13,7 @@ if ($session->get('is_login') !== true) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ADMIN SIBETA</title>
   <!-- Favicons -->
-  <link href="../assets/img/sibetaV3.png" rel="icon">
+  <link href="../assets/img/icon2.png" rel="icon">
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
@@ -47,7 +47,7 @@ if ($session->get('is_login') !== true) {
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
       <a href=" index.php" class="brand-link">
-        <img src="../assets/img/sibetaV3.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <img src="../assets/img/icon2.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">SIBETA</span>
       </a>
 
