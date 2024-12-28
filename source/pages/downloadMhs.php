@@ -17,32 +17,35 @@
 
     <!-- Layanan Bebas Tanggungan Section -->
     <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Layanan Bebas Tanggungan</h3>
-        </div>
-        <div class="card-body">
-            <h4>Request Verifikasi</h4>
-            <ul>
-                <li>REQ Surat Publikasi *admin prodi
-                    <!-- <button type="button" class="btn">Basic</button> -->
-                    <a href="https://docs.google.com/document/d/1txt2YJx2c8rf-iVexCnqMkExUrbvXSE2/edit" class="btn btn-info" role="button">Link Button</a>
-                    <!-- <button class="btn btn-sm btn-info" a href="https://docs.google.com/document/d/1txt2YJx2c8rf-iVexCnqMkExUrbvXSE2/edit?usp=drive_link&ouid=114318234382610261186&rtpof=true&sd=true">Download Semua File</button> -->
-                </li>
-                <li>REQ Surat Bebas Kompen *admin prodi
-                <a href="https://docs.google.com/document/d/1fXrfJZlVyKasZtHNdCY4DzC3U63lugep/edit?usp=drive_link&ouid=114318234382610261186&rtpof=true&sd=true" class="btn btn-info" role="button">Link Button</a>
-
-                </li>
-                <li>REQ Surat Validasi PKL *admin ruang BACA
-                <a href="https://docs.google.com/document/d/1txt2YJx2c8rf-iVexCnqMkExUrbvXSE2/edit" class="btn btn-info" role="button">Link Button</a>
-
-                </li>
-                <li>REQ Surat SKLA *admin bu merry
-                <a href="https://docs.google.com/document/d/1txt2YJx2c8rf-iVexCnqMkExUrbvXSE2/edit" class="btn btn-info" role="button">Link Button</a>
-
-                </li>
-            </ul>
+    <div class="card-header">
+        <h3 class="card-title font-weight-bold" style="font-family: 'Arial', sans-serif;">Layanan Bebas Tanggungan</h3>
+    </div>
+    <div class="card-body">
+        <h4 class="font-weight-bold" style="font-family: 'Arial', sans-serif;">DOWNLOAD SURAT</h4>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <h5 class="font-weight-semibold" style="font-family: 'Arial', sans-serif;">Surat Publikasi </h5>
+                <!-- Button to Download Surat Publikasi -->
+                <a href="https://drive.google.com/file/d/1nucVO1ewGTILmydCNr6hOddcePdRb7yR/view?usp=sharing" class="btn btn-sm btn-primary" target="_blank">Download Surat Publikasi</a>
+            </div>
+            <div class="col-md-6 mb-3">
+                <h5 class="font-weight-semibold" style="font-family: 'Arial', sans-serif;">Surat Bebas Kompen </h5>
+                <!-- Button to Download Surat Bebas Kompen -->
+                <a href="https://drive.google.com/file/d/1U5hUtjeEpa9DADH4FzXbja7ty5Lb6uf_/view?usp=drive_link" class="btn btn-sm btn-primary" target="_blank">Download Surat Bebas Kompen</a>
+            </div>
+            <div class="col-md-6 mb-3">
+                <h5 class="font-weight-semibold" style="font-family: 'Arial', sans-serif;">Surat Validasi PKL </h5>
+                <!-- Button to Download Surat Validasi PKL -->
+                <a href="https://drive.google.com/file/d/17XeqjkVv6YGyfiP97ET-XUU9oE-p3y4t/view?usp=drive_link" class="btn btn-sm btn-primary" target="_blank">Download Surat Validasi PKL</a>
+            </div>
+            <div class="col-md-6 mb-3">
+                <h5 class="font-weight-semibold" style="font-family: 'Arial', sans-serif;">Surat SKLA </h5>
+                <!-- Button to Download Surat SKLA -->
+                <a href="https://drive.google.com/file/d/1thBugXeZPZlxWzp169e-Zf9Qmy3SwdRS/view?usp=drive_link" class="btn btn-sm btn-primary" target="_blank">Download Surat SKLA</a>
+            </div>
         </div>
     </div>
+</div>
 
 
     </div>
