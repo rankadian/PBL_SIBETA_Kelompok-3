@@ -1,7 +1,3 @@
-<head>
-<link rel="stylesheet" href="../source/adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-<link rel="stylesheet" href="../source/adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-</head>
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -23,126 +19,84 @@
         <div class="card-header">
             <h3 class="card-title">Daftar Tanggungan Mahasiswa</h3>
             <div class="card-tools">
-                <button type="button" class="btn btn-md btn-primary" >
-                  <a href="../index.php?page=upload">UPLOAD</a>
-                </button>
+                <a href="../index.php?page=upload" class="btn btn-primary">
+                    <i class="fas fa-upload"></i> Upload Dokumen
+                </a>
             </div>
         </div>
         <div class="card-body">
-            <table class="table table-sm table-bordered table-striped" id="table-data">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Pengajuan ID</th>
-                        <th>NIM Mahasiswa</th>
-                        <th>Nama Mahasiswa</th>
-                        <th>Nama Surat</th>
-                        <th>Status Pengajuan</th>
-                        <th>Tanggal Pengajuan</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table id="tanggunganTable" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>ID Upload</th>
+                            <th>Nama File</th>
+                            <th>Jenis Surat</th>
+                            <th>Tanggal Upload</th>
+                            <th>Status</th>
+                            <th>Catatan</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
         </div>
     </div>
 </section>
 
-
 <script>
-    
-    function tambahData() {
-        $('#form-data').modal('show');
-        $('#form-tambah').attr('action', 'pages/Upload.php');
-        $('#pengajuan_id').val('');
-        $('#nim').val('');
-        $('#nama_surat').val('');
-        $('#status_pengajuan').val('');
-        $('#tanggal_pengajuan').val('');
-    }
-
-    function editData(id) {
-        $.ajax({
-            url: 'action/tanggunganAction.php?act=get&id=' + id,
-            method: 'get',
-            success: function(response) {
-                var data = JSON.parse(response);
-                $('#form-data').modal('show');
-                $('#form-tambah').attr('action', 'action/tanggunganAction.php?act=update&id=' + id);
-                $('#pengajuan_id').val(data.PengajuanID);  // Assuming 'PengajuanID' is the correct field
-                $('#nim').val(data.NIM); 
-                $('#nama_surat').val(data.NamaSurat);
-                $('#status_pengajuan').val(data.StatusPengajuan);
-                $('#tanggal_pengajuan').val(data.TanggalPengajuan);
-            }
-        });
-    }
-
-    function deleteData(id) {
-        if (confirm('Apakah anda yakin?')) {
-            $.ajax({
-                url: 'action/tanggunganAction.php?act=delete&id=' + id,
-                method: 'post',
-                success: function(response) {
-                    var result = JSON.parse(response);
-                    if (result.status) {
-                        tabelData.ajax.reload();
-                    } else {
-                        alert(result.message);
-                    }
-                }
-            });
+$(document).ready(function() {
+    var table = $('#tanggunganTable').DataTable({
+        "processing": true,
+        "ajax": {
+            "url": "action/TanggunganAction.php?act=load",
+            "type": "GET"
+        },
+        "columns": [
+            { "data": 0 },
+            { "data": 1 },
+            { "data": 2 },
+            { "data": 3 },
+            { "data": 4 },
+            { "data": 5 },
+            { "data": 6 },
+            { "data": 7 }
+        ],
+        "responsive": true,
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Indonesian.json"
         }
-    }
-
-    var tabelData;
-    $(document).ready(function() {
-        tabelData = $('#table-data').DataTable({
-            ajax: 'action/tanggunganAction.php?act=load',
-        });
-
-        $('#form-tambah').validate({
-            rules: {
-                nim: {
-                    required: true,
-                },
-                nama_surat: {
-                    required: true,
-                },
-                status_pengajuan: {
-                    required: true,
-                },
-                tanggal_pengajuan: {
-                    required: true,
-                }
-            },
-            errorElement: 'span',
-            errorPlacement: function(error, element) {
-                error.addClass('invalid-feedback');
-                element.closest('.form-group').append(error);
-            },
-            highlight: function(element, errorClass, validClass) {
-                $(element).addClass('is-invalid');
-            },
-            unhighlight: function(element, errorClass, validClass) {
-                $(element).removeClass('is-invalid');
-            },
-            submitHandler: function(form) {
-                $.ajax({
-                    url: $(form).attr('action'),
-                    method: 'post',
-                    data: $(form).serialize(),
-                    success: function(response) {
-                        var result = JSON.parse(response);
-                        if (result.status) {
-                            $('#form-data').modal('hide');
-                            tabelData.ajax.reload();
-                        } else {
-                            alert(result.message);
-                        }
-                    }
-                });
-            }
-        });
     });
+
+    // Check document status
+    $.ajax({
+        url: 'action/TanggunganAction.php?act=check_status',
+        type: 'GET',
+        success: function(response) {
+            var result = JSON.parse(response);
+            if (result.status) {
+                var documents = result.data;
+                var allSubmitted = true;
+                for (var doc in documents) {
+                    if (!documents[doc]) {
+                        allSubmitted = false;
+                        break;
+                    }
+                }
+                // if (!allSubmitted) {
+                //     Swal.fire({
+                //         icon: 'warning',
+                //         title: 'Dokumen Belum Lengkap',
+                //         text: 'Masih ada dokumen yang belum diupload'
+                //     });
+                // }
+            }
+        }
+    });
+});
+
+function viewDocument(filename) {
+    window.open('uploads/documents/' + filename, '_blank');
+}
 </script>

@@ -44,76 +44,117 @@ if ($act == 'get') {
     exit;
 }
 
-// Proses untuk menyimpan data (termasuk upload file)
 if ($act == 'save') {
-    // Check if a file was uploaded
-    $FilePath = '';
-    if (isset($_FILES['FilePath']) && $_FILES['FilePath']['error'] === UPLOAD_ERR_OK) {
-        $uploadDir = "../upload";
-        $allowedTypes = ['pdf', 'doc', 'docx'];
-        $fileType = pathinfo($_FILES['FilePath']['name'], PATHINFO_EXTENSION);
-
-        if (!in_array(strtolower($fileType), $allowedTypes)) {
-            echo json_encode(['status' => false, 'message' => 'Invalid file type.']);
-            exit;
-        }
-        if ($_FILES['FilePath']['size'] > 10000000) {
-            echo json_encode(['status' => false, 'message' => 'File is too large.']);
-            exit;
-        }
-
-        $fileName = time() . "_" . basename($_FILES['FilePath']['name']);
-        $uploadFile = $uploadDir . '/' . $fileName;
-        if (move_uploaded_file($_FILES['FilePath']['tmp_name'], $uploadFile)) {
-            $FilePath = $fileName;
-        } else {
-            echo json_encode(['status' => false, 'message' => 'Failed to move uploaded file.']);
-            exit;
-        }
-    }
-
     // Get NIM from session
     if (!isset($_SESSION['NIM'])) {
-        echo json_encode(['status' => false, 'message' => 'NIM is not set in session.']);
+        echo json_encode(['status' => false, 'message' => 'NIM tidak ditemukan dalam session.']);
         exit;
     }
     $NIM = $_SESSION['NIM'];
 
-    // Validate Jenis_Surat
-    $validJenisSurat = ['ukt', 'skkm', 'Toeic', 'Publikasi', 'Skla', 'kompensasi'];
-    $Jenis_Surat = isset($_POST['Jenis_Surat']) && !empty(trim($_POST['Jenis_Surat']))
-        ? trim($_POST['Jenis_Surat'])
-        : null;
-        error_log('Jenis_Surat value: ' . $Jenis_Surat);
+    $uploadDir = "../uploads/documents";
+    if (!file_exists($uploadDir)) {
+        mkdir($uploadDir, 0777, true);
+    }
 
-    if (is_null($Jenis_Surat) || !in_array($Jenis_Surat, $validJenisSurat)) {
+    $allowedTypes = ['pdf', 'doc', 'docx'];
+    $maxFileSize = 10 * 1024 * 1024; // 10MB
+    $fileTypes = [
+        'file_skla' => 1,      // ID 1 untuk SKLA
+        'file_kompensasi' => 2, // ID 2 untuk Kompensasi
+        'file_ukt' => 3,       // ID 3 untuk UKT
+        'file_skkm' => 4,      // ID 4 untuk SKKM
+        'file_toeic' => 5,     // ID 5 untuk TOEIC
+        'file_publikasi' => 6  // ID 6 untuk Publikasi
+    ];
+
+    $uploadModel = new UploadModel();
+
+    // Mulai transaksi database
+    if (!$uploadModel->beginTransaction()) {
         echo json_encode([
-            'status' => false, 
-            'message' => 'Please select a valid document type (ukt, skkm, Toeic, Publikasi, Skla, or kompensasi).'
+            'status' => false,
+            'message' => "Gagal memulai transaksi database."
         ]);
         exit;
     }
-    
-    // Validate or set TanggalDibuat
-    $TanggalDibuat = isset($_POST['TanggalDibuat']) && !empty($_POST['TanggalDibuat'])
-        ? antiSqlInjection($_POST['TanggalDibuat'])
-        : date('Y-m-d');
 
-    // Prepare data
-    $data = [
-        'Nama_file' => $FilePath,
-        'Jenis_Surat' => $Jenis_Surat,
-        'TanggalDibuat' => $TanggalDibuat,
-        'NIM' => $NIM,
-    ];
+    $uploadedFiles = [];
+    $errors = [];
+    $successCount = 0;
 
-    // Save to database
-    $upload = new UploadModel();
-    $result = $upload->insertData($data);
-    // Send proper JSON response
-    echo json_encode([
-        'status' => $result,
-        'message' => $result ? 'Data berhasil disimpan.' : 'Gagal menyimpan data.',
-    ]);
+    try {
+        foreach ($fileTypes as $fileKey => $IDSurat) {
+            // Cek apakah file ada dan tidak ada error
+            if (!isset($_FILES[$fileKey]) || $_FILES[$fileKey]['error'] !== UPLOAD_ERR_OK) {
+                throw new Exception("File {$fileKey} belum dipilih atau terjadi error.");
+            }
+
+            $file = $_FILES[$fileKey];
+            if (empty($file['name'])) {
+                throw new Exception("File {$fileKey} tidak memiliki nama yang valid.");
+            }
+
+            $fileType = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+
+            // Validasi tipe file
+            if (!in_array($fileType, $allowedTypes)) {
+                throw new Exception("File {$fileKey}: Tipe file tidak diizinkan (hanya " . implode(', ', $allowedTypes) . ")");
+            }
+
+            // Validasi ukuran file
+            if ($file['size'] > $maxFileSize) {
+                throw new Exception("File {$fileKey}: Ukuran file terlalu besar (max 10MB).");
+            }
+
+            // Generate nama file yang unik
+            $fileName = time() . "_" . $NIM . "_" . $IDSurat . "." . $fileType;
+            $uploadFile = $uploadDir . '/' . $fileName;
+
+            // Upload file
+            if (!move_uploaded_file($file['tmp_name'], $uploadFile)) {
+                throw new Exception("File {$fileKey}: Gagal mengupload file.");
+            }
+
+            $uploadedFiles[] = $uploadFile;
+            
+            // Simpan ke database
+            $uploadModel->save([
+                'Nama_file' => $fileName,
+                'TanggalDibuat' => date('Y-m-d'),
+                'NIM' => $NIM,
+                'IDSurat' => $IDSurat
+            ]);
+
+            $successCount++;
+        }
+
+        // Jika semua file berhasil diupload, commit transaksi
+        if ($successCount === count($fileTypes)) {
+            $uploadModel->commit();
+            echo json_encode([
+                'status' => true,
+                'message' => "Berhasil mengupload semua file."
+            ]);
+        } else {
+            throw new Exception("Tidak semua file berhasil diupload.");
+        }
+
+    } catch (Exception $e) {
+        // Rollback transaksi
+        $uploadModel->rollback();
+        
+        // Hapus file yang sudah terupload
+        foreach ($uploadedFiles as $file) {
+            if (file_exists($file)) {
+                unlink($file);
+            }
+        }
+
+        echo json_encode([
+            'status' => false,
+            'message' => $e->getMessage()
+        ]);
+    }
     exit;
 }

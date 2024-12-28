@@ -1,10 +1,9 @@
 <?php
-include_once('Model.php');
 
-class VerifAdmin extends Model
+class AdminModel
 {
     protected $db;
-    protected $table = 'TB_Verifikasi';
+    protected $table = 'TB_Admin';
 
     public function __construct()
     {
@@ -12,90 +11,32 @@ class VerifAdmin extends Model
         $this->db = $db;
     }
 
-    // Implementasi insertData - Menambahkan data verifikasi
-    public function insertData($data)
+    // Ambil data mahasiswa berdasarkan username
+    public function getDataByUsername($username)
     {
-        $query = "INSERT INTO {$this->table} (IDUpload, IDAdmin, TanggalVerifikasi, StatusVerifikasi, Catatan) 
-                  VALUES (?, ?, ?, ?, ?)";
-        
-        $params = [
-            $data['IDUpload'],
-            $data['IDAdmin'],
-            $data['TanggalVerifikasi'],
-            $data['StatusVerifikasi'],
-            $data['Catatan']
-        ];
+    // Persiapkan query dengan parameter
+    $sql = "SELECT a.IDAdmin 
+            FROM {$this->table} a 
+            JOIN TB_USER u ON a.ID = u.ID 
+            WHERE u.username = ?";
 
-        $stmt = sqlsrv_query($this->db, $query, $params);
-        if ($stmt === false) {
-            die(print_r(sqlsrv_errors(), true));
-        }
+    // Persiapkan statement
+    $stmt = sqlsrv_prepare($this->db, $sql, [$username]);
 
-        return sqlsrv_rows_affected($stmt) > 0; // Jika berhasil, return true
+    if ($stmt === false) {
+        die(print_r(sqlsrv_errors(), true)); // Debug jika terjadi kesalahan saat persiapan
     }
 
-    // Implementasi getData - Mengambil semua data verifikasi
-    public function getData()
-    {
-        $query = "SELECT * FROM {$this->table}";
-        $result = sqlsrv_query($this->db, $query);
+    // Eksekusi query
+    $result = sqlsrv_execute($stmt);
 
-        if ($result === false) {
-            die(print_r(sqlsrv_errors(), true)); // Debugging error
-        }
-
-        $data = [];
-        while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
-            $data[] = $row;
-        }
-
-        return $data;
+    if ($result === false) {
+        die(print_r(sqlsrv_errors(), true)); // Debug jika terjadi kesalahan saat eksekusi
     }
 
-    // Implementasi getDataById - Mengambil data verifikasi berdasarkan ID
-    public function getDataById($id)
-    {
-        $query = "SELECT * FROM {$this->table} WHERE IDVerifikasi = ?";
-        $params = [$id];
-
-        $stmt = sqlsrv_query($this->db, $query, $params);
-        if ($stmt === false) {
-            die(print_r(sqlsrv_errors(), true)); // Debugging error
-        }
-
-        return sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+    // Ambil hasilnya
+    return sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
     }
-
-    // Implementasi updateData - Mengupdate status verifikasi
-    public function updateData($id, $data)
-    {
-        $query = "UPDATE {$this->table} SET StatusVerifikasi = ?, Catatan = ? WHERE IDVerifikasi = ?";
-        $params = [
-            $data['StatusVerifikasi'],
-            $data['Catatan'],
-            $id
-        ];
-
-        $stmt = sqlsrv_query($this->db, $query, $params);
-        if ($stmt === false) {
-            die(print_r(sqlsrv_errors(), true)); // Debugging error
-        }
-
-        return sqlsrv_rows_affected($stmt) > 0;
-    }
-
-    // Implementasi deleteData - Menghapus data verifikasi
-    public function deleteData($id)
-    {
-        $query = "DELETE FROM {$this->table} WHERE IDVerifikasi = ?";
-        $params = [$id];
-
-        $stmt = sqlsrv_query($this->db, $query, $params);
-        if ($stmt === false) {
-            die(print_r(sqlsrv_errors(), true)); // Debugging error
-        }
-
-        return sqlsrv_rows_affected($stmt) > 0;
-    }
+   
 }
 ?>

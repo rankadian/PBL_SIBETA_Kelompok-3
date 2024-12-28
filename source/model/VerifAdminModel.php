@@ -1,7 +1,7 @@
 <?php
 include_once('Model.php');
 
-class VerifAdminModel extends Model
+class VerifAdminModel 
 {
     protected $db;
     protected $table = 'TB_Verifikasi';
@@ -12,229 +12,137 @@ class VerifAdminModel extends Model
         $this->db = $db;
     }
 
-    // Implementasi insertData - Menambahkan data verifikasi
-    public function insertData($data)
+    // Get detailed verification data with joins
+    public function getDetailVerifikasi()
     {
-        $query = "INSERT INTO {$this->table} (IDUpload, IDAdmin, TanggalVerifikasi, StatusVerifikasi, Catatan) 
-                  VALUES (?, ?, ?, ?, ?)";
+        $query = "SELECT v.IDVerifikasi,
+                         v.StatusVerifikasi,
+                         v.Catatan,
+                         v.TanggalVerifikasi,
+                         u.IDUpload,
+                         u.Nama_file,
+                         u.TanggalDibuat,
+                         s.Jenis_Surat,
+                         m.NIM,
+                         m.Nama,
+                         m.ProgramStudi,
+                         a.NamaAdmin
+                  FROM TB_Verifikasi v
+                  JOIN TB_Upload u ON v.IDUpload = u.IDUpload
+                  JOIN TB_Mahasiswa m ON u.NIM = m.NIM
+                  JOIN TB_Surat s ON u.IDSurat = s.IDSurat
+                  LEFT JOIN TB_Admin a ON v.IDAdmin = a.IDAdmin
+                  ORDER BY v.TanggalVerifikasi DESC";
 
-        $params = [
-            $data['IDUpload'],
-            $data['IDAdmin'],
-            $data['TanggalVerifikasi'],
-            $data['StatusVerifikasi'],
-            $data['Catatan']
-        ];
-
-        $stmt = sqlsrv_query($this->db, $query, $params);
-        if ($stmt === false) {
-            die(print_r(sqlsrv_errors(), true));
-        }
-
-        return sqlsrv_rows_affected($stmt) > 0; // Jika berhasil, return true
-    }
-
-    // Implementasi getData - Mengambil semua data verifikasi
-    public function getData()
-    {
-        $query = "SELECT * FROM {$this->table}";
         $result = sqlsrv_query($this->db, $query);
 
         if ($result === false) {
-            die(print_r(sqlsrv_errors(), true)); // Debugging error
+            throw new Exception("Error executing query: " . print_r(sqlsrv_errors(), true));
         }
 
         $data = [];
         while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+            // Format dates if they are DateTime objects
+            if ($row['TanggalVerifikasi'] instanceof DateTime) {
+                $row['TanggalVerifikasi'] = $row['TanggalVerifikasi']->format('Y-m-d H:i:s');
+            }
+            if ($row['TanggalDibuat'] instanceof DateTime) {
+                $row['TanggalDibuat'] = $row['TanggalDibuat']->format('Y-m-d H:i:s');
+            }
             $data[] = $row;
         }
 
         return $data;
     }
 
-    // Implementasi getDataById - Mengambil data verifikasi berdasarkan ID
+    // Get verification data by ID
     public function getDataById($id)
     {
-        $query = "SELECT * FROM {$this->table} WHERE IDVerifikasi = ?";
+        $query = "SELECT v.*, u.Nama_file, s.Jenis_Surat, m.NIM, m.Nama
+                  FROM {$this->table} v
+                  JOIN TB_Upload u ON v.IDUpload = u.IDUpload
+                  JOIN TB_Mahasiswa m ON u.NIM = m.NIM
+                  JOIN TB_Surat s ON u.IDSurat = s.IDSurat
+                  WHERE v.IDVerifikasi = ?";
+        
         $params = [$id];
-
         $stmt = sqlsrv_query($this->db, $query, $params);
+        
         if ($stmt === false) {
-            die(print_r(sqlsrv_errors(), true)); // Debugging error
+            throw new Exception("Error getting data: " . print_r(sqlsrv_errors(), true));
         }
 
-        return sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+        $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+        
+        // Format dates if they exist
+        if ($row && isset($row['TanggalVerifikasi']) && $row['TanggalVerifikasi'] instanceof DateTime) {
+            $row['TanggalVerifikasi'] = $row['TanggalVerifikasi']->format('Y-m-d H:i:s');
+        }
+
+        return $row;
     }
 
-    // Implementasi updateData - Mengupdate status verifikasi
+    // Update verification status
     public function updateData($id, $data)
     {
-        $query = "UPDATE {$this->table} SET StatusVerifikasi = ?, Catatan = ? WHERE IDVerifikasi = ?";
-        $params = [
-            $data['StatusVerifikasi'],
-            $data['Catatan'],
-            $id
-        ];
-
-        $stmt = sqlsrv_query($this->db, $query, $params);
-        if ($stmt === false) {
-            die(print_r(sqlsrv_errors(), true)); // Debugging error
-        }
-
-        return sqlsrv_rows_affected($stmt) > 0;
-    }
-
-    // Implementasi deleteData - Menghapus data verifikasi
-    public function deleteData($id)
-    {
         try {
-            // Begin transaction
             if (sqlsrv_begin_transaction($this->db) === false) {
-                throw new Exception("Tidak dapat memulai transaksi");
+                throw new Exception("Could not begin transaction");
             }
 
-            // Check if data exists first
-            $checkQuery = "SELECT COUNT(*) as count FROM {$this->table} WHERE IDVerifikasi = ?";
-            $checkParams = [$id];
-            $checkStmt = sqlsrv_query($this->db, $checkQuery, $checkParams);
-            
-            if ($checkStmt === false) {
-                sqlsrv_rollback($this->db);
-                throw new Exception(print_r(sqlsrv_errors(), true));
-            }
-            
-            $row = sqlsrv_fetch_array($checkStmt, SQLSRV_FETCH_ASSOC);
-            if ($row['count'] == 0) {
-                sqlsrv_rollback($this->db);
-                return false; // Data not found
-            }
+            $query = "UPDATE {$this->table} 
+                     SET StatusVerifikasi = ?,
+                         Catatan = ?,
+                         TanggalVerifikasi = ?,
+                         IDAdmin = ?
+                     WHERE IDVerifikasi = ?";
 
-            // Delete query
-            $query = "DELETE FROM {$this->table} WHERE IDVerifikasi = ?";
-            $params = [$id];
-            
-            // Execute delete
+            $params = [
+                $data['StatusVerifikasi'],
+                $data['Catatan'],
+                $data['TanggalVerifikasi'],
+                $data['IDAdmin'],
+                $id
+            ];
+
             $stmt = sqlsrv_query($this->db, $query, $params);
             
             if ($stmt === false) {
-                sqlsrv_rollback($this->db);
-                throw new Exception(print_r(sqlsrv_errors(), true));
+                throw new Exception("Error updating data: " . print_r(sqlsrv_errors(), true));
             }
 
-            // Check affected rows
-            $affected = sqlsrv_rows_affected($stmt);
-            if ($affected === false || $affected === 0) {
-                sqlsrv_rollback($this->db);
-                return false;
-            }
-
-            // Commit transaction
             if (sqlsrv_commit($this->db) === false) {
-                throw new Exception("Gagal melakukan commit transaksi");
+                throw new Exception("Could not commit transaction");
             }
 
             return true;
+
         } catch (Exception $e) {
-            // Ensure rollback on any error
             if (sqlsrv_rollback($this->db) === false) {
-                throw new Exception("Gagal melakukan rollback: " . $e->getMessage());
+                throw new Exception("Could not rollback transaction");
             }
             throw $e;
         }
     }
 
-    // Mengambil data verifikasi dengan detail mahasiswa dan surat
-    public function getDetailVerifikasi()
+    // Check if all documents are verified for a student
+    public function checkAllDocumentsVerified($nim)
     {
-        $query = "SELECT v.IDVerifikasi,
-                         v.TanggalVerifikasi,
-                         v.StatusVerifikasi,
-                         v.Catatan,
-                         u.IDUpload,
-                         u.Nama_file,
-                         u.Jenis_Surat,
-                         u.TanggalDibuat,
-                         m.NIM,
-                         m.Nama,
-                         a.NamaAdmin
-                  FROM TB_Verifikasi v
-                  JOIN TB_Upload u ON v.IDUpload = u.IDUpload
-                  JOIN TB_Mahasiswa m ON u.NIM = m.NIM
-                  JOIN TB_Admin a ON v.IDAdmin = a.IDAdmin
-                  ORDER BY v.TanggalVerifikasi DESC";
-        
-        $result = sqlsrv_query($this->db, $query);
-        if ($result === false) {
-            die(print_r(sqlsrv_errors(), true));
-        }
-
-        $data = [];
-        while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
-            // Konversi status dari BIT ke boolean
-            $row['StatusVerifikasi'] = $row['StatusVerifikasi'] ? true : false;
-            
-            // Format tanggal menggunakan CONVERT di SQL Server
-            $row['TanggalVerifikasi'] = date_format($row['TanggalVerifikasi'], 'Y-m-d');
-            $row['TanggalDibuat'] = date_format($row['TanggalDibuat'], 'Y-m-d');
-            
-            $data[] = $row;
-        }
-        return $data;
-    }
-
-    // Mengambil surat yang belum diverifikasi berdasarkan jenis surat
-    public function getUnverifiedDocuments($jenisSurat = null)
-    {
-        $query = "SELECT 
-                    u.IDUpload,
-                    u.Nama_file,
-                    u.Jenis_Surat,
-                    u.TanggalDibuat,
-                    m.NIM,
-                    m.Nama,
-                    m.ProgramStudi
+        $query = "SELECT COUNT(*) as total,
+                         SUM(CASE WHEN v.StatusVerifikasi = 1 THEN 1 ELSE 0 END) as verified
                   FROM TB_Upload u
-                  JOIN TB_Mahasiswa m ON u.NIM = m.NIM
-                  WHERE u.IDUpload NOT IN (SELECT IDUpload FROM {$this->table})";
-        
-        if ($jenisSurat) {
-            $query .= " AND u.Jenis_Surat = ?";
-            $params = [$jenisSurat];
-        } else {
-            $params = [];
-        }
-        
-        $result = sqlsrv_query($this->db, $query, $params);
-        if ($result === false) {
-            die(print_r(sqlsrv_errors(), true));
-        }
+                  JOIN {$this->table} v ON u.IDUpload = v.IDUpload
+                  WHERE u.NIM = ?";
 
-        $data = [];
-        while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
-            $row['TanggalDibuat'] = $row['TanggalDibuat']->format('Y-m-d');
-            $data[] = $row;
-        }
-        return $data;
-    }
-
-    // Update status verifikasi
-    public function updateVerifikasi($idVerifikasi, $status, $catatan)
-    {
-        $query = "UPDATE {$this->table} 
-                  SET StatusVerifikasi = ?, 
-                      Catatan = ?,
-                      TanggalVerifikasi = GETDATE()
-                  WHERE IDVerifikasi = ?";
-        
-        // Konversi status ke BIT
-        $statusBit = $status ? 1 : 0;
-        $params = [$statusBit, $catatan, $idVerifikasi];
-        
+        $params = [$nim];
         $stmt = sqlsrv_query($this->db, $query, $params);
+
         if ($stmt === false) {
-            die(print_r(sqlsrv_errors(), true));
+            throw new Exception("Error checking verification: " . print_r(sqlsrv_errors(), true));
         }
-        
-        return sqlsrv_rows_affected($stmt) > 0;
+
+        $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+        return $row['total'] > 0 && $row['total'] == $row['verified'];
     }
 }
+?>

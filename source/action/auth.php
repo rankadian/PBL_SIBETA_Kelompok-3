@@ -32,12 +32,17 @@ if ($act === 'login') {
 
         // Load MahasiswaModel untuk mengambil NIM berdasarkan username
         include('../model/MahasiswaModel.php');
+        include('../model/AdminModel.php');
         $mahasiswa = new MahasiswaModel();
         $mahasiswaData = $mahasiswa->getDataByUsername($data['username']); // Sesuaikan metode ini
+        $admin = new AdminModel();
+        $adminData = $admin->getDataByUsername($data['username']); // Sesuaikan metode ini
 
         // Set NIM ke session jika ditemukan
         if ($mahasiswaData && isset($mahasiswaData['NIM'])) {
             $session->set('NIM', $mahasiswaData['NIM']);
+        } elseif ($adminData && isset($adminData['IDAdmin'])) {
+            $session->set('IDAdmin', $adminData['IDAdmin']);
         } else {
             $session->setFlash('status', false);
             $session->setFlash('message', 'Data mahasiswa tidak ditemukan.');

@@ -14,8 +14,6 @@ if ($session->get('is_login') !== true) {
   <title>ADMIN SIBETA</title>
   <!-- Favicons -->
   <link href="../assets/img/sibetaV3.png" rel="icon">
-
-
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
@@ -33,6 +31,9 @@ if ($session->get('is_login') !== true) {
 
   <!-- jQuery -->
   <script src="adminlte/plugins/jquery/jquery.min.js"></script>
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -61,19 +62,13 @@ if ($session->get('is_login') !== true) {
 
       <?php
       $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
-
+      
       switch (strtolower($page)) {
         case 'dashboard':
           include('pages/Tanggungan.php');
           break;
         case 'verif':
           include('pages/VerifAdmin.php');
-          break;
-        case 'kategori':
-          include('pages/kategori.php');
-          break;
-        case 'user':
-          include('pages/user.php');
           break;
         case 'mahasiswa':
           include('pages/mahasiswa.php');
@@ -83,6 +78,8 @@ if ($session->get('is_login') !== true) {
           break;
         case 'download':
           include('pages/downloadMhs.php');
+        case 'status':
+          include('pages/StatusLaporan.php');
           break;
         default:
           // Cek apakah file 404.php ada

@@ -1,6 +1,7 @@
 <?php
 include('../lib/Session.php');
 include_once('../model/VerifAdminModel.php');
+include_once('../model/AdminModel.php');
 include_once('../lib/Secure.php');
 
 $session = new Session();
@@ -13,27 +14,61 @@ if ($session->get('is_login') !== true) {
 
 // Mendapatkan action dari parameter
 $act = isset($_GET['act']) ? strtolower($_GET['act']) : '';
+$VerifAdminModel = new VerifAdminModel();
 
 if ($act == 'load') {
-    $VerifAdminModel = new VerifAdminModel();
-    $data = $VerifAdminModel->getDetailVerifikasi(); // Pastikan query-nya sesuai
+    $data = $VerifAdminModel->getDetailVerifikasi();
     $result = [];
     $i = 1;
 
     foreach ($data as $row) {
+        // Format tanggal
+        $tanggalVerifikasi = $row['TanggalVerifikasi'] ? date('d/m/Y', strtotime($row['TanggalVerifikasi'])) : '-';
+        $tanggalDibuat = date('d/m/Y', strtotime($row['TanggalDibuat']));
+
+        // Format status
+        $statusText = '';
+        $statusClass = '';
+        
+        if ($row['StatusVerifikasi'] === null) {
+            $statusText = 'Menunggu Verifikasi';
+            $statusClass = 'badge badge-warning';
+        } else if ($row['StatusVerifikasi'] == 1) {
+            $statusText = 'Disetujui';
+            $statusClass = 'badge badge-success';
+        } else {
+            $statusText = 'Ditolak';
+            $statusClass = 'badge badge-danger';
+        }
+        
+        $status = '<span class="' . $statusClass . '">' . $statusText . '</span>';
+
+        // Tentukan tombol aksi berdasarkan status
+        $actionButtons = '';
+            $actionButtons = '<div class="btn-group">
+                <button type="button" class="btn btn-sm btn-success" onclick="approveDocument(' . $row['IDVerifikasi'] . ')">
+                    <i class="fas fa-check"></i> Setuju
+                </button>
+                <button type="button" class="btn btn-sm btn-danger" onclick="showRejectModal(' . $row['IDVerifikasi'] . ')">
+                    <i class="fas fa-times"></i> Tolak
+                </button>
+            </div>';
+
         $result['data'][] = [
+            $i,
             $row['IDVerifikasi'],
-            $row['TanggalVerifikasi'],
-            $row['StatusVerifikasi'],
-            $row['Catatan'],
+            $tanggalVerifikasi,
+            $status,
+            $row['Catatan'] ?: '-',
+            $row['IDUpload'],
             $row['Nama_file'],
             $row['Jenis_Surat'],
-            $row['TanggalDibuat'],
+            $tanggalDibuat,
             $row['NIM'],
             $row['Nama'],
+            $row['ProgramStudi'],
             $row['NamaAdmin'],
-            '<button class="btn btn-sm btn-warning" onclick="editData('.$row['IDVerifikasi'].')"><i class="fas fa-edit"></i></button>
-             <button class="btn btn-sm btn-danger" onclick="deleteData('.$row['IDVerifikasi'].')"><i class="fas fa-trash"></i></button>'
+            $actionButtons
         ];
         $i++;
     }
@@ -42,90 +77,59 @@ if ($act == 'load') {
     exit();
 }
 
-if ($act == 'get') {
-    // Ambil data verifikasi berdasarkan ID
-    $id = (isset($_GET['id']) && ctype_digit($_GET['id'])) ? $_GET['id'] : 0;
-    $VerifAdminModel = new VerifAdminModel();
-    $data = $VerifAdminModel->getDataById($id);
-    echo json_encode($data);
-    exit();
-}
-
-if ($act == 'save') {
-    // // Simpan verifikasi mahasiswa baru
-    // $data = [
-    //     'admin_email' => antiSqlInjection($_POST['admin_email']),
-    //     'mahasiswa_nim' => antiSqlInjection($_POST['mahasiswa_nim']),
-    //     'id_tanggungan' => antiSqlInjection($_POST['id_tanggungan']),
-    //     'status_validasi' => 'Pending',  // Status default
-    //     'tanggal_verifikasi' => date('Y-m-d')
-    // ];
-
-    // $VerifAdminModel = new VerifAdminModel();
-    // $VerifAdminModel->insertData($data);
-
-    // // Return JSON response
-    // header('Content-Type: application/json');
-    // echo json_encode([
-    //     'status' => true,
-    //     'message' => 'Data berhasil disimpan.'
-    // ]);
-    // exit();
-}
-
 if ($act == 'update') {
-    // Update data verifikasi mahasiswa
-    $id = (isset($_GET['id']) && ctype_digit($_GET['id'])) ? $_GET['id'] : 0;
-    $data = [
-        'IDVerifikasi' => isset($_POST['IDVerifikasi']) ? antiSqlInjection($_POST['IDVerifikasi']) : '',
-        'StatusVerifikasi' => isset($_POST['StatusVerifikasi']) ? antiSqlInjection($_POST['StatusVerifikasi']) : '',
-        'Catatan' => isset($_POST['Catatan']) ? antiSqlInjection($_POST['Catatan']) : ''
-    ];
-
-    $VerifAdminModel = new VerifAdminModel();
-    $VerifAdminModel->updateData($id, $data);
-
-    echo json_encode([
-        'status' => true,
-        'message' => 'Data berhasil diperbarui.'
-    ]);
-    exit();
-}
-
-if ($act == 'delete') {
-    header('Content-Type: application/json');
-    
-    // Hapus data verifikasi mahasiswa berdasarkan ID
-    $id = (isset($_GET['id']) && ctype_digit($_GET['id'])) ? $_GET['id'] : 0;
-    
-    if ($id == 0) {
-        echo json_encode([
-            'status' => false,
-            'message' => 'ID tidak valid'
-        ]);
-        exit();
-    }
-
+        // Get ID ADMIN from session
+        if (!isset($_SESSION['IDAdmin'])) {
+            echo json_encode(['status' => false, 'message' => 'IDAdmin tidak ditemukan dalam session.']);
+            exit;
+        }
+        $IDAmin = $_SESSION['IDAdmin'];
     try {
-        $VerifAdminModel = new VerifAdminModel();
-        $result = $VerifAdminModel->deleteData($id);
+        // Validasi input
+        $idVerifikasi = isset($_POST['IDVerifikasi']) ? antiSqlInjection($_POST['IDVerifikasi']) : '';
+        $statusVerifikasi = isset($_POST['StatusVerifikasi']) ? antiSqlInjection($_POST['StatusVerifikasi']) : '';
+        $catatan = isset($_POST['Catatan']) ? antiSqlInjection($_POST['Catatan']) : '';
         
-        if ($result === true) {
+        // Validasi data
+        if (empty($idVerifikasi) || $statusVerifikasi === '') {
+            throw new Exception('Data tidak lengkap');
+        }
+
+        // Jika status ditolak (0), catatan harus diisi
+        if ($statusVerifikasi == '0' && empty($catatan)) {
+            throw new Exception('Catatan penolakan harus diisi');
+        }
+
+        // Jika status disetujui (1), berikan catatan default
+        if ($statusVerifikasi == '1' && empty($catatan)) {
+            $catatan = 'Dokumen disetujui';
+        }
+
+        $data = [
+            'IDVerifikasi' => $idVerifikasi,
+            'StatusVerifikasi' => $statusVerifikasi,
+            'Catatan' => $catatan,
+            'TanggalVerifikasi' => date('Y-m-d'),
+            'IDAdmin' => $IDAmin
+        ];
+
+        // Update data
+        $result = $VerifAdminModel->updateData($idVerifikasi, $data);
+
+        if ($result) {
             echo json_encode([
                 'status' => true,
-                'message' => 'Data berhasil dihapus'
+                'message' => $statusVerifikasi == '1' ? 'Dokumen berhasil disetujui' : 'Dokumen berhasil ditolak'
             ]);
         } else {
-            echo json_encode([
-                'status' => false,
-                'message' => 'Data tidak ditemukan atau gagal dihapus'
-            ]);
+            throw new Exception('Gagal memperbarui data');
         }
     } catch (Exception $e) {
         echo json_encode([
             'status' => false,
-            'message' => 'Error: ' . $e->getMessage()
+            'message' => $e->getMessage()
         ]);
     }
     exit();
 }
+?>

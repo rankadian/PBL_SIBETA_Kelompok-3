@@ -37,9 +37,8 @@ fa-search fa-fw"></i></button></div>
             <?php
             if ($_SESSION['level'] == 'admin') {
             ?>
-
                 <li class="nav-item">
-                    <a href="index.php" class="nav-link">
+                    <a href="index.php?page=dashboard" class="nav-link">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>Dashboard</p>
                     </a>
@@ -48,25 +47,6 @@ fa-search fa-fw"></i></button></div>
                     <a href="index.php?page=verif" class="nav-link">
                         <i class="nav-icon fas fa-bookmark"></i>
                         <p>Verifikasi Mahasiswa</p>
-                    </a>
-                </li>
-                <li class="nav-item ">
-                    <a href="index.php?page=buku" class="nav-link">
-                        <i class="nav-icon fas fa-book"></i>
-                        <p>Buku</p>
-                    </a>
-                </li>
-                <li class="nav-item ">
-                    <a href="index.php?page=buku" class="nav-link">
-                        <i class="nav-icon fas fa-user  "></i>
-                        <p>Upload Bukti</p>
-                    </a>
-                </li>
-                </li>
-                <li class="nav-item ">
-                    <a href="index.php?page=buku" class="nav-link">
-                        <i class="nav-icon fas fa-columns"></i>
-                        <p>Status Validasi</p>
                     </a>
                 </li>
 
@@ -78,29 +58,29 @@ fa-search fa-fw"></i></button></div>
             if ($_SESSION['level'] == 'mahasiswa') {
             ?>
                 <li class="nav-item">
-                    <a href="index.php" class="nav-link">
+                    <a href="index.php?page=dashboard" class="nav-link">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>Dashboard</p>
+                        <p>Tanggungan</p>
                     </a>
                 </li>
 
                 <li class="nav-item "> <!--border bottom buat garis paling akhir -->
                     <a href="index.php?page=download" class="nav-link">
-                        <i class="nav-icon fas fa-file"></i>
+                        <i class="nav-icon fas fa-file-download"></i>
                         <p>Download Surat</p>
                     </a>
                 </li>
 
                 <li class="nav-item "> <!--border bottom buat garis paling akhir -->
                     <a href="index.php?page=upload" class="nav-link">
-                        <i class="nav-icon fas fa-file"></i>
+                        <i class="nav-icon fas fa-file-upload"></i>
                         <p>Upload Surat</p>
                     </a>
                 </li>
 
                 <li class="nav-item border-bottom"> <!--border bottom buat garis paling akhir -->
-                    <a href="index.php?page=" class="nav-link">
-                        <i class="nav-icon fas fa-file"></i>
+                    <a href="index.php?page=status" class="nav-link">
+                        <i class="nav-icon far fa-hourglass"></i>
                         <p>Status</p>
                     </a>
                 </li>
