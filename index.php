@@ -9,7 +9,7 @@
   <meta name="keywords" content="">
 
   <!-- Favicons -->
-  <link href="assets/img/sibetaV3.png" rel="icon">
+  <link href="assets/img/icon2.png" rel="icon">
   
 
   <!-- Fonts -->
