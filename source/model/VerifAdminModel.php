@@ -144,5 +144,20 @@ class VerifAdminModel
         $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
         return $row['total'] > 0 && $row['total'] == $row['verified'];
     }
+
+    // In VerifAdminModel
+    public function countVerifiedReports()
+    {
+        $query = "SELECT COUNT(*) as total_verified FROM {$this->table} WHERE StatusVerifikasi = 1"; // Assuming 1 means verified
+        $result = sqlsrv_query($this->db, $query);
+
+        if ($result === false) {
+            throw new Exception("Error fetching verified report count: " . print_r(sqlsrv_errors(), true));
+        }
+
+        $row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
+        return $row['total_verified'];
+    }
+
 }
 ?>
