@@ -36,7 +36,7 @@ if ($level == 'admin') {
                         <div class="icon">
                             <i class="ion ion-bag"></i>
                         </div>
-                        <a href="index.php?page=status2" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        <a href="index.php?page=verif" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <!-- TAMBAH MAHASISWA -->
@@ -49,7 +49,7 @@ if ($level == 'admin') {
                         <div class="icon">
                             <i class="ion ion-stats-bars"></i>
                         </div>
-                        <a href="index.php?page=tambah1" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        <a href="index.php?page=verif" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
 
@@ -93,7 +93,7 @@ if ($level == 'mahasiswa') {
         <div class="card-header">
             <h3 class="card-title">Daftar Tanggungan Mahasiswa</h3>
             <div class="card-tools">
-                <a href="../index.php?page=upload" class="btn btn-primary">
+                <a href="index.php?page=upload" class="btn btn-primary">
                     <i class="fas fa-upload"></i> Upload Dokumen
                 </a>
             </div>
