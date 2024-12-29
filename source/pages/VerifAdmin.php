@@ -8,200 +8,272 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item"><a href="DashAdmin.php">Home</a></li>
                     <li class="breadcrumb-item active">Verifikasi Mahasiswa</li>
                 </ol>
             </div>
         </div>
-    </div>
-    <!-- Layanan Verifikasi Mahasiswa -->
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Layanan Verifikasi Mahasiswa</h3>
-        </div>
-        <div class="card-body">
-            <table id="verifikasiTable" class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Tanggal</th>
-                        <th>Status</th>
-                        <th>Catatan</th>
-                        <th>File</th>
-                        <th>Jenis Surat</th>
-                        <th>Tanggal Upload</th>
-                        <th>NIM</th>
-                        <th>Nama Mahasiswa</th>
-                        <th>Admin</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Data akan dimuat melalui AJAX -->
-                </tbody>
-            </table>
 
-            <!-- Modal Verifikasi -->
-            <div class="modal fade" id="verifikasiModal" tabindex="-1" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Verifikasi Dokumen</h5>
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="formVerifikasi">
-                                <input type="hidden" id="idVerifikasi">
-                                <div class="form-group">
-                                    <label>Status Verifikasi</label>
-                                    <select class="form-control" id="statusVerifikasi">
-                                        <option value="1">Terima</option>
-                                        <option value="0">Tolak</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Catatan</label>
-                                    <textarea class="form-control" id="catatan" rows="3" required></textarea>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                                    <button type="submit" class="btn btn-primary">Simpan</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+        <!-- Layanan Verifikasi Mahasiswa -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    Layanan Verifikasi Mahasiswa
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="verifikasiTable" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th width="5%">No</th>
+                                <th>NIM</th>
+                                <th>Nama</th>
+                                <th>Program Studi</th>
+                                <th>Jenis Surat</th>
+                                <th>Nama File</th>
+                                <th>Tanggal Upload</th>
+                                <th>Status</th>
+                                <th>Catatan</th>
+                                <th width="15%">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Data akan dimuat melalui AJAX -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
+<!-- Modal Penolakan -->
+<div class="modal fade" id="rejectModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <h5 class="modal-title text-white">
+                    <i class="fas fa-times-circle mr-2"></i>
+                    Penolakan Dokumen
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="formReject">
+                <div class="modal-body">
+                    <input type="hidden" name="IDVerifikasi" id="rejectIDVerifikasi">
+                    <input type="hidden" name="StatusVerifikasi" value="0">
+                    
+                    <div class="form-group">
+                        <label for="rejectCatatan">Catatan Penolakan <span class="text-danger">*</span></label>
+                        <textarea class="form-control" name="Catatan" id="rejectCatatan" rows="4" 
+                            placeholder="Mohon berikan alasan penolakan dokumen" required></textarea>
+                        <small class="text-muted">
+                            Catatan ini akan ditampilkan kepada mahasiswa sebagai alasan penolakan dokumen.
+                        </small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fas fa-times mr-2"></i>Batal
+                    </button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-check mr-2"></i>Konfirmasi Penolakan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Template untuk Preview File -->
+<div class="modal fade" id="previewModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Preview Dokumen</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <iframe id="filePreview" style="width: 100%; height: 500px;" frameborder="0"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 $(document).ready(function() {
+    // Inisialisasi DataTable dengan konfigurasi
     var table = $('#verifikasiTable').DataTable({
         "processing": true,
-        "serverSide": true,
+        "serverSide": false,
         "ajax": {
             "url": "action/VerifAdminAction.php?act=load",
-            "type": "POST"
+            "type": "GET"
         },
         "columns": [
-            {"data": 0}, // ID Verifikasi
-            {"data": 1}, // Tanggal Verifikasi
-            {
-                "data": 2,
-                "render": function(data) {
-                    if (data === null || data === '') {
-                        return '<span class="badge badge-warning">Menunggu</span>';
-                    }
-                    return data == 1 ? 
-                        '<span class="badge badge-success">Diterima</span>' : 
-                        '<span class="badge badge-danger">Ditolak</span>';
+            { "data": 0 },  // No
+            { "data": 9 },  // NIM
+            { "data": 10 }, // Nama
+            { "data": 11 }, // Program Studi
+            { "data": 7 },  // Jenis Surat
+            { 
+                "data": 6,  // Nama File
+                "render": function(data, type, row) {
+                    return `<a href="javascript:void(0)" onclick="previewFile('${data}')">${data}</a>`;
                 }
             },
-            {"data": 3}, // Catatan
-            {"data": 4}, // Nama File
-            {"data": 5}, // Jenis Surat
-            {"data": 6}, // Tanggal Upload
-            {"data": 7}, // NIM
-            {"data": 8}, // Nama Mahasiswa
-            {"data": 9}, // Admin
-            {
-                "data": 10,
-                "orderable": false,
-                "searchable": false,
-                "className": "text-center"
-            }
+            { "data": 8 },  // Tanggal Upload
+            { "data": 3 },  // Status
+            { "data": 4 },  // Catatan
+            { "data": 13 }  // Aksi
         ],
-        "order": [[1, 'desc']], // Sort by tanggal verifikasi
+        "order": [[0, 'asc']],
         "responsive": true,
         "language": {
             "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Indonesian.json"
-        }
-    });
-
-});
-
-// Fungsi untuk edit/verifikasi data
-function editData(id) {
-    $.ajax({
-        url: 'action/VerifAdminAction.php?act=get&id= ' +id,
-        type: 'POST',
-        data: {id: id},
-        success: function(response) {
-            var data = JSON.parse(response);
-            $('#verifikasiModal').modal('show');
-            $('#idVerifikasi').val(data.IDVerifikasi);
-            $('#statusVerifikasi').val(data.StatusVerifikasi);
-            $('#catatan').val(data.Catatan);
         },
-        error: function() {
-            toastr.error('Gagal mengambil data verifikasi');
-        }
+        "columnDefs": [
+            {
+                "targets": -1,
+                "className": "text-center"
+            }
+        ]
     });
-}
 
-// Fungsi untuk melihat detail data
-function viewData(id) {
-    $.ajax({
-        url: 'action/VerifAdminAction.php?act=view',
-        type: 'POST',
-        data: {id: id},
-        success: function(response) {
-            var data = JSON.parse(response);
-            // Tampilkan detail data dalam modal atau halaman baru
-            window.open('view_document.php?id=' + id, '_blank');
-        },
-        error: function() {
-            toastr.error('Gagal mengambil detail data');
+    // Handle form rejection submission
+    $('#formReject').on('submit', function(e) {
+        e.preventDefault();
+        
+        if (!$('#rejectCatatan').val().trim()) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Catatan penolakan harus diisi'
+            });
+            return;
         }
-    });
-}
 
-// Fungsi untuk menghapus data
-function deleteData(id) {
-    if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
         $.ajax({
-            url: 'action/VerifAdminAction.php?act=delete&id=' + id,
+            url: 'action/VerifAdminAction.php?act=update',
             type: 'POST',
-            data: {id: id},
+            data: $(this).serialize(),
             success: function(response) {
-                $('#verifikasiTable').DataTable().ajax.reload();
-                toastr.success('Data berhasil dihapus');
+                try {
+                    var result = JSON.parse(response);
+                    if (result.status) {
+                        $('#rejectModal').modal('hide');
+                        table.ajax.reload();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: 'Dokumen berhasil ditolak'
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: result.message || 'Terjadi kesalahan'
+                        });
+                    }
+                } catch (e) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Terjadi kesalahan saat memproses response'
+                    });
+                }
             },
             error: function() {
-                toastr.error('Gagal menghapus data');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Gagal menghubungi server'
+                });
             }
         });
-    }
-}
+    });
+});
 
-function submitVerifikasi() {
-    var id = $('#idVerifikasi').val();
-    var status = $('#statusVerifikasi').val();
-    var catatan = $('#catatan').val();
-
-    if (!catatan) {
-        toastr.warning('Catatan harus diisi');
-        return;
-    }
-
-    $.ajax({
-        url: 'action/VerifAdminAction.php?act=update',
-        type: 'POST',
-        data: {
-            id: id,
-            status: status,
-            catatan: catatan
-        },
-        success: function(response) {
-            $('#verifikasiModal').modal('hide');
-            $('#verifikasiTable').DataTable().ajax.reload();
-            toastr.success('Status verifikasi berhasil diperbarui');
-        },
-        error: function() {
-            toastr.error('Terjadi kesalahan saat memperbarui status');
+// Function to approve document
+function approveDocument(id) {
+    Swal.fire({
+        title: 'Konfirmasi Persetujuan',
+        text: "Apakah Anda yakin ingin menyetujui dokumen ini?",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#28a745',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Ya, Setuju',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: 'action/VerifAdminAction.php?act=update',
+                type: 'POST',
+                data: {
+                    IDVerifikasi: id,
+                    StatusVerifikasi: 1,
+                    Catatan: 'Dokumen disetujui'
+                },
+                success: function(response) {
+                    try {
+                        var result = JSON.parse(response);
+                        if (result.status) {
+                            $('#verifikasiTable').DataTable().ajax.reload();
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil',
+                                text: 'Dokumen berhasil disetujui'
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: result.message || 'Terjadi kesalahan'
+                            });
+                        }
+                    } catch (e) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Terjadi kesalahan saat memproses response'
+                        });
+                    }
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Gagal menghubungi server'
+                    });
+                }
+            });
         }
     });
+}
+
+// Function to show reject modal
+function showRejectModal(id) {
+    $('#rejectIDVerifikasi').val(id);
+    $('#rejectCatatan').val('');
+    $('#rejectModal').modal('show');
+}
+
+// Function to preview file
+function previewFile(filename) {
+    // Assuming files are stored in an 'uploads' directory
+    var fileUrl = '../uploads/' + filename;
+    $('#filePreview').attr('src', fileUrl);
+    $('#previewModal').modal('show');
+}
+
+function viewDocument(filename) {
+    window.open('uploads/documents/' + filename, '_blank');
 }
 </script>

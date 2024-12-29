@@ -5,12 +5,14 @@ class UserModel extends Model
         protected $db;
         protected $table = 'TB_USER';
         protected $driver;
+
         public function __construct()
         {
                 include('../lib/Connection.php');
                 $this->db = $db;
                 $this->driver = $use_driver;
         }
+
         public function insertData($data)
         {
                 // eksekusi query untuk menyimpan ke database
@@ -25,6 +27,7 @@ class UserModel extends Model
                         )
                 );
         }
+
         public function getData()
         {
 
@@ -36,6 +39,7 @@ class UserModel extends Model
                 }
                 return $data;
         }
+
         public function getDataById($id)
         {
 
@@ -44,6 +48,7 @@ class UserModel extends Model
                 // ambil hasil query
                 return sqlsrv_fetch_array($query, SQLSRV_FETCH_ASSOC);
         }
+
         public function updateData($id, $data)
         {
                 // query untuk update data
@@ -56,11 +61,13 @@ class UserModel extends Model
                         $id
                 ]);
         }
+
         public function deleteData($id)
         {
                 // query untuk delete data
                 sqlsrv_query($this->db, "delete from {$this->table} where user_id = ?", [$id]);
         }
+        
         public function getSingleDataByKeyword($column, $keyword)
         {
                 // query untuk mengambil data berdasarkan id

@@ -13,7 +13,7 @@ class MahasiswaModel
 
     // Ambil data mahasiswa berdasarkan username
     public function getDataByUsername($username)
-{
+    {
     // Persiapkan query dengan parameter
     $sql = "SELECT m.NIM 
             FROM {$this->table} m 
@@ -36,7 +36,7 @@ class MahasiswaModel
 
     // Ambil hasilnya
     return sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
-}
+    }
 
     
 }

@@ -62,7 +62,7 @@ if ($act == 'create') {
 
     // Menyimpan data verifikasi awal
     $verifModel = new VerifAdminModel();
-    $result = $verifModel->insertData($data);
+    $result = $verifModel->updateData($id, $data);
 
     echo json_encode([
         'status' => $result,

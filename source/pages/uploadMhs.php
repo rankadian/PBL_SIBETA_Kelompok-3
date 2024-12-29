@@ -13,9 +13,7 @@
                 </ol>
             </div>
         </div>
-    </div>
-
-   
+    </div> 
 
     <!-- File Upload Section -->
     <div class="card">

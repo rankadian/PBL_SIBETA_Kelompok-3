@@ -1,10 +1,10 @@
 <?php  
     $use_driver = 'sqlsrv'; // mysql atau sqlsrv 
  
-    $host     = 'DESKTOP-QAULIDP'; 
+    $host     = 'AZKIYAIHTIARILH'; 
     $username = ''; //'sa'; 
     $password = ''; 
-    $database = 'SibetaWeb6'; 
+    $database = 'SibetaWeb7'; 
     $db; 
  
     
@@ -24,4 +24,6 @@
         }catch(Exception $e){ 
             die($e->getMessage()); 
         } 
+
+?>
    

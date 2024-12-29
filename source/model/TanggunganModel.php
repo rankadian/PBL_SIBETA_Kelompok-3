@@ -1,10 +1,10 @@
 <?php
 include_once('Model.php');
 
-class TanggunganModel extends Model
+class TanggunganModel  
 {
     protected $db;
-    protected $table = 'TB_PengajuanSurat';
+    protected $table = 'TB_Upload';
 
     public function __construct()
     {
@@ -12,96 +12,59 @@ class TanggunganModel extends Model
         $this->db = $db;
     }
 
-    public function insertData($data)
+    // Mengambil daftar tanggungan berdasarkan NIM
+    public function getTanggunganByNIM($nim)
     {
-        // Optional, tergantung kebutuhan.
-    }
+        // Query  Pemanggilan VIEW
+        $query = "SELECT * FROM V_Tanggungan_Mahasiswa WHERE NIM = ? ORDER BY TanggalDibuat DESC;";
 
-    public function getData()
-    {
-        $sql = "
-            SELECT 
-                ps.PengajuanID, 
-                ps.NIM, 
-                m.Nama AS NamaMahasiswa, 
-                s.NamaSurat, 
-                ps.StatusPengajuan, 
-                ps.TanggalPengajuan
-            FROM 
-                {$this->table} ps
-            LEFT JOIN 
-                TB_Mahasiswa m ON ps.NIM = m.NIM
-            LEFT JOIN 
-                TB_Surat s ON ps.SuratID = s.SuratID
-        ";
-        $query = sqlsrv_query($this->db, $sql);
+        $params = array($nim);
+        $stmt = sqlsrv_query($this->db, $query, $params);
+        
+        if ($stmt === false) {
+            throw new Exception("Error getting tanggungan: " . print_r(sqlsrv_errors(), true));
+        }
 
-        // Fetch data dalam bentuk array
         $data = [];
-        while ($row = sqlsrv_fetch_array($query, SQLSRV_FETCH_ASSOC)) {
+        while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+            // Format tanggal
+            if ($row['TanggalDibuat'] instanceof DateTime) {
+                $row['TanggalDibuat'] = $row['TanggalDibuat']->format('Y-m-d');
+            }
+            if ($row['TanggalVerifikasi'] instanceof DateTime) {
+                $row['TanggalVerifikasi'] = $row['TanggalVerifikasi']->format('Y-m-d');
+            }
+            
+            // Format status
+            $row['StatusVerifikasi'] = isset($row['StatusVerifikasi']) ? 
+                ($row['StatusVerifikasi'] ? 'Diverifikasi' : 'Ditolak') : 
+                'Menunggu';
+            
             $data[] = $row;
         }
-
         return $data;
-    }
+    }   
 
-    /**
-     * Ambil data pengajuan surat berdasarkan NIM mahasiswa.
-     */
-    public function getDataById($nim)
+    //Mengecek apakah mahasiswa sudah mengupload semua dokumen yang diperlukan
+    public function checkAllDocumentsSubmitted($nim)
     {
-        $sql = "
-            SELECT 
-                ps.PengajuanID, 
-                ps.NIM, 
-                m.Nama AS NamaMahasiswa, 
-                s.NamaSurat, 
-                ps.StatusPengajuan, 
-                ps.TanggalPengajuan
-            FROM 
-                {$this->table} ps
-            LEFT JOIN 
-                TB_Mahasiswa m ON ps.NIM = m.NIM
-            LEFT JOIN 
-                TB_Surat s ON ps.SuratID = s.SuratID
-            WHERE 
-                ps.NIM = ?
-        ";
-        $params = [$nim];
-        $stmt = sqlsrv_prepare($this->db, $sql, $params);
-
-        if (sqlsrv_execute($stmt)) {
-            $data = [];
-            while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-                $data[] = $row;
-            }
-            return $data;
-        } else {
-            return false; // Handle error jika eksekusi gagal
-        }
-    }
-
-    public function updateData($id, $data)
-    {
-        $sql = "UPDATE {$this->table} SET StatusPengajuan = ? WHERE PengajuanID = ?";
-        $params = [ $id];
-        $stmt = sqlsrv_query($this->db, $sql, $params);
-
+        // Query Pemanggilan VIEW
+        $query = "SELECT Jenis_Surat, IsSubmitted 
+                  FROM V_CheckAllDocumentsSubmitted 
+                  WHERE NIM = ?";
+    
+        $params = array($nim);
+        $stmt = sqlsrv_query($this->db, $query, $params);
+    
         if ($stmt === false) {
-            return false; // Handle error
+            throw new Exception("Error checking documents: " . print_r(sqlsrv_errors(), true));
         }
-        return true;
-    }
-
-    public function deleteData($id)
-    {
-        $sql = "DELETE FROM {$this->table} WHERE PengajuanID = ?";
-        $params = [$id];
-        $stmt = sqlsrv_query($this->db, $sql, $params);
-
-        if ($stmt === false) {
-            return false; // Handle error
+    
+        $documents = [];
+        while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+            $documents[$row['Jenis_Surat']] = $row['IsSubmitted'];
         }
-        return true;
-    }
+        return $documents;
+    }  
 }
+?>
