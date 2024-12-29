@@ -19,10 +19,10 @@ $global = new GlobalModel();
 if ($level == 'admin') {
     // Admin Dashboard - Total Reports  
     // Dumm6y data
-    $verifikasiMHS = 6; // Dummy number of reports uploaded by students
-    $mahasiswa = 1; // Dummy number of students
+    $total = $global->getCountData('TB_Mahasiswa');
+    $upload = $global->getCountData('TB_Upload')
 ?>
-    <!-- Admin Dashboard Card with Chart -->
+    <!-- Admin Dashboard Card with Chart -->    
     <section class="content">
         <div class="container-fluid">
             <div class="row">
@@ -30,7 +30,7 @@ if ($level == 'admin') {
                 <div class="col-lg-2 col-6">
                     <div class="small-box bg-info">
                         <div class="inner">
-                            <h3 class="font-weight-bold"><?= $verifikasiMHS; ?></h3>
+                            <h3 class="font-weight-bold"><?= $upload; ?></h3>
                             <p class="text-uppercase font-weight-light">VERIFIKASI MAHASISWA</p>
                         </div>
                         <div class="icon">
@@ -43,7 +43,7 @@ if ($level == 'admin') {
                 <div class="col-lg-2 col-6">
                     <div class="small-box bg-success">
                         <div class="inner">
-                            <h3 class="font-weight-bold"><?= $mahasiswa; ?></h3>
+                            <h3 class="font-weight-bold"><?= $total; ?></h3>
                             <p class="text-uppercase font-weight-light">Total mahasiswa</p>
                         </div>
                         <div class="icon">
