@@ -10,7 +10,7 @@
 
   <!-- Favicons -->
   <link href="assets/img/icon2.png" rel="icon">
-  
+
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -121,7 +121,7 @@
                 <div class="icon-box">
                   <i class="bi bi-clipboard-pulse"></i>
                   <h3>Guna</h3>
-                  <p>Digunakan untuk mendaftar wisuda.</p>
+                  <p>Menjadi tanda sudah tidak memiliki tanggungan atau beban pada kampus.</p>
                 </div>
               </div> <!-- End Icon Box -->
 
@@ -137,7 +137,7 @@
                 <div class="icon-box">
                   <i class="bi bi-graph-up-arrow"></i>
                   <h3>Request</h3>
-                  <p>Surat bebas tanggungan bisa diminta ketiga semua tanggungan sudah selesai setelah menyelesaikan Tugas Akhir (TA)</p>
+                  <p>Surat bebas tanggungan bisa diminta ketika semua tanggungan sudah selesai setelah menyelesaikan Tugas Akhir (TA)</p>
                 </div>
               </div> <!-- End Icon Box -->
 
