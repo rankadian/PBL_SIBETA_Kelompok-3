@@ -20,7 +20,7 @@ if ($level == 'admin') {
     // Admin Dashboard - Total Reports  
     // Dumm6y data
     $total = $global->getCountData('TB_Mahasiswa');
-    $upload = $global->getCountData('TB_Upload')
+    $upload = $global->getCountData('TB_Upload');
 ?>
     <!-- Admin Dashboard Card with Chart -->    
     <section class="content">
