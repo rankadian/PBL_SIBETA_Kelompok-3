@@ -1,0 +1,42 @@
+<?php
+
+class AdminModel
+{
+    protected $db;
+    protected $table = 'TB_Admin';
+
+    public function __construct()
+    {
+        include('../lib/Connection.php');
+        $this->db = $db;
+    }
+
+    // Ambil data mahasiswa berdasarkan username
+    public function getDataByUsername($username)
+    {
+    // Persiapkan query dengan parameter
+    $sql = "SELECT a.IDAdmin 
+            FROM {$this->table} a 
+            JOIN TB_USER u ON a.ID = u.ID 
+            WHERE u.username = ?";
+
+    // Persiapkan statement
+    $stmt = sqlsrv_prepare($this->db, $sql, [$username]);
+
+    if ($stmt === false) {
+        die(print_r(sqlsrv_errors(), true)); // Debug jika terjadi kesalahan saat persiapan
+    }
+
+    // Eksekusi query
+    $result = sqlsrv_execute($stmt);
+
+    if ($result === false) {
+        die(print_r(sqlsrv_errors(), true)); // Debug jika terjadi kesalahan saat eksekusi
+    }
+
+    // Ambil hasilnya
+    return sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+    }
+   
+}
+?>
