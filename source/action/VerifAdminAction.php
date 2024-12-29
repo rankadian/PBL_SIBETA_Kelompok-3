@@ -29,7 +29,7 @@ if ($act == 'load') {
         // Format status
         $statusText = '';
         $statusClass = '';
-        
+
         if ($row['StatusVerifikasi'] === null) {
             $statusText = 'Menunggu Verifikasi';
             $statusClass = 'badge badge-warning';
@@ -40,20 +40,22 @@ if ($act == 'load') {
             $statusText = 'Ditolak';
             $statusClass = 'badge badge-danger';
         }
-        
+
         $status = '<span class="' . $statusClass . '">' . $statusText . '</span>';
 
         // Tentukan tombol aksi berdasarkan status
         $actionButtons = '';
-            $actionButtons = '<div class="btn-group">
-                <button type="button" class="btn btn-sm btn-success" onclick="approveDocument(' . $row['IDVerifikasi'] . ')">
-                    <i class="fas fa-check"></i> Setuju
-                </button>
-                <button type="button" class="btn btn-sm btn-danger" onclick="showRejectModal(' . $row['IDVerifikasi'] . ')">
-                    <i class="fas fa-times"></i> Tolak
-                </button>
-            </div>';
-
+        $actionButtons = '<div class="btn-group">
+    <button type="button" class="btn btn-sm btn-success" onclick="approveDocument(' . $row['IDVerifikasi'] . ')">
+        <i class="fas fa-check"></i> Setuju
+    </button>
+    <button type="button" class="btn btn-sm btn-danger" onclick="showRejectModal(' . $row['IDVerifikasi'] . ')">
+        <i class="fas fa-times"></i> Tolak
+    </button>
+    <button class="btn btn-sm btn-info" onclick="previewFile(\'' . $row['IDVerifikasi'] . '\', \'' . $row['Nama_file'] . '\')">
+        <i class="fas fa-eye"></i> Cek data
+    </button>
+</div>';
         $result['data'][] = [
             $i,
             $row['IDVerifikasi'],
@@ -78,18 +80,18 @@ if ($act == 'load') {
 }
 
 if ($act == 'update') {
-        // Get ID ADMIN from session
-        if (!isset($_SESSION['IDAdmin'])) {
-            echo json_encode(['status' => false, 'message' => 'IDAdmin tidak ditemukan dalam session.']);
-            exit;
-        }
-        $IDAmin = $_SESSION['IDAdmin'];
+    // Get ID ADMIN from session
+    if (!isset($_SESSION['IDAdmin'])) {
+        echo json_encode(['status' => false, 'message' => 'IDAdmin tidak ditemukan dalam session.']);
+        exit;
+    }
+    $IDAmin = $_SESSION['IDAdmin'];
     try {
         // Validasi input
         $idVerifikasi = isset($_POST['IDVerifikasi']) ? antiSqlInjection($_POST['IDVerifikasi']) : '';
         $statusVerifikasi = isset($_POST['StatusVerifikasi']) ? antiSqlInjection($_POST['StatusVerifikasi']) : '';
         $catatan = isset($_POST['Catatan']) ? antiSqlInjection($_POST['Catatan']) : '';
-        
+
         // Validasi data
         if (empty($idVerifikasi) || $statusVerifikasi === '') {
             throw new Exception('Data tidak lengkap');
@@ -132,4 +134,28 @@ if ($act == 'update') {
     }
     exit();
 }
-?>
+if ($act == 'getDocument') {
+    $id = isset($_GET['id']) ? antiSqlInjection($_GET['id']) : '';
+
+    if (empty($id)) {
+        echo json_encode(['status' => false, 'message' => 'ID dokumen tidak valid']);
+        exit;
+    }
+
+    try {
+        $document = $VerifAdminModel->getDocumentById($id);
+        if ($document) {
+            $fileUrl = '../uploads/documents/' . $document['Nama_file'];
+            if (file_exists($fileUrl)) {
+                echo json_encode(['status' => true, 'fileUrl' => $fileUrl]);
+            } else {
+                echo json_encode(['status' => false, 'message' => 'File tidak ditemukan di server']);
+            }
+        } else {
+            echo json_encode(['status' => false, 'message' => 'Dokumen tidak ditemukan']);
+        }
+    } catch (Exception $e) {
+        echo json_encode(['status' => false, 'message' => 'Terjadi kesalahan: ' . $e->getMessage()]);
+    }
+    exit;
+}

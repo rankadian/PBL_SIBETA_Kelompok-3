@@ -90,8 +90,10 @@
 </div>
 
 <!-- Template untuk Preview File -->
+<!-- Template untuk Preview File -->
+<!-- Template untuk Preview File -->
 <div class="modal fade" id="previewModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg" style="max-width: 90%; margin: 10px auto;">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Preview Dokumen</h5>
@@ -100,7 +102,13 @@
                 </button>
             </div>
             <div class="modal-body">
-                <iframe id="filePreview" style="width: 100%; height: 500px;" frameborder="0"></iframe>
+                <!-- PDF will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                <a id="downloadBtn" href="#" class="btn btn-primary" download>
+                    <i class="fas fa-download"></i> Download
+                </a>
             </div>
         </div>
     </div>
@@ -124,9 +132,9 @@ $(document).ready(function() {
             { "data": 7 },  // Jenis Surat
             { 
                 "data": 6,  // Nama File
-                "render": function(data, type, row) {
-                    return `<a href="javascript:void(0)" onclick="previewFile('${data}')">${data}</a>`;
-                }
+    "render": function(data, type, row) {
+        return `<a href="javascript:void(0)" onclick="previewFile('${row[1]}', '${data}')">${data}</a>`;
+    }
             },
             { "data": 8 },  // Tanggal Upload
             { "data": 3 },  // Status
@@ -266,10 +274,45 @@ function showRejectModal(id) {
 }
 
 // Function to preview file
-function previewFile(filename) {
-    // Assuming files are stored in an 'uploads' directory
-    var fileUrl = '../uploads/' + filename;
-    $('#filePreview').attr('src', fileUrl);
-    $('#previewModal').modal('show');
+function previewFile(id, filename) {
+    // Construct the file URL relative to the current page
+    var fileUrl = 'uploads/documents/' + filename; // Remove the '../' since we're already in source directory
+    
+    // Update the embed source and download button
+    var previewElement = document.getElementById('filePreview');
+    var downloadBtn = document.getElementById('downloadBtn');
+    
+    // Set the source for the PDF viewer with proper Content-Type
+    $.ajax({
+        url: fileUrl,
+        type: 'HEAD',
+        error: function() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'File tidak ditemukan'
+            });
+        },
+        success: function() {
+            // If file exists, show it in the modal
+            // Use object tag instead of embed for better PDF handling
+            var objectHtml = `<object data="${fileUrl}" type="application/pdf" width="100%" height="600px">
+                                <p>Browser anda tidak mendukung PDF viewer. 
+                                   <a href="${fileUrl}" target="_blank">Klik disini untuk download PDF</a>
+                                </p>
+                            </object>`;
+            $('.modal-body').html(objectHtml);
+            $('#previewModal').modal('show');
+            
+            // Update download button
+            downloadBtn.href = fileUrl;
+            downloadBtn.download = filename;
+        }
+    });
 }
+
+function viewDocument(filename) {
+    window.open('uploads/documents/' + filename, '_blank');
+}
+
 </script>

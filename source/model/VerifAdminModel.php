@@ -81,6 +81,15 @@ class VerifAdminModel
 
         return $row;
     }
+    
+    public function getDocumentById($id) {
+        $query = "SELECT v.*, u.Nama_file 
+                  FROM verifikasi v 
+                  JOIN upload u ON v.IDUpload = u.IDUpload 
+                  WHERE v.IDVerifikasi = ?";
+        $params = [$id];
+        return $this->db->getRow($query, $params);
+    }
 
     // Update verification status
     public function updateData($id, $data)
