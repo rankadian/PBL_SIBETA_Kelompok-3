@@ -1,8 +1,8 @@
 <?php
-$use_driver = 'sqlsrv'; // mysql atau sqlsrv 
+$use_driver = 'sqlsrv';
 
 $host     = 'LAPTOP-9E916KGJ';
-$username = ''; //'sa'; 
+$username = '';
 $password = '';
 $database = 'SibetaWeb7';
 $db;
