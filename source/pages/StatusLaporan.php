@@ -104,7 +104,7 @@
                 </div>
                 
                 <div id="downloadSection" class="text-center mt-4" style="display: none;">
-                    <a href="download-bebas-tanggungan.php" class="btn btn-success">
+                    <a href="./pages/LaporanBebasTanggungan/generate_pdf.php" class="btn btn-success">
                         <i class="fas fa-download me-2"></i>Download Surat Bebas Tanggungan
                     </a>
                 </div>

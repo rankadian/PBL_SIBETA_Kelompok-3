@@ -13,31 +13,76 @@ class StatusLaporanModel
     }
 
     // Mengambil status laporan berdasarkan NIM
+    // public function getStatusByNIM($nim)
+    // {
+    //     $query = "SELECT v.IDVerifikasi,
+    //                      v.StatusVerifikasi,
+    //                      v.Catatan,
+    //                      v.TanggalVerifikasi,
+    //                      u.IDUpload,
+    //                      u.Nama_file,
+    //                      u.TanggalDibuat,
+    //                      s.Jenis_Surat,
+    //                      m.NIM,
+    //                      m.Nama,
+    //                      m.ProgramStudi,
+    //                      a.NamaAdmin
+    //               FROM TB_Verifikasi v
+    //               JOIN TB_Upload u ON v.IDUpload = u.IDUpload
+    //               JOIN TB_Mahasiswa m ON u.NIM = m.NIM
+    //               JOIN TB_Surat s ON u.IDSurat = s.IDSurat
+    //               JOIN TB_Admin a ON v.IDAdmin = a.IDAdmin
+    //               WHERE m.NIM = ?
+    //               ORDER BY v.TanggalVerifikasi DESC";
+
+    //     $params = array($nim);
+    //     $stmt = sqlsrv_query($this->db, $query, $params);
+        
+    //     if ($stmt === false) {
+    //         throw new Exception("Error getting status: " . print_r(sqlsrv_errors(), true));
+    //     }
+
+    //     $data = [];
+    //     while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+    //         // Format tanggal
+    //         if ($row['TanggalVerifikasi'] instanceof DateTime) {
+    //             $row['TanggalVerifikasi'] = $row['TanggalVerifikasi']->format('Y-m-d');
+    //         }
+    //         if ($row['TanggalDibuat'] instanceof DateTime) {
+    //             $row['TanggalDibuat'] = $row['TanggalDibuat']->format('Y-m-d');
+    //         }
+            
+    //         // Format status
+    //         $row['StatusVerifikasi'] = $row['StatusVerifikasi'] ? 'Disetujui' : 'Ditolak';
+            
+    //         $data[] = $row;
+    //     }
+    //     return $data;
+    // }
+
+    // Mengambil status laporan berdasarkan NIM menggunakan view
     public function getStatusByNIM($nim)
     {
-        $query = "SELECT v.IDVerifikasi,
-                         v.StatusVerifikasi,
-                         v.Catatan,
-                         v.TanggalVerifikasi,
-                         u.IDUpload,
-                         u.Nama_file,
-                         u.TanggalDibuat,
-                         s.Jenis_Surat,
-                         m.NIM,
-                         m.Nama,
-                         m.ProgramStudi,
-                         a.NamaAdmin
-                  FROM TB_Verifikasi v
-                  JOIN TB_Upload u ON v.IDUpload = u.IDUpload
-                  JOIN TB_Mahasiswa m ON u.NIM = m.NIM
-                  JOIN TB_Surat s ON u.IDSurat = s.IDSurat
-                  JOIN TB_Admin a ON v.IDAdmin = a.IDAdmin
-                  WHERE m.NIM = ?
-                  ORDER BY v.TanggalVerifikasi DESC";
+        // Query Pemanggilan VIEW V_StatusLaporan
+        $query = "SELECT IDVerifikasi,
+                        StatusVerifikasi,
+                        Catatan,
+                        TanggalVerifikasi,
+                        IDUpload,
+                        Nama_file,
+                        TanggalDibuat,
+                        Jenis_Surat,
+                        NIM,
+                        Nama,
+                        ProgramStudi,
+                        NamaAdmin
+                FROM V_StatusLaporan
+                WHERE NIM = ?
+                ORDER BY TanggalVerifikasi DESC";
 
         $params = array($nim);
         $stmt = sqlsrv_query($this->db, $query, $params);
-        
+
         if ($stmt === false) {
             throw new Exception("Error getting status: " . print_r(sqlsrv_errors(), true));
         }
@@ -51,10 +96,10 @@ class StatusLaporanModel
             if ($row['TanggalDibuat'] instanceof DateTime) {
                 $row['TanggalDibuat'] = $row['TanggalDibuat']->format('Y-m-d');
             }
-            
+
             // Format status
             $row['StatusVerifikasi'] = $row['StatusVerifikasi'] ? 'Disetujui' : 'Ditolak';
-            
+
             $data[] = $row;
         }
         return $data;

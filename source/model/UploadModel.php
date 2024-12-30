@@ -27,22 +27,24 @@ class UploadModel extends Model
         return sqlsrv_rollback($this->db);
     }
 
-    // Implementasi method abstract
     public function insertData($data)
     {
         try {
-            // Query SQL untuk menyisipkan data
-            $query = "INSERT INTO TB_Upload (Nama_file, TanggalDibuat, NIM, IDSurat) VALUES (?, ?, ?, ?)";
-        
-            // Menyiapkan query dengan parameter
-            $stmt = sqlsrv_prepare($this->db, $query, array(
+            // Menyiapkan nama stored procedure dan parameter
+            $query = "{CALL SP_InsertUpload(?, ?, ?, ?)}";
+
+            // Menyiapkan parameter untuk stored procedure
+            $params = array(
                 $data['Nama_file'],
                 $data['TanggalDibuat'],
                 $data['NIM'],
                 $data['IDSurat']
-            ));
-        
-            // Mengeksekusi query yang sudah disiapkan
+            );
+
+            // Menyiapkan statement SQL Server
+            $stmt = sqlsrv_prepare($this->db, $query, $params);
+
+            // Mengeksekusi stored procedure
             if (sqlsrv_execute($stmt)) {
                 return true;
             }
@@ -52,6 +54,7 @@ class UploadModel extends Model
             return false;
         }
     }
+
 
     public function getData()
     {
@@ -96,24 +99,61 @@ class UploadModel extends Model
         }
     }
 
+    // public function getDataById($id)
+    // {
+    //     try {
+    //         $query = "SELECT 
+    //                     u.IDUpload,
+    //                     u.Nama_file,
+    //                     u.TanggalDibuat,
+    //                     s.Jenis_Surat,
+    //                     v.StatusVerifikasi,
+    //                     v.TanggalVerifikasi,
+    //                     v.Catatan
+    //                 FROM TB_Upload u
+    //                 INNER JOIN TB_Surat s ON u.IDSurat = s.IDSurat
+    //                 LEFT JOIN TB_Verifikasi v ON u.IDUpload = v.IDUpload
+    //                 WHERE u.IDUpload = ?";
+
+    //         $stmt = sqlsrv_query($this->db, $query, array($id));
+            
+    //         if ($stmt === false) {
+    //             throw new Exception("Error getting data by ID: " . print_r(sqlsrv_errors(), true));
+    //         }
+
+    //         if ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+    //             if (isset($row['TanggalDibuat']) && $row['TanggalDibuat'] instanceof DateTime) {
+    //                 $row['TanggalDibuat'] = $row['TanggalDibuat']->format('Y-m-d');
+    //             }
+    //             if (isset($row['TanggalVerifikasi']) && $row['TanggalVerifikasi'] instanceof DateTime) {
+    //                 $row['TanggalVerifikasi'] = $row['TanggalVerifikasi']->format('Y-m-d');
+    //             }
+    //             return $row;
+    //         }
+    //         return false;
+    //     } catch (Exception $e) {
+    //         error_log("Error in getDataById: " . $e->getMessage());
+    //         return false;
+    //     }
+    // }
+
     public function getDataById($id)
     {
         try {
+            // Menggunakan view untuk mengambil data berdasarkan IDUpload
             $query = "SELECT 
-                        u.IDUpload,
-                        u.Nama_file,
-                        u.TanggalDibuat,
-                        s.Jenis_Surat,
-                        v.StatusVerifikasi,
-                        v.TanggalVerifikasi,
-                        v.Catatan
-                    FROM TB_Upload u
-                    INNER JOIN TB_Surat s ON u.IDSurat = s.IDSurat
-                    LEFT JOIN TB_Verifikasi v ON u.IDUpload = v.IDUpload
-                    WHERE u.IDUpload = ?";
+                        IDUpload,
+                        Nama_file,
+                        TanggalDibuat,
+                        Jenis_Surat,
+                        StatusVerifikasi,
+                        TanggalVerifikasi,
+                        Catatan
+                    FROM VW_UploadData
+                    WHERE IDUpload = ?";
 
             $stmt = sqlsrv_query($this->db, $query, array($id));
-            
+
             if ($stmt === false) {
                 throw new Exception("Error getting data by ID: " . print_r(sqlsrv_errors(), true));
             }
@@ -137,21 +177,19 @@ class UploadModel extends Model
     public function updateData($id, $data)
     {
         try {
-            $query = "UPDATE TB_Upload 
-                     SET Nama_file = ?, 
-                         TanggalDibuat = ?, 
-                         NIM = ?, 
-                         IDSurat = ?
-                     WHERE IDUpload = ?";
+            // Menyiapkan query untuk memanggil stored procedure
+            $query = "EXEC SP_UpdateUploadData ?, ?, ?, ?, ?";
 
+            // Menyiapkan dan mengeksekusi query dengan parameter yang sesuai
             $stmt = sqlsrv_prepare($this->db, $query, array(
+                $id,
                 $data['Nama_file'],
                 $data['TanggalDibuat'],
                 $data['NIM'],
-                $data['IDSurat'],
-                $id
+                $data['IDSurat']
             ));
 
+            // Mengeksekusi query dan mengembalikan hasilnya
             return sqlsrv_execute($stmt);
         } catch (Exception $e) {
             error_log("Error in updateData: " . $e->getMessage());
